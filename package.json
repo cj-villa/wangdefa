@@ -1,0 +1,26 @@
+{
+  "author": "yummyLcj",
+  "email": "luchenjiemail@gmail.com",
+  "scripts": {
+    "dev": "lerna run dev --parallel --scope react-page --scope app"
+  },
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/**"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "eslint": "^7.19.0",
+    "husky": "^4.3.8",
+    "lerna": "^3.22.1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $GIT_PARAMS"
+    }
+  },
+  "dependencies": {}
+}
