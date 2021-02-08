@@ -7,7 +7,8 @@ interface globalValue {
 
 declare global {
   namespace NodeJS {
-      interface Global extends globalValue {}
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface Global extends globalValue { }
   }
 }
 
@@ -18,6 +19,6 @@ export const handlerGlobal = (ctx: Koa.Context) => {
   };
 
   ctx.setGlobal = <K extends keyof globalValue>(key: K, value?: globalValue[K]) => {
-    return global[key] = value;
+    global[key] = value;
   }
 };

@@ -5,7 +5,7 @@ import { Route, Get } from "../decorators/router";
 class Main {
 
   @Get('')
-  renderPage(ctx: koa.Context) {
+  private renderPage(ctx: koa.Context) {
     ctx.render('layout');
   }
 }
