@@ -1,0 +1,7 @@
+{
+  "password": "password",
+  "user": "root",
+  "host": "host",
+  "port": 3306,
+  "schema": "<options>"
+}
