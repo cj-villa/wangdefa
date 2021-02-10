@@ -2,3 +2,4 @@ node_modules/
 lerna-debug.log
 dist/
 mysql.json
+package-lock.json
