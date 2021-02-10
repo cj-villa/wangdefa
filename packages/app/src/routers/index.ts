@@ -1,3 +1,3 @@
 import './main';
 
-export { router } from '../decorators/router';
+export { router } from 'decorators/router';

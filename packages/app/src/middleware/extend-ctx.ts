@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import * as extendFns from '../extends';
+import * as extendFns from 'extends/index';
 
 export const extendCtx = async (ctx: Koa.Context, next: Koa.Next) => {
   return Promise
