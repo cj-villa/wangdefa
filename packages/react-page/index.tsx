@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { TodoList } from './src/TodoList';
+
 const Demo:React.FC = () => {
-  return <div>hello world2</div>;
+  return <TodoList />;
 };
 
 ReactDOM.render(<Demo/>, document.getElementById('root'));

@@ -5,6 +5,9 @@ module.exports = {
     'eslint-config-alloy/react',
     'eslint-config-alloy/typescript',
   ],
+  plugins: [
+    'react-hooks',
+  ],
   globals: {
     React: false,
     ReactDOM: false

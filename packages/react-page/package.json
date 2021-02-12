@@ -20,6 +20,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "eslint-plugin-react-hooks": "^0.0.0-483358c38",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   }

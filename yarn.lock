@@ -3314,6 +3314,11 @@ eslint-config-alloy@^3.10.0:
   resolved "https://registry.npm.taobao.org/eslint-config-alloy/download/eslint-config-alloy-3.10.0.tgz?cache=0&sync_timestamp=1609212650014&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-config-alloy%2Fdownload%2Feslint-config-alloy-3.10.0.tgz#b2d85ba3bd7dddcc6d7fc79088c192a646f4f246"
   integrity sha1-sthbo7193cxtf8eQiMGSpkb08kY=
 
+eslint-plugin-react-hooks@^0.0.0-483358c38:
+  version "0.0.0-483358c38"
+  resolved "https://registry.npm.taobao.org/eslint-plugin-react-hooks/download/eslint-plugin-react-hooks-0.0.0-483358c38.tgz#c7bc22bec3091f4fd2263e536ee36e0a0130d617"
+  integrity sha1-x7wivsMJH0/SJj5TbuNuCgEw1hc=
+
 eslint-plugin-react@^7.22.0:
   version "7.22.0"
   resolved "https://registry.npm.taobao.org/eslint-plugin-react/download/eslint-plugin-react-7.22.0.tgz?cache=0&sync_timestamp=1609302368527&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-plugin-react%2Fdownload%2Feslint-plugin-react-7.22.0.tgz#3d1c542d1d3169c45421c1215d9470e341707269"
