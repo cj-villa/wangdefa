@@ -16,33 +16,43 @@ export const Route = (basePath: string) => {
     const { prototype } = target;
     prototype[BASEPATH] = basePath;
     const routers: IRoutersItem[] = prototype[ROUTERS];
-      while(routers.length) {
-        const routerItem = routers.pop();
-        if (!routerItem) {
-          return;
-        }
-        const { method, path, propertyKey } = routerItem;
-        router[method](`${basePath}${path}`, prototype[propertyKey]);
+    while (routers.length) {
+      const routerItem = routers.pop();
+      if (!routerItem) {
+        return;
       }
-  }
+      const { method, path, propertyKey } = routerItem;
+      router[method](`${basePath}${path}`, prototype[propertyKey]);
+    }
+  };
 };
 
-const registerMethod = (method: 'get' | 'post', path: string, prototype: Function['prototype'], propertyKey: string) => {
+const registerMethod = (options: {
+  method: 'get' | 'post';
+  path: string;
+  prototype: Function['prototype'];
+  propertyKey: string;
+}) => {
+  const { method, path, prototype, propertyKey } = options;
   if (prototype[BASEPATH]) {
     router[method](`${prototype[BASEPATH]}${path}`, prototype[propertyKey]);
     return;
   }
-  prototype[ROUTERS] = (prototype[ROUTERS] || []).concat([{
-    method,
-    path,
-    propertyKey,
-  }]);
+  prototype[ROUTERS] = (prototype[ROUTERS] || []).concat([
+    {
+      method,
+      path,
+      propertyKey,
+    },
+  ]);
 };
 
 export const Get = (path: string) => {
-  return (prototype: Function['prototype'], propertyKey: string) => registerMethod('get', path, prototype, propertyKey);
+  return (prototype: Function['prototype'], propertyKey: string) =>
+    registerMethod({ method: 'get', path, prototype, propertyKey });
 };
 
 export const Post = (path: string) => {
-  return (prototype: Function['prototype'], propertyKey: string) => registerMethod('post', path, prototype, propertyKey);
+  return (prototype: Function['prototype'], propertyKey: string) =>
+    registerMethod({ method: 'post', path, prototype, propertyKey });
 };

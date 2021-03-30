@@ -1,11 +1,11 @@
-import koa from "koa";
-import { Route, Get } from "decorators/router";
+import koa from 'koa';
+import { Route, Get } from 'decorators/router';
 
 @Route('/')
-class Main {
-
+export class Main {
+  /** 渲染页面 */
   @Get('')
-  private renderPage(ctx: koa.Context) {
+  protected renderPage(ctx: koa.Context) {
     ctx.render('layout');
   }
 }

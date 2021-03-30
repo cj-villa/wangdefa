@@ -16,13 +16,13 @@ export class Sql {
   }
 
   /** 执行数据库语句 */
-  public query(sql: string) {
+  public query<T extends any = any>(sql: string) {
     return new Promise((resolve, reject) => {
       if (!this?.pool?.query) {
         reject(new Error('no pool'));
         return;
       }
-      this.pool.query(sql, (error, result) => {
+      this.pool.query(sql, (error, result: T) => {
         if (error) {
           reject(error);
         }
@@ -35,7 +35,8 @@ export class Sql {
   private connect(connectionLimit = CONNECTIONLIMIT) {
     this.pool = mysql.createPool({
       connectionLimit,
-      ...mysqlConfig
+      database: 'wangdefa',
+      ...mysqlConfig,
     });
   }
 }

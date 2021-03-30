@@ -22,6 +22,9 @@
       "extends/*": [
         "./src/extends/*"
       ],
+      "model/*": [
+        "./src/model/*"
+      ],
       "utils/*": [
         "./src/utils/*"
       ]

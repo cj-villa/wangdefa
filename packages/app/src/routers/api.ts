@@ -1,11 +1,13 @@
-import koa from "koa";
-import { Route, Get } from "../decorators/router";
+import koa from 'koa';
+import { Route, Get } from '../decorators/router';
 
 @Route('/api')
-class API {
-
+export class API {
   @Get('')
-  renderPage(ctx: koa.Context) {
-    ctx.body ='api';
+  protected async renderPage(ctx: koa.Context, next: koa.Next) {
+    const result = await ctx.models.users.find();
+    console.log('result', result);
+    ctx.body = result;
+    return next();
   }
 }

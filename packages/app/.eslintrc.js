@@ -1,19 +1,7 @@
 module.exports = {
   root: true,
-  extends: [
-    'eslint-config-alloy',
-    'eslint-config-alloy/typescript',
-  ],
+  extends: ['eslint-config-alloy', '../../.eslintrc.ts'],
   env: {},
   globals: {},
-  rules: {
-    'indent': [
-      'error',
-      2,
-      {
-        SwitchCase: 1,
-        flatTernaryExpressions: true
-      }
-    ],
-  },
+  rules: {},
 };
