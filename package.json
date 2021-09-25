@@ -1,8 +1,11 @@
 {
+  "name": "wangdefa",
   "author": "yummyLcj",
   "email": "luchenjiemail@gmail.com",
   "scripts": {
     "dev": "lerna run dev --parallel --scope react-page --scope app",
+    "clear": "./shell/delete.sh",
+    "bootstrap": "yarn clear && yarn",
     "eslint": "eslint"
   },
   "private": true,
@@ -38,6 +41,5 @@
     "packages/**/*.{jsx,txs,ts,js,vue}": [
       "eslint"
     ]
-  },
-  "dependencies": {}
+  }
 }
