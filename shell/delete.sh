@@ -1,8 +1,7 @@
 #!/bin/bash
-echo "rm -rf ./node_modules..."
-rm -rf ./node_modules
-echo "rm -rf ./packages/app/node_modules"
-rm -rf ./packages/app/node_modules
-echo "rm -rf ./packages/react-page/node_modules"
-rm -rf ./packages/react-page/node_modules
-# rm ./yarn.lock
+
+echo "[1/2]delete all node_modules ..."
+find . -name "node_modules" -type d -exec rm -rf '{}' +
+
+echo "[2/2]delete all lock file ..."
+find . -name "*.lock" -type f -exec rm -rf '{}' +
