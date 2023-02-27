@@ -5,41 +5,12 @@
   "scripts": {
     "dev": "lerna run dev --parallel --scope react-page --scope app",
     "clear": "./shell/delete.sh",
-    "bootstrap": "yarn clear && yarn",
-    "eslint": "eslint"
+    "bootstrap": "yarn clear && yarn"
   },
   "private": true,
   "workspaces": {
     "packages": [
       "packages/**"
-    ]
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.14.2",
-    "@typescript-eslint/parser": "^4.14.2",
-    "eslint": "^7.19.0",
-    "eslint-config-alloy": "^3.10.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-react": "^7.22.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "glob": "^7.1.6",
-    "husky": "^4.3.8",
-    "lerna": "^3.22.1",
-    "lint-staged": "^10.5.4",
-    "prettier": "^2.2.1",
-    "typescript-eslint": "^0.0.1-alpha.0"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -e $GIT_PARAMS",
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "packages/**/*.{jsx,txs,ts,js,vue}": [
-      "eslint"
     ]
   }
 }

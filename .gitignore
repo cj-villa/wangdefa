@@ -1,5 +1,6 @@
 node_modules/
 lerna-debug.log
 dist/
+.idea
 mysql.json
 package-lock.json
