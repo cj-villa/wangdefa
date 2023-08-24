@@ -1,0 +1,14 @@
+{
+  "name": "@l/shared",
+  "version": "0.0.1",
+  "scripts": {
+    "start:dev": "tsc --watch -p tsconfig.json",
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "class-validator": "^0.14.0"
+  }
+}

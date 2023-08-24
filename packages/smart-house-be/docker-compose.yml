@@ -1,0 +1,25 @@
+version: '1'
+services:
+  mysql:
+    restart: unless-stopped
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      - "MYSQL_USER=nextcloud"
+      - "MYSQL_ROOT_PASSWORD=tWKsmGqC)tmY*nn9vw62"
+      - "MYSQL_DATABASE=wangdefa"
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 3306:3306
+  redis:
+    restart: unless-stopped
+    image: redis:7
+    container_name: redis
+    environment:
+      - "MYSQL_USER=nextcloud"
+      - "MYSQL_ROOT_PASSWORD=tWKsmGqC)tmY*nn9vw62"
+      - "MYSQL_DATABASE=wangdefa"
+      - "TZ=Asia/Shanghai"
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass mypassword
