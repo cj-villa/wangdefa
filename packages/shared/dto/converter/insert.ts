@@ -7,10 +7,10 @@ import {
   BillConvertRuleOperator,
   BillSourceEnum,
 } from '../../model';
-import type { InsertType } from '../../type-gymnastics/insert-type';
+import type { InsertType } from '../../type-gymnastics';
 
 type DTO = InsertType<BillConverterModel> & {
-  rules: InsertType<BillConvertRuleModel>[];
+  rules: Array<InsertType<BillConvertRuleModel>>;
 };
 
 class ConvertRuleInsertDTO implements InsertType<BillConvertRuleModel> {

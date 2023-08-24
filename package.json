@@ -4,8 +4,8 @@
   "author": "yummyLcj",
   "email": "luchenjiemail@gmail.com",
   "scripts": {
-    "start:dev": "lerna run start:dev --parallel --scope @lcj/smart-house --scope @l/app-a --scope @l/shared",
-    "start:app": "lerna run start:dev --stream --parallel --scope @l/shared --scope @l/app-a",
+    "dev": "lerna run dev --parallel --scope @lcj/smart-house --scope @l/app-a --scope @l/shared",
+    "start": "lerna run start:dev --stream --parallel --scope @l/shared --scope @l/app-a",
     "clear": "./shell/delete.sh",
     "bootstrap": "yarn clear && yarn",
     "prepare": "./packages/lint/shell/prepare.sh"

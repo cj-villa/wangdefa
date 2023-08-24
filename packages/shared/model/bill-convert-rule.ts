@@ -2,8 +2,8 @@
  * 账单转换规则集
  */
 import { BaseModel } from './base';
-import { BillSourceEnum } from './bill-source';
 import { BillConverterModel } from './bill-converter';
+import { BillSourceEnum } from './bill-source';
 import { UserModel } from './user';
 
 export enum BillConvertRuleAction {

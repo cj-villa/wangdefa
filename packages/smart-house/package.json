@@ -2,7 +2,7 @@
   "name": "@l/smart-home",
   "version": "0.0.1",
   "scripts": {
-    "start:dev": "webpack serve"
+    "dev": "webpack serve"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
