@@ -1,20 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
-const Demo: React.FC = () => {
-  return <div>hello world2</div>;
+import { App } from './app';
+
+window._AMapSecurityConfig = {
+  securityJsCode: '708301eade5faae33ef9c00d070ee54a',
 };
 
-ReactDOM.render(<Demo />, document.getElementById('root'));
-
-class Base {
-  value: number | string;
-
-  set data(value: string) {
-    console.log('data changed to ' + value);
-  }
-
-  constructor(value: number | string) {
-    this.value = value;
-  }
-}
+createRoot(document.body).render(<App />);

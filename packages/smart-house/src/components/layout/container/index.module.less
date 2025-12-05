@@ -1,0 +1,21 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 52px);
+  min-height: 800px;
+
+  &-card {
+    min-height: 100%;
+  }
+
+  :global {
+    .ant-pro-grid-content {
+      flex: 1;
+
+      &-children,
+      .ant-pro-page-container-children-container {
+        height: 100%;
+      }
+    }
+  }
+}

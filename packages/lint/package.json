@@ -10,7 +10,7 @@
     "debug": "^4.3.4",
     "eslint": "~8.2.0",
     "eslint-config-ali": "14.0.1",
-    "eslint-config-egg": "12.0.0",
+    "eslint-config-egg": "14.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^3.1.1",
     "eslint-plugin-import": "^2.26.0",
@@ -32,8 +32,5 @@
     "stylelint-prettier": "^2.0.0",
     "stylelint-scss": "^4.2.0",
     "vue-eslint-parser": "^9.0.3"
-  },
-  "devDependencies": {
-    "typescript": "^4.5.4"
   }
 }

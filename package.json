@@ -4,8 +4,9 @@
   "author": "yummyLcj",
   "email": "luchenjiemail@gmail.com",
   "scripts": {
-    "dev": "lerna run dev --parallel --scope @lcj/smart-house --scope @l/app-a --scope @l/shared",
-    "start": "lerna run start:dev --stream --parallel --scope @l/shared --scope @l/app-a",
+    "dev": "lerna run dev --parallel --scope @l/smart-home --scope @l/app-a",
+    "dev:fe": "lerna run dev --parallel --scope @l/smart-home",
+    "dev:be": "lerna run dev --parallel --scope @l/app-a",
     "clear": "./shell/delete.sh",
     "bootstrap": "yarn clear && yarn",
     "prepare": "./packages/lint/shell/prepare.sh"
@@ -16,6 +17,7 @@
     ]
   },
   "devDependencies": {
-    "lerna": "^6.5.1"
+    "lerna": "^6.5.1",
+    "typescript": "^5.0.0"
   }
 }
