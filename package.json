@@ -7,6 +7,7 @@
     "dev": "lerna run dev --parallel --scope @l/smart-home --scope @l/app-a",
     "dev:fe": "lerna run dev --parallel --scope @l/smart-home",
     "dev:be": "lerna run dev --parallel --scope @l/app-a",
+    "start": "cd packages/smart-house-be && yarn start",
     "clear": "./shell/delete.sh",
     "bootstrap": "yarn clear && yarn",
     "prepare": "./packages/lint/shell/prepare.sh"
