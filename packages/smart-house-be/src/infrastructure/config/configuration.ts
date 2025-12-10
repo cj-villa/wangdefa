@@ -1,0 +1,50 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import * as yaml from 'js-yaml';
+import * as fs from 'fs';
+import { registerAs } from '@nestjs/config';
+import * as process from 'node:process';
+import { deepMerge } from '@/shared/toolkits/object';
+
+const envPrefix = {
+  development: 'dev',
+  production: 'prod',
+};
+
+/**
+ * 配置文件的读取方法，会根据环境进行配置文件的合并操作
+ */
+export class ConfigLoader<T extends Record<string, any>> {
+  static YAML_CONFIG_DIR = join(__dirname, '../../../config');
+
+  constructor(private readonly token: string) {}
+
+  /**
+   * Load config file
+   * @param env Whether to load env config file
+   * @returns Config object
+   */
+  private loadFile(env?: boolean) {
+    if (env && !envPrefix[process.env.NODE_ENV]) {
+      return {};
+    }
+    const fileName = env ? `${this.token}.${envPrefix[process.env.NODE_ENV]}` : this.token;
+    const filePath = join(ConfigLoader.YAML_CONFIG_DIR, `${fileName}.yaml`);
+    if (!fs.existsSync(filePath)) {
+      return {};
+    }
+    return yaml.load(
+      readFileSync(join(ConfigLoader.YAML_CONFIG_DIR, `${this.token}.yaml`), 'utf8')
+    ) as T;
+  }
+
+  private load() {
+    const base = this.loadFile();
+    const env = this.loadFile(true);
+    return deepMerge(base, env);
+  }
+
+  register() {
+    return registerAs<T>(this.token, this.load.bind(this));
+  }
+}
