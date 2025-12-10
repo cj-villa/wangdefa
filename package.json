@@ -7,7 +7,8 @@
     "dev": "lerna run dev --parallel --scope @l/smart-home --scope @l/app-a",
     "dev:fe": "lerna run dev --parallel --scope @l/smart-home",
     "dev:be": "lerna run dev --parallel --scope @l/app-a",
-    "start": "git pull && yarn --network-timeout 600000 && cd packages/smart-house-be && yarn build && yarn start:prod",
+    "start:be": "cd packages/smart-house-be && yarn build && yarn start:prod",
+    "start": "git pull && yarn --network-timeout 600000 && yarn start:be",
     "clear": "./shell/delete.sh",
     "bootstrap": "yarn clear && yarn",
     "prepare": "./packages/lint/shell/prepare.sh"

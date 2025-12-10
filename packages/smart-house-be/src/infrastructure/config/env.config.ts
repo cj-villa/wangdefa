@@ -1,3 +1,7 @@
 import { ConfigLoader } from './configuration';
 
-export const envConfig = new ConfigLoader('env').register();
+export interface EnvConfig {
+  port?: number;
+}
+
+export const envConfig = new ConfigLoader<EnvConfig>('env').register();

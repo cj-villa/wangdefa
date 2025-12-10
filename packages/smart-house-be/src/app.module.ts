@@ -20,7 +20,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     ConsulModule.forRootAsync({
       isGlobal: true,
       useFactory: (consulCfg: ConfigType<typeof consulConfig>) => ({
-        host: consulCfg.host,
+        ...consulCfg,
       }),
       inject: [consulConfig.KEY],
     }),

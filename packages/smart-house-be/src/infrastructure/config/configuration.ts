@@ -33,9 +33,7 @@ export class ConfigLoader<T extends Record<string, any>> {
     if (!fs.existsSync(filePath)) {
       return {};
     }
-    return yaml.load(
-      readFileSync(join(ConfigLoader.YAML_CONFIG_DIR, `${this.token}.yaml`), 'utf8')
-    ) as T;
+    return yaml.load(readFileSync(filePath, 'utf8')) as T;
   }
 
   private load() {
