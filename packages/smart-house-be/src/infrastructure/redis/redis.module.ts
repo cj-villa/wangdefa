@@ -33,8 +33,8 @@ export class RedisModule {
           };
     return {
       provide: REDIS_CONFIGURATION_LOADER,
-      useFactory: (config, ...args) => {
-        const userConfig = providerOptions.useFactory(...args);
+      useFactory: async (config, ...args) => {
+        const userConfig = await providerOptions.useFactory(...args);
         return deepMerge(config, userConfig);
       },
       inject: [REDIS_CONFIGURATION_TOKEN, ...(providerOptions.inject || [])],
@@ -48,8 +48,10 @@ export class RedisModule {
     return [
       {
         provide: REDIS_INSTANCE,
-        useFactory: (config) => new Redis(config),
-        inject: [REDIS_CONFIGURATION_TOKEN],
+        useFactory: (config) => {
+          return new Redis(config);
+        },
+        inject: [REDIS_CONFIGURATION_LOADER],
       },
       {
         provide: RedisBaseService,

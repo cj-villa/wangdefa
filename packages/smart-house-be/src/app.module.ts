@@ -34,10 +34,6 @@ import { GuardProviders } from '@/infrastructure/guard';
       isGlobal: true,
       useFactory: async (kvService: KvService, dbConfig: ConfigType<typeof databaseConfig>) => {
         const config = await kvService.get('db');
-        console.log('{ ...dbConfig.redis, ...config.redis }', {
-          ...dbConfig.redis,
-          ...config.redis,
-        });
         return {
           retryStrategy: (times: number) => {
             return Math.min(times * 1000, 10000);

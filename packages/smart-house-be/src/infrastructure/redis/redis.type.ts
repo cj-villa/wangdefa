@@ -4,8 +4,7 @@ import { type RedisOptions } from 'ioredis';
 /**
  * 同步模块配置
  */
-export interface RedisBaseModuleConfig
-  extends Pick<RedisOptions, 'db' | 'username' | 'password' | 'port' | 'host'> {}
+export interface RedisBaseModuleConfig extends RedisOptions {}
 
 /** 配置模块的创建参数 */
 export type CfgProviderConfig = Pick<
