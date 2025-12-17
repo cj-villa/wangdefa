@@ -32,12 +32,21 @@ import { GuardProviders } from '@/infrastructure/guard';
     // redis模块
     RedisModule.forRootAsync({
       isGlobal: true,
-      useFactory: async (kvService: KvService) => {
+      useFactory: async (kvService: KvService, dbConfig: ConfigType<typeof databaseConfig>) => {
         const config = await kvService.get('db');
-        console.log('redis config', config.redis);
-        return config.redis;
+        console.log('{ ...dbConfig.redis, ...config.redis }', {
+          ...dbConfig.redis,
+          ...config.redis,
+        });
+        return {
+          retryStrategy: (times: number) => {
+            return Math.min(times * 1000, 10000);
+          },
+          ...dbConfig.redis,
+          ...config.redis,
+        };
       },
-      inject: [KvService],
+      inject: [KvService, databaseConfig.KEY],
     }),
     /**
      * 业务代码模块
