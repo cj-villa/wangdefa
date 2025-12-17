@@ -24,7 +24,7 @@ export class PublicGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest();
     const ip = getIp(request);
-    console.log('ip', request.headers['x-forwarded-for'], request.headers, ip);
+    console.log('ip', ip);
     if (isDev || ip === '127.0.0.1' || ip.startsWith('192.168')) {
       return true;
     }
