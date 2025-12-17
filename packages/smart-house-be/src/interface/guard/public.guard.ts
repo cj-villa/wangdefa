@@ -19,16 +19,16 @@ export class PublicGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    console.log('isPublic', isPublic);
     if (isPublic) {
       return true;
     }
     const request = context.switchToHttp().getRequest();
     const ip = getIp(request);
-    console.log('ip', ip);
+    console.log('ip', request.headers['x-forwarded-for'], request.headers, ip);
     if (isDev || ip === '127.0.0.1' || ip.startsWith('192.168')) {
       return true;
     }
+    // /tmp/cloudflare-v6-ddns/cloudflare-v6-ddns.sh
     throw new PrivateException();
   }
 }
