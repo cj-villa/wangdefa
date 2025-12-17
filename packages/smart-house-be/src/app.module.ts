@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { FireflyModule } from '@/interface/modules/firefly/firefly.module';
 import { configLoad, consulConfig, databaseConfig } from '@/infrastructure/config';
-import { ConsulModule } from '@/infrastructure/consul';
+import { ConsulModule, KvService } from '@/infrastructure/consul';
 import { ExceptionProvider } from '@/infrastructure/exception';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RedisModule } from '@/infrastructure/redis';
@@ -21,14 +21,6 @@ import { GuardProviders } from '@/infrastructure/guard';
     CacheModule.register({
       isGlobal: true,
     }),
-    // redis模块
-    RedisModule.forRootAsync({
-      isGlobal: true,
-      useFactory: (dbCfg: ConfigType<typeof databaseConfig>) => ({
-        ...dbCfg.redis,
-      }),
-      inject: [databaseConfig.KEY],
-    }),
     // 远程配置模块
     ConsulModule.forRootAsync({
       isGlobal: true,
@@ -36,6 +28,15 @@ import { GuardProviders } from '@/infrastructure/guard';
         ...consulCfg,
       }),
       inject: [consulConfig.KEY],
+    }),
+    // redis模块
+    RedisModule.forRootAsync({
+      isGlobal: true,
+      useFactory: async (kvService: KvService) => {
+        const config = await kvService.get('db');
+        return config.redis;
+      },
+      inject: [KvService],
     }),
     /**
      * 业务代码模块

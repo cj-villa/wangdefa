@@ -3,5 +3,5 @@ mysql:
   port: 3306
   password: 123456
 redis:
-  host: redis
+  host: nas.lcj.com
   port: 6379
