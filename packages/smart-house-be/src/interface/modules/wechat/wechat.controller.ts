@@ -1,7 +1,7 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { REDIS_INSTANCE } from '@/infrastructure/redis';
 import Redis from 'ioredis';
-import { Public } from '@/infrastructure/guard';
+import { Public } from 'src/interface/guard';
 
 @Controller('/api/open/wechat')
 export class WechatController {

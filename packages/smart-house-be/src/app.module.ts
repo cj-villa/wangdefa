@@ -3,11 +3,12 @@ import { ConfigModule, ConfigType } from '@nestjs/config';
 import { FireflyModule } from '@/interface/modules/firefly/firefly.module';
 import { configLoad, consulConfig, databaseConfig } from '@/infrastructure/config';
 import { ConsulModule, KvService } from '@/infrastructure/consul';
-import { ExceptionProvider } from '@/infrastructure/exception';
+import { ExceptionProvider } from 'src/interface/exception';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RedisModule } from '@/infrastructure/redis';
 import { WechatModule } from '@/interface/modules/wechat/wechat.module';
-import { GuardProviders } from '@/infrastructure/guard';
+import { GuardProviders } from 'src/interface/guard';
+import { FallbackModule } from '@/interface/modules/fallback/fallback.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { GuardProviders } from '@/infrastructure/guard';
      */
     FireflyModule,
     WechatModule,
+    FallbackModule,
   ],
   providers: [...GuardProviders, ...ExceptionProvider],
 })

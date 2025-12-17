@@ -1,5 +1,5 @@
 import { APP_GUARD } from '@nestjs/core';
-import { PublicGuard } from '@/infrastructure/guard/public.guard';
+import { PublicGuard } from '@/interface/guard/public.guard';
 
 export const GuardProviders = [
   {

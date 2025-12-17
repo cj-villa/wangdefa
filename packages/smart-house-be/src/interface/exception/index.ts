@@ -1,6 +1,6 @@
 import { APP_FILTER } from '@nestjs/core';
-import { GlobalExceptionsFilter } from '@/infrastructure/exception/global-exception';
-import { PrivateExceptionsFilter } from '@/infrastructure/exception/private-exception';
+import { GlobalExceptionsFilter } from '@/interface/exception/global-exception';
+import { PrivateExceptionsFilter } from '@/interface/exception/private-exception';
 
 export const ExceptionProvider = [
   { provide: APP_FILTER, useClass: GlobalExceptionsFilter },

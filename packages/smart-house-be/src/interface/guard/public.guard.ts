@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { getIp } from '@/shared/toolkits/request';
 import { isDev } from '@/shared/toolkits/env';
-import { PrivateException } from '@/infrastructure/exception';
+import { PrivateException } from 'src/interface/exception';
 
 const IS_PUBLIC_KEY = Symbol('isPublic');
 
@@ -19,16 +19,17 @@ export class PublicGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+    console.log('isPublic', isPublic);
     if (isPublic) {
       return true;
     }
     const request = context.switchToHttp().getRequest();
     const ip = getIp(request);
     console.log('ip', ip);
-    if (isDev || ip === '127.0.0.1') {
+    if (isDev || ip === '127.0.0.1' || ip.startsWith('192.168')) {
       return true;
     }
-    return true;
+    throw new PrivateException();
   }
 }
 
