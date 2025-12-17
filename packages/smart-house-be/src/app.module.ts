@@ -1,22 +1,35 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
-import { UserModule } from '@/interface/modules/user/user.module';
-import { configLoad } from '@/infrastructure/config';
+import { FireflyModule } from '@/interface/modules/firefly/firefly.module';
+import { configLoad, consulConfig, databaseConfig } from '@/infrastructure/config';
 import { ConsulModule } from '@/infrastructure/consul';
-import { consulConfig } from '@/infrastructure/config/consul.config';
 import { ExceptionProvider } from '@/infrastructure/exception';
 import { CacheModule } from '@nestjs/cache-manager';
+import { RedisModule } from '@/infrastructure/redis';
+import { WechatModule } from '@/interface/modules/wechat/wechat.module';
+import { GuardProviders } from '@/infrastructure/guard';
 
 @Module({
   imports: [
+    // 配置模块
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
       load: configLoad,
     }),
+    // 缓存模块
     CacheModule.register({
       isGlobal: true,
     }),
+    // redis模块
+    RedisModule.forRootAsync({
+      isGlobal: true,
+      useFactory: (dbCfg: ConfigType<typeof databaseConfig>) => ({
+        ...dbCfg.redis,
+      }),
+      inject: [databaseConfig.KEY],
+    }),
+    // 远程配置模块
     ConsulModule.forRootAsync({
       isGlobal: true,
       useFactory: (consulCfg: ConfigType<typeof consulConfig>) => ({
@@ -24,8 +37,12 @@ import { CacheModule } from '@nestjs/cache-manager';
       }),
       inject: [consulConfig.KEY],
     }),
-    UserModule,
+    /**
+     * 业务代码模块
+     */
+    FireflyModule,
+    WechatModule,
   ],
-  providers: [...ExceptionProvider],
+  providers: [...GuardProviders, ...ExceptionProvider],
 })
 export class AppModule {}

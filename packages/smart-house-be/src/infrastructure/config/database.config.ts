@@ -1,8 +1,13 @@
 import { ConfigLoader } from './configuration';
+import { type RedisBaseModuleConfig } from '@/infrastructure/redis';
 
 export interface DataBaseConfig {
-  host: string;
-  port: string;
+  mysql: {
+    host: string;
+    port: number;
+    password: string;
+  };
+  redis: RedisBaseModuleConfig;
 }
 
-export const databaseConfig = new ConfigLoader<DataBaseConfig>('database').register();
+export const databaseConfig = new ConfigLoader<DataBaseConfig>('db').register();

@@ -9,6 +9,7 @@ export class KvService {
 
   constructor(private consulBaseService: ConsulBaseService) {
     global[CONSUL_GLOBAL_DATA] = {};
+    console.log('prefetch consul: %o', global[CONSUL_PRE_FETCH_KEYS]);
     global[CONSUL_PRE_FETCH_KEYS]?.forEach((key) => {
       this.subscribe(key);
     });
@@ -33,7 +34,7 @@ export class KvService {
       throw new Error('subscribe failed');
     }
     return this.consulBaseService
-      .get(`/v1/kv/${key}`, {
+      .get(`/v1/kv/wangdefa/${key}`, {
         params: {
           index: index ?? 0,
           wait: '60s',
