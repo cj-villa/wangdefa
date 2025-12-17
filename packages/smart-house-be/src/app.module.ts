@@ -34,6 +34,7 @@ import { GuardProviders } from '@/infrastructure/guard';
       isGlobal: true,
       useFactory: async (kvService: KvService) => {
         const config = await kvService.get('db');
+        console.log('redis config', config.redis);
         return config.redis;
       },
       inject: [KvService],
