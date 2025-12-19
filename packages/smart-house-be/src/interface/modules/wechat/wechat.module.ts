@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
-import { WechatController } from '@/interface/modules/wechat/wechat.controller';
+import { SubscriptionDecryptionService } from '@/core/wechat';
+import { SubscriptionController } from './subscription.controller';
 
 @Module({
-  controllers: [WechatController],
+  controllers: [SubscriptionController],
+  providers: [SubscriptionDecryptionService],
 })
 export class WechatModule {}
