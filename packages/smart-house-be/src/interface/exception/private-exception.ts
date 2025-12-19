@@ -23,12 +23,13 @@ export class PrivateExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    if (response.socket) {
-      response.socket?.destroy();
-    } else if (response.connection) {
-      response.connection?.destroy();
-    } else {
-      response.status(HttpStatus.NOT_FOUND).end();
-    }
+    response.status(HttpStatus.NOT_FOUND).end("a?");
+    // if (response.socket) {
+    //   response.socket?.destroy();
+    // } else if (response.connection) {
+    //   response.connection?.destroy();
+    // } else {
+    //   response.status(HttpStatus.NOT_FOUND).end();
+    // }
   }
 }
