@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { REDIS_INSTANCE } from '@/infrastructure/redis';
 import Redis from 'ioredis';
 import { Public } from 'src/interface/guard';
@@ -7,6 +7,12 @@ import { Public } from 'src/interface/guard';
 export class WechatController {
   @Inject(REDIS_INSTANCE)
   private readonly redis: Redis;
+
+  @Public()
+  @Get('/test')
+  test(@Body() body) {
+    return 'test';
+  }
 
   @Public()
   @Post('/auth')
