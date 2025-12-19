@@ -26,7 +26,7 @@ export class PublicGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest();
     const ip = getIp(request);
-    this.logger.log('guard ip: %s', ip);
+    this.logger.log(`guard ip: ${ip}`);
     if (isDev || ip === '127.0.0.1' || ip.startsWith('192.168')) {
       return true;
     }
