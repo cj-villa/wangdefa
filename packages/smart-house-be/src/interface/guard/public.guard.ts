@@ -1,7 +1,7 @@
 /**
  * 开放公网校验，仅开放固定的接口，其余全部不返回数据
  */
-import { CanActivate, ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, Logger, SetMetadata } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { getIp } from '@/shared/toolkits/request';
@@ -12,6 +12,8 @@ const IS_PUBLIC_KEY = Symbol('isPublic');
 
 @Injectable()
 export class PublicGuard implements CanActivate {
+  private readonly logger = new Logger(PublicGuard.name);
+
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
@@ -24,7 +26,7 @@ export class PublicGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest();
     const ip = getIp(request);
-    console.log('ip', ip);
+    this.logger.log('guard ip: %s', ip);
     if (isDev || ip === '127.0.0.1' || ip.startsWith('192.168')) {
       return true;
     }
