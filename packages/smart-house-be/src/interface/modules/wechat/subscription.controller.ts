@@ -37,7 +37,7 @@ export class SubscriptionController {
     }
 
     @Public()
-    @Get('')
+    @Get('test')
     test() {
         return 'public';
     }
