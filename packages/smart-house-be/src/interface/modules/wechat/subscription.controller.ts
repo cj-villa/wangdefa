@@ -36,7 +36,7 @@ export class SubscriptionController {
             SubscriptionPayloadCommand.fromDto(body)
         );
         console.log('result', result);
-        return 'success';
+        return result ? query.echostr : false;
     }
 
     @Public()
