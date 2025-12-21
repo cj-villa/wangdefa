@@ -31,10 +31,12 @@ export class SubscriptionController {
         @Body() body: SubscriptionDecryptionRequestBodyDto,
         @Query() query: SubscriptionDecryptionRequestQueryDto
     ) {
-        return this.decryptionService.decrypt(
+        const result = this.decryptionService.decrypt(
             SubscriptionDecryptionCommand.fromDto(body, query, this.token, this.encodingAESKey),
             SubscriptionPayloadCommand.fromDto(body)
         );
+        console.log('result', result);
+        return 'success';
     }
 
     @Public()
