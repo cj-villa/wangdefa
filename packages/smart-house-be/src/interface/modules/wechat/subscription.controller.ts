@@ -22,6 +22,7 @@ export class SubscriptionController {
     @Kv('token', ['subscription', 'encodingAESKey'])
     private readonly encodingAESKey: string;
 
+    @Inject(SubscriptionDecryptionService)
     private readonly decryptionService: SubscriptionDecryptionService;
 
     @Public()
