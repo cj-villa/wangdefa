@@ -50,12 +50,7 @@ export class SubscriptionController {
       SubscriptionPayloadCommand.fromDto(body)
     );
     if (result) {
-      console.log(
-        this.decryptionService.getPayload(
-          SubscriptionDecryptionCommand.fromDto(body, query, this.token, this.encodingAESKey),
-          SubscriptionPayloadCommand.fromDto(body)
-        )
-      );
+      console.log(body, query);
     }
     return result ? query.echostr : false;
   }
