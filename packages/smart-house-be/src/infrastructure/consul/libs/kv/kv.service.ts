@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConsoleLogger, Inject, Injectable } from '@nestjs/common';
 import { ConsulBaseService } from '../consul-base.service';
 import { parseJson } from '@/shared/toolkits/object';
 import {
@@ -12,6 +12,7 @@ import { get, type PropertyPath } from 'lodash';
 @Injectable()
 export class KvService {
   private readonly maxSubscribeFailedCount = 3;
+  private readonly logger = new ConsoleLogger(KvService.name);
 
   constructor(
     private consulBaseService: ConsulBaseService,
@@ -19,7 +20,7 @@ export class KvService {
   ) {
     global[CONSUL_GLOBAL_DATA] = {};
     const preload = new Set<string>([...config.preload, ...global[CONSUL_PRE_FETCH_KEYS]]);
-    console.log('prefetch consul: %o', preload);
+    this.logger.log('prefetch consul: %o', preload);
     preload.forEach((key) => {
       this.subscribe(key);
     });

@@ -9,7 +9,6 @@ export class SubscriptionService {
   private readonly singleAutomationService: SingleAutomationService;
 
   onMessage(body: WechatMessageDto) {
-    console.log(body);
     if (body.MsgType === 'text') {
       return this.handlerTextMessage(body);
     }
@@ -24,8 +23,8 @@ export class SubscriptionService {
         ToUserName: { $: body.FromUserName },
         FromUserName: { $: body.ToUserName },
         CreateTime: Math.floor(Date.now() / 1000),
-        MsgType: { $: `当前已缓存的提示提：\n\r${currentHint.join(';')}` },
-        Content: { $: '接受成功' },
+        MsgType: { $: 'text' },
+        Content: { $: `当前已缓存的提示提：\n\r${currentHint.join(';')}` },
       },
     };
     return create(json).end({ prettyPrint: true, headless: true });
