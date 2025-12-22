@@ -31,6 +31,20 @@ export class SubscriptionController {
 
   @Public()
   @Get('')
+  verify(
+    @Body() body: SubscriptionDecryptionRequestBodyDto,
+    @Query() query: SubscriptionDecryptionRequestQueryDto
+  ) {
+    const result = this.decryptionService.decrypt(
+      SubscriptionDecryptionCommand.fromDto(body, query, this.token, this.encodingAESKey),
+      SubscriptionPayloadCommand.fromDto(body)
+    );
+    console.log('result', result);
+    return result ? query.echostr : false;
+  }
+
+  @Public()
+  @Post('')
   onMessage(
     @Body() body: SubscriptionDecryptionRequestBodyDto,
     @Query() query: SubscriptionDecryptionRequestQueryDto
