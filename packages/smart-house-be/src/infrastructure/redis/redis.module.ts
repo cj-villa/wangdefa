@@ -48,8 +48,14 @@ export class RedisModule {
     return [
       {
         provide: REDIS_INSTANCE,
-        useFactory: (config: RedisClientOptions) => {
-          return createClient(config);
+        useFactory: async (config: RedisClientOptions) => {
+          console.log('config', config);
+          return createClient({ ...config })
+            .on('error', (err) => {
+              console.error('Redis Client Error', err);
+              throw new Error('Redis Client Error');
+            })
+            .connect();
         },
         inject: [REDIS_CONFIGURATION_LOADER],
       },
