@@ -1,6 +1,4 @@
 import { All, Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
-import { REDIS_INSTANCE } from '@/infrastructure/redis';
-import { type RedisClientType } from 'redis';
 import { Public } from 'src/interface/guard';
 import {
   SubscriptionDecryptionService,
@@ -10,12 +8,11 @@ import {
   SubscriptionPayloadCommand,
 } from '@/core/wechat';
 import { Kv } from '@/infrastructure/consul';
-import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Controller('/api/open/wechat')
 export class SubscriptionController {
-  @Inject(REDIS_INSTANCE)
-  private readonly redis: RedisClientType;
+  // @Inject(REDIS_INSTANCE)
+  // private readonly redis: RedisClientType;
 
   @Kv('token', ['subscription', 'token'])
   private readonly token: string;
@@ -26,8 +23,8 @@ export class SubscriptionController {
   @Inject(SubscriptionDecryptionService)
   private readonly decryptionService: SubscriptionDecryptionService;
 
-  @Inject(CACHE_MANAGER)
-  private cacheManager: Cache;
+  // @Inject(CACHE_MANAGER)
+  // private cacheManager: Cache;
 
   @Public()
   @Get('')
@@ -39,7 +36,6 @@ export class SubscriptionController {
       SubscriptionDecryptionCommand.fromDto(body, query, this.token, this.encodingAESKey),
       SubscriptionPayloadCommand.fromDto(body)
     );
-    console.log('result', result);
     return result ? query.echostr : false;
   }
 
@@ -53,7 +49,6 @@ export class SubscriptionController {
       SubscriptionDecryptionCommand.fromDto(body, query, this.token, this.encodingAESKey),
       SubscriptionPayloadCommand.fromDto(body)
     );
-    console.log('result', result);
     if (result) {
       console.log(
         this.decryptionService.getPayload(
