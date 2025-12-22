@@ -24,7 +24,7 @@ export class SubscriptionService {
         FromUserName: { $: body.ToUserName },
         CreateTime: Math.floor(Date.now() / 1000),
         MsgType: { $: 'text' },
-        Content: { $: `当前已缓存的提示提：\n\r${currentHint.join(';')}` },
+        Content: { $: `当前已缓存的提示词：\n${currentHint.join(';')}` },
       },
     };
     return create(json).end({ prettyPrint: true, headless: true });
