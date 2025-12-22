@@ -18,7 +18,7 @@ const logger = new ConsoleLogger('DecryptionDecorate');
 const getDecryptionVO = (request: Request<{}, {}, any, SubscriptionDecryptionRequestQueryDto>) => {
   const token = KvService.get('token', ['subscription', 'token']);
   const encodingAESKey = KvService.get('token', ['subscription', 'encodingAESKey']);
-  console.log(`body: ${JSON.stringify(request.body.xml)} query: ${request.query}`);
+  console.log(`body: ${JSON.stringify(request.body.xml)} query: ${JSON.stringify(request.query)}`);
   return new SubscriptionDecryptionVO(
     SubscriptionDecryptionCommand.fromDto(request.body.xml, request.query, token, encodingAESKey)
   );
