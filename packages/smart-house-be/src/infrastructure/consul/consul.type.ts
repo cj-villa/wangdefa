@@ -6,6 +6,7 @@ import type { FactoryProvider, ModuleMetadata } from '@nestjs/common';
 export interface ConsulKvModuleConfig {
   host: string;
   token?: string;
+  preload?: string[];
 }
 
 /** 配置模块的创建参数 */

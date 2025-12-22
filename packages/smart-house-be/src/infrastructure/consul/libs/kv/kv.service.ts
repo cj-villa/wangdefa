@@ -1,16 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConsulBaseService } from '../consul-base.service';
 import { parseJson } from '@/shared/toolkits/object';
-import { CONSUL_GLOBAL_DATA, CONSUL_PRE_FETCH_KEYS } from '@/infrastructure/consul/constant';
+import {
+  CONSUL_CONFIGURATION_TOKEN,
+  CONSUL_GLOBAL_DATA,
+  CONSUL_PRE_FETCH_KEYS,
+} from '@/infrastructure/consul/constant';
+import type { ConsulKvModuleConfig } from '@/infrastructure/consul';
+import { get, type PropertyPath } from 'lodash';
 
 @Injectable()
 export class KvService {
   private readonly maxSubscribeFailedCount = 3;
 
-  constructor(private consulBaseService: ConsulBaseService) {
+  constructor(
+    private consulBaseService: ConsulBaseService,
+    @Inject(CONSUL_CONFIGURATION_TOKEN) private config: ConsulKvModuleConfig
+  ) {
     global[CONSUL_GLOBAL_DATA] = {};
-    console.log('prefetch consul: %o', global[CONSUL_PRE_FETCH_KEYS]);
-    global[CONSUL_PRE_FETCH_KEYS]?.forEach((key) => {
+    const preload = new Set<string>([...config.preload, ...global[CONSUL_PRE_FETCH_KEYS]]);
+    console.log('prefetch consul: %o', preload);
+    preload.forEach((key) => {
       this.subscribe(key);
     });
   }
@@ -66,7 +76,8 @@ export class KvService {
    * @description 获取某一个key的配置的值
    * @param key 配置的key
    * */
-  static get<T extends any = any>(key: string): Promise<T> {
-    return global[CONSUL_GLOBAL_DATA][key];
+  static get<T extends any = any>(key: string, path?: PropertyPath): T {
+    const data = global[CONSUL_GLOBAL_DATA][key];
+    return path ? get(data, path) : data;
   }
 }

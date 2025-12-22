@@ -8,8 +8,7 @@ export const Kv = (consulKey: string, path?: PropertyPath): PropertyDecorator =>
   return (target: Object, propertyKey: string | symbol) => {
     Object.defineProperty(target, propertyKey, {
       get: function () {
-        const data = KvService.get(consulKey);
-        return propertyKey ? get(data, path) : data;
+        return KvService.get(consulKey, path);
       },
       enumerable: true,
       configurable: true,

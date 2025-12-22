@@ -1,5 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { isProd } from '@/shared/toolkits/env';
 
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {
@@ -22,7 +23,7 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
       path: request.url,
       method: request.method,
       error: message instanceof Object ? (message as any).message || message : message, // 提取错误详细信息
-      stack: (exception as any).stack,
+      stack: isProd ? undefined : (exception as any).stack,
     };
 
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
