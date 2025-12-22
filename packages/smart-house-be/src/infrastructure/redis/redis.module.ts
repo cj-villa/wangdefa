@@ -1,6 +1,6 @@
 import { Module, type DynamicModule, type ModuleMetadata, type Provider } from '@nestjs/common';
 import {
-  REDIS_BASE_SERVICE,
+  REDIS_SERVICE,
   REDIS_CONFIGURATION_LOADER,
   REDIS_CONFIGURATION_TOKEN,
   REDIS_INSTANCE,
@@ -13,7 +13,7 @@ import type {
 import { deepMerge } from '@/shared/toolkits/object';
 import { RedisBaseService } from './libs/redis-base.service';
 import { RedisOpenModule } from './libs/redis-open.module';
-import Redis from 'ioredis';
+import { createClient, type RedisClientType, type RedisClientOptions } from 'redis';
 
 type CombineOptions = RedisBaseModuleConfig | CfgProviderConfig;
 
@@ -48,18 +48,18 @@ export class RedisModule {
     return [
       {
         provide: REDIS_INSTANCE,
-        useFactory: (config) => {
-          return new Redis(config);
+        useFactory: (config: RedisClientOptions) => {
+          return createClient(config);
         },
         inject: [REDIS_CONFIGURATION_LOADER],
       },
       {
         provide: RedisBaseService,
-        useFactory: (baseService: RedisBaseService, redis: Redis) => {
+        useFactory: (baseService: RedisBaseService, redis: RedisClientType) => {
           baseService.register(redis);
           return baseService;
         },
-        inject: [REDIS_BASE_SERVICE, REDIS_INSTANCE],
+        inject: [REDIS_SERVICE, REDIS_INSTANCE],
       },
     ];
   }

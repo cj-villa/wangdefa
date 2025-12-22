@@ -1,10 +1,10 @@
 import type { FactoryProvider, ModuleMetadata } from '@nestjs/common';
-import { type RedisOptions } from 'ioredis';
+import { type RedisClientOptions } from 'redis';
 
 /**
  * 同步模块配置
  */
-export interface RedisBaseModuleConfig extends RedisOptions {}
+export interface RedisBaseModuleConfig extends RedisClientOptions {}
 
 /** 配置模块的创建参数 */
 export type CfgProviderConfig = Pick<

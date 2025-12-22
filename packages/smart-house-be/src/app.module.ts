@@ -5,10 +5,13 @@ import { configLoad, consulConfig, databaseConfig } from '@/infrastructure/confi
 import { ConsulModule, KvService } from '@/infrastructure/consul';
 import { ExceptionProvider } from 'src/interface/exception';
 import { CacheModule } from '@nestjs/cache-manager';
-import { RedisModule } from '@/infrastructure/redis';
+import { REDIS_INSTANCE, RedisModule } from '@/infrastructure/redis';
 import { WechatModule } from '@/interface/modules/wechat/wechat.module';
 import { GuardProviders } from 'src/interface/guard';
 import { FallbackModule } from '@/interface/modules/fallback/fallback.module';
+import { CacheableMemory, Keyv } from 'cacheable';
+import KeyvRedis from '@keyv/redis';
+import { RedisClientType } from 'redis';
 
 @Module({
   imports: [
@@ -17,10 +20,6 @@ import { FallbackModule } from '@/interface/modules/fallback/fallback.module';
       isGlobal: true,
       cache: true,
       load: configLoad,
-    }),
-    // 缓存模块
-    CacheModule.register({
-      isGlobal: true,
     }),
     // 远程配置模块
     ConsulModule.forRootAsync({
@@ -36,14 +35,26 @@ import { FallbackModule } from '@/interface/modules/fallback/fallback.module';
       useFactory: async (kvService: KvService, dbConfig: ConfigType<typeof databaseConfig>) => {
         const config = await kvService.get('db');
         return {
-          retryStrategy: (times: number) => {
-            return Math.min(times * 1000, 10000);
-          },
           ...dbConfig.redis,
           ...config.redis,
         };
       },
       inject: [KvService, databaseConfig.KEY],
+    }),
+    // 缓存模块
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async (redis: RedisClientType) => {
+        return {
+          stores: [
+            new Keyv({
+              store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
+            }),
+            new KeyvRedis(redis),
+          ],
+        };
+      },
+      inject: [REDIS_INSTANCE],
     }),
     /**
      * 业务代码模块

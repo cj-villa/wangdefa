@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import IoRedis from 'ioredis';
+import type { RedisClientType } from 'redis';
 
 @Injectable()
 export class RedisBaseService {
   constructor() {}
 
-  private _redis: IoRedis;
+  private _redis: RedisClientType;
 
-  register(redis: IoRedis) {
+  register(redis: RedisClientType) {
     this._redis = redis;
   }
 

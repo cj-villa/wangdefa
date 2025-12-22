@@ -1,55 +1,59 @@
-import {Body, Controller, Get, Inject, Post, Query} from '@nestjs/common';
-import {REDIS_INSTANCE} from '@/infrastructure/redis';
-import Redis from 'ioredis';
-import {Public} from 'src/interface/guard';
+import { All, Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
+import { REDIS_INSTANCE } from '@/infrastructure/redis';
+import { type RedisClientType } from 'redis';
+import { Public } from 'src/interface/guard';
 import {
-    SubscriptionDecryptionService,
-    type SubscriptionDecryptionRequestBodyDto,
-    type SubscriptionDecryptionRequestQueryDto,
-    SubscriptionDecryptionCommand,
-    SubscriptionPayloadCommand,
+  SubscriptionDecryptionService,
+  type SubscriptionDecryptionRequestBodyDto,
+  type SubscriptionDecryptionRequestQueryDto,
+  SubscriptionDecryptionCommand,
+  SubscriptionPayloadCommand,
 } from '@/core/wechat';
-import {Kv} from '@/infrastructure/consul';
+import { Kv } from '@/infrastructure/consul';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Controller('/api/open/wechat')
 export class SubscriptionController {
-    @Inject(REDIS_INSTANCE)
-    private readonly redis: Redis;
+  @Inject(REDIS_INSTANCE)
+  private readonly redis: RedisClientType;
 
-    @Kv('token', ['subscription', 'token'])
-    private readonly token: string;
+  @Kv('token', ['subscription', 'token'])
+  private readonly token: string;
 
-    @Kv('token', ['subscription', 'encodingAESKey'])
-    private readonly encodingAESKey: string;
+  @Kv('token', ['subscription', 'encodingAESKey'])
+  private readonly encodingAESKey: string;
 
-    @Inject(SubscriptionDecryptionService)
-    private readonly decryptionService: SubscriptionDecryptionService;
+  @Inject(SubscriptionDecryptionService)
+  private readonly decryptionService: SubscriptionDecryptionService;
 
-    @Public()
-    @Get('')
-    check(
-        @Body() body: SubscriptionDecryptionRequestBodyDto,
-        @Query() query: SubscriptionDecryptionRequestQueryDto
-    ) {
-        const result = this.decryptionService.decrypt(
-            SubscriptionDecryptionCommand.fromDto(body, query, this.token, this.encodingAESKey),
-            SubscriptionPayloadCommand.fromDto(body)
-        );
-        console.log('result', result);
-        return result ? query.echostr : false;
+  @Inject(CACHE_MANAGER)
+  private cacheManager: Cache;
+
+  @Public()
+  @Get('')
+  onMessage(
+    @Body() body: SubscriptionDecryptionRequestBodyDto,
+    @Query() query: SubscriptionDecryptionRequestQueryDto
+  ) {
+    const result = this.decryptionService.decrypt(
+      SubscriptionDecryptionCommand.fromDto(body, query, this.token, this.encodingAESKey),
+      SubscriptionPayloadCommand.fromDto(body)
+    );
+    console.log('result', result);
+    if (result) {
+      console.log(
+        this.decryptionService.getPayload(
+          SubscriptionDecryptionCommand.fromDto(body, query, this.token, this.encodingAESKey),
+          SubscriptionPayloadCommand.fromDto(body)
+        )
+      );
     }
+    return result ? query.echostr : false;
+  }
 
-    @Public()
-    @Get('test')
-    test() {
-        return 'public';
-    }
-
-    @Public()
-    @Post('/auth')
-    auth(@Body() body) {
-        const now = new Date();
-        const key = `firefly.task.${now.getDay()}`;
-        return this.redis.lpush(key, JSON.stringify(body));
-    }
+  @Public()
+  @All('test')
+  async test(@Query() query: any) {
+    return 'test';
+  }
 }

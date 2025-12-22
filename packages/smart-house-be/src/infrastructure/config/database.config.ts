@@ -1,8 +1,8 @@
 import { ConfigLoader } from './configuration';
-import { RedisOptions } from 'ioredis/built/redis/RedisOptions';
+import { RedisClientOptions } from 'redis';
 
 export interface DataBaseConfig {
-  redis: Omit<RedisOptions, 'host' | 'port' | 'password' | 'db'>;
+  redis: Omit<RedisClientOptions, 'host' | 'port' | 'password' | 'db'>;
 }
 
 export const databaseConfig = new ConfigLoader<DataBaseConfig>('db').register();
