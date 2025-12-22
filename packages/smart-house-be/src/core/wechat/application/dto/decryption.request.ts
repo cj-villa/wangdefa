@@ -2,9 +2,6 @@ import { IsNumberString, IsString } from 'class-validator';
 
 /** 服务号加密query参数 */
 export class SubscriptionDecryptionRequestQueryDto {
-  /** 签名 */
-  @IsString()
-  signature: string;
   /** 时间戳 */
   @IsNumberString()
   timestamp: string;
@@ -21,11 +18,15 @@ export class SubscriptionDecryptionRequestQueryDto {
 
   /** 加密类型 */
   @IsString()
-  encrypt_type?: string;
+  encrypt_type: string;
 
   /** 消息签名 */
   @IsString()
-  msg_signature?: string;
+  msg_signature: string;
+
+  /** 非加密消息签名 */
+  @IsString()
+  signature?: string;
 }
 
 /** 服务号加密body参数 */

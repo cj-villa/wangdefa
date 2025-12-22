@@ -2,25 +2,42 @@ import {
   ConsoleLogger,
   createParamDecorator,
   ExecutionContext,
-  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { type Request } from 'express';
 import {
-  SubscriptionDecryptionCommand,
+  SubscriptionSecureCommand,
   type SubscriptionDecryptionRequestQueryDto,
   SubscriptionDecryptionVO,
+  type SubscriptionDecryptionRequestBodyDto,
 } from '@/core/wechat';
 import { KvService } from '@/infrastructure/consul';
 
 const logger = new ConsoleLogger('DecryptionDecorate');
 
-const getDecryptionVO = (request: Request<{}, {}, any, SubscriptionDecryptionRequestQueryDto>) => {
+const getDecryptionVO = (
+  request: Request<
+    {},
+    {},
+    { xml: SubscriptionDecryptionRequestBodyDto },
+    SubscriptionDecryptionRequestQueryDto
+  >
+) => {
   const token = KvService.get('token', ['subscription', 'token']);
   const encodingAESKey = KvService.get('token', ['subscription', 'encodingAESKey']);
-  console.log(`body: ${JSON.stringify(request.body.xml)} query: ${JSON.stringify(request.query)}`);
+  const body = request.body.xml;
+  const query = request.query;
   return new SubscriptionDecryptionVO(
-    SubscriptionDecryptionCommand.fromDto(request.body.xml, request.query, token, encodingAESKey)
+    new SubscriptionSecureCommand(
+      token,
+      query.timestamp,
+      query.nonce,
+      query.signature,
+      body.Encrypt,
+      query.encrypt_type,
+      query.msg_signature,
+      encodingAESKey
+    )
   );
 };
 
@@ -43,5 +60,5 @@ export const DecryptBody = createParamDecorator((data: unknown, ctx: ExecutionCo
   if (!legal) {
     throw new UnauthorizedException();
   }
-  return JSON.stringify(decryptionVO.payload);
+  return decryptionVO.getPayload();
 });

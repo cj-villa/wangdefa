@@ -1,7 +1,6 @@
 import { All, Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { Public } from 'src/interface/guard';
 import {
-  type SubscriptionDecryptionRequestBodyDto,
   type SubscriptionDecryptionRequestQueryDto,
   DecryptQuery,
   DecryptBody,
@@ -20,7 +19,7 @@ export class SubscriptionController {
 
   @Public()
   @Post('')
-  onMessage(@DecryptBody() body: SubscriptionDecryptionRequestBodyDto) {
+  onMessage(@DecryptBody() body) {
     return this.subscriptionService.onMessage(body);
   }
 

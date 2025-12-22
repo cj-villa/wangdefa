@@ -1,17 +1,15 @@
-import { SubscriptionDecryptionCommand, SubscriptionPayloadCommand } from '@/core/wechat';
+import type { SubscriptionSecureCommand, WechatMessageDto } from '@/core/wechat';
 import * as crypto from 'crypto';
-import { parseJson } from '@/shared/toolkits/object';
+import { xml2Json } from '@/shared/toolkits/object';
 
-export class SubscriptionDecryptionVO {
-  constructor(
-    private readonly decryption: SubscriptionDecryptionCommand,
-    private _payload?: SubscriptionPayloadCommand
-  ) {}
+export class SubscriptionDecryptionVO<T extends WechatMessageDto = WechatMessageDto> {
+  private _payload?: T;
+
+  constructor(private readonly decryption: SubscriptionSecureCommand) {}
 
   // 加密情况下进行校验
   private verifyWithSecure() {
-    const { token, timestamp, nonce, encrypt } = this.decryption;
-    const { Encrypt, msgSignature } = encrypt!;
+    const { token, timestamp, nonce, Encrypt, msgSignature } = this.decryption;
     const compareStr = [token, timestamp, nonce, Encrypt].filter(Boolean).sort().join('');
     return crypto.createHash('sha1').update(compareStr, 'utf8').digest('hex') === msgSignature;
   }
@@ -24,12 +22,11 @@ export class SubscriptionDecryptionVO {
   }
 
   // 加密情况下获取数据
-  private decryptPayload(): SubscriptionPayloadCommand | undefined {
-    const { encrypt } = this.decryption;
-    if (!encrypt) {
+  private decryptPayload() {
+    const { encodingAESKey, Encrypt } = this.decryption;
+    if (!Encrypt) {
       return;
     }
-    const { encodingAESKey, Encrypt } = encrypt!;
     const aesKey = Buffer.from(`${encodingAESKey}=`, 'base64');
     if (aesKey.length !== 32) {
       return;
@@ -42,20 +39,22 @@ export class SubscriptionDecryptionVO {
     const msgLength = Uint8Array.prototype.slice.call(decryptedBuffer, 16, 20).readUInt32BE(0);
     const payload = Uint8Array.prototype.slice.call(decryptedBuffer, 20, 20 + msgLength).toString();
     const appId = Uint8Array.prototype.slice.call(decryptedBuffer, 20 + msgLength, 205).toString();
-    return parseJson(payload);
+    return xml2Json<{ xml: T }>(payload).then((res) => res?.xml ?? (res as unknown as T));
   }
 
-  get payload() {
+  async getPayload() {
     if (this._payload) {
       return this._payload;
     }
-    const payload = this.decryptPayload();
-    this._payload = payload;
+    const payload = await this.decryptPayload().then((res) => {
+      this._payload = res;
+      return res;
+    });
     return payload;
   }
 
   verify(): boolean {
-    if (this.decryption.encrypt) {
+    if (this.decryption.Encrypt) {
       return this.verifyWithSecure();
     }
     return this.verifyWithPlainText();
