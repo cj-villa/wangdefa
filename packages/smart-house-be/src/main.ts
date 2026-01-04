@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
-import * as bodyParser from 'body-parser';
-import * as bodyParserXml from 'body-parser-xml';
+import bodyParser from 'body-parser';
+import bodyParserXml from 'body-parser-xml';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

@@ -1,9 +1,4 @@
-import {
-  ConsoleLogger,
-  createParamDecorator,
-  ExecutionContext,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { type Request } from 'express';
 import {
   SubscriptionSecureCommand,
@@ -12,8 +7,9 @@ import {
   type SubscriptionDecryptionRequestBodyDto,
 } from '@/core/wechat';
 import { KvService } from '@/infrastructure/consul';
+import { createLogger } from '@/shared/logger';
 
-const logger = new ConsoleLogger('DecryptionDecorate');
+const logger = createLogger('DecryptionDecorate');
 
 const getDecryptionVO = (
   request: Request<

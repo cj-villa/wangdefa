@@ -6,12 +6,15 @@ import { ConsulModule, KvService } from '@/infrastructure/consul';
 import { ExceptionProvider } from 'src/interface/exception';
 import { CacheModule } from '@nestjs/cache-manager';
 import { REDIS_INSTANCE, RedisModule } from '@/infrastructure/redis';
-import { WechatModule } from '@/interface/modules/wechat/wechat.module';
+import { MailModule } from '@/infrastructure/mail';
+import { DifyModule } from '@/infrastructure/dify';
 import { GuardProviders } from 'src/interface/guard';
+import { WechatModule } from '@/interface/modules/wechat/wechat.module';
 import { FallbackModule } from '@/interface/modules/fallback/fallback.module';
 import { CacheableMemory, Keyv } from 'cacheable';
 import KeyvRedis from '@keyv/redis';
 import { RedisClientType } from 'redis';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -41,6 +44,16 @@ import { RedisClientType } from 'redis';
       },
       inject: [KvService, databaseConfig.KEY],
     }),
+    MailModule.forRootAsync({
+      isGlobal: true,
+      useFactory: async (kvService: KvService) => {
+        const config = await kvService.get('token');
+        return {
+          ...config.subscriptionMail,
+        };
+      },
+      inject: [KvService],
+    }),
     // 缓存模块
     CacheModule.registerAsync({
       isGlobal: true,
@@ -56,6 +69,17 @@ import { RedisClientType } from 'redis';
       },
       inject: [REDIS_INSTANCE],
     }),
+    DifyModule.forRootAsync({
+      isGlobal: true,
+      useFactory: async (kvService: KvService) => {
+        const config = await kvService.get('token');
+        return {
+          ...config.dify,
+        };
+      },
+      inject: [KvService],
+    }),
+    ScheduleModule.forRoot(),
     /**
      * 业务代码模块
      */

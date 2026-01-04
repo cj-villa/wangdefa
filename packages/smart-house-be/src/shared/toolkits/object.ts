@@ -1,8 +1,9 @@
 import { isArray, mergeWith } from 'lodash';
-import { BadRequestException, ConsoleLogger, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { parseStringPromise } from 'xml2js';
+import { createLogger } from '@/shared/logger';
 
-const logger = new ConsoleLogger('ObjectToolkit');
+const logger = createLogger('ObjectToolkit');
 
 export const deepMerge = <TObject, TSource>(object: TObject, source: TSource) => {
   return mergeWith(object, source, (objValue, srcValue) => {
@@ -19,6 +20,15 @@ export const parseJson = <T>(jsonStr: string, options: { defaultJson?: T } = {})
   } catch (error) {
     logger.error('parseJson error', error);
     return defaultJson;
+  }
+};
+
+export const stringifyJson = (json: any): string => {
+  try {
+    return JSON.stringify(json);
+  } catch (error) {
+    logger.error('stringify Json error', error);
+    return '';
   }
 };
 

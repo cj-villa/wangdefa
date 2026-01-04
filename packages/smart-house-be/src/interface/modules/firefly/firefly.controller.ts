@@ -1,10 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { Kv, KvService } from '@/infrastructure/consul';
-import axios from 'axios';
+import { Controller, Get } from '@nestjs/common';
+import { Kv } from '@/infrastructure/consul';
+import { BasicInfoService } from '@/core/firefly';
 
 @Controller('api/firefly')
 export class FireflyController {
-  constructor(private consulKvService: KvService) {}
+  constructor(private basicInfoService: BasicInfoService) {}
 
   @Kv('token', 'firefly')
   token: string;
@@ -12,15 +12,8 @@ export class FireflyController {
   @Kv('domain', 'firefly')
   domain: string;
 
-  @Get('account')
-  async getAccount(@Query('userId') userId, @Query('type') type = 'asset') {
-    return axios
-      .get(`${this.domain}/api/v1/accounts`, {
-        params: { type },
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      })
-      .then((res) => res.data.data?.map((item) => item?.attributes?.name).filter(Boolean));
+  @Get('basic')
+  async getBasicInfo() {
+    return this.basicInfoService.getBasicInfo();
   }
 }

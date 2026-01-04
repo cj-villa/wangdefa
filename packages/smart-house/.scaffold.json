@@ -1,0 +1,6 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cj-villa/scaffold/refs/heads/master/.schema.json?token=GHSAT0AAAAAADN6QWXA5APJM5HNU7A5MHL22KJ6QHQ",
+  "plugins": [
+    "react"
+  ]
+}

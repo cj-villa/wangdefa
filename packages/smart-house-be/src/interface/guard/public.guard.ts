@@ -7,12 +7,14 @@ import { Reflector } from '@nestjs/core';
 import { getIp } from '@/shared/toolkits/request';
 import { isDev } from '@/shared/toolkits/env';
 import { PrivateException } from 'src/interface/exception';
+import { InjectLogger, type LokiLogger } from '@/interface/middleware/inject-logger';
 
 const IS_PUBLIC_KEY = Symbol('isPublic');
 
 @Injectable()
 export class PublicGuard implements CanActivate {
-  private readonly logger = new Logger(PublicGuard.name);
+  @InjectLogger(PublicGuard.name)
+  private readonly logger: LokiLogger;
 
   constructor(private reflector: Reflector) {}
 
@@ -23,7 +25,7 @@ export class PublicGuard implements CanActivate {
     ]);
     const request = context.switchToHttp().getRequest();
     const ip = getIp(request);
-    this.logger.log(`guard ip: ${ip}; method: ${request.method}; path: ${request.path};`);
+    this.logger.info(`guard ip: ${ip}; method: ${request.method}; path: ${request.path};`);
     if (isPublic) {
       return true;
     }

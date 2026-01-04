@@ -1,3 +1,4 @@
 preload:
   - 'token'
   - 'db'
+  - 'bill_map'

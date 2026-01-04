@@ -5,3 +5,4 @@ import { consulConfig } from '@/infrastructure/config/consul.config';
 export const configLoad = [envConfig, databaseConfig, consulConfig];
 
 export { envConfig, databaseConfig, consulConfig };
+export { getConfig } from './configuration';

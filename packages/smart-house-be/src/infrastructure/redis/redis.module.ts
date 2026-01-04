@@ -13,7 +13,8 @@ import type {
 import { deepMerge } from '@/shared/toolkits/object';
 import { RedisBaseService } from './libs/redis-base.service';
 import { RedisOpenModule } from './libs/redis-open.module';
-import { createClient, type RedisClientType, type RedisClientOptions } from 'redis';
+import { createInstance } from './libs/create-instance';
+import { type RedisClientType } from 'redis';
 
 type CombineOptions = RedisBaseModuleConfig | CfgProviderConfig;
 
@@ -46,18 +47,7 @@ export class RedisModule {
    */
   private static createProviders(): Provider[] {
     return [
-      {
-        provide: REDIS_INSTANCE,
-        useFactory: async (config: RedisClientOptions) => {
-          return createClient({ ...config })
-            .on('error', (err) => {
-              console.error('Redis Client Error', err);
-              throw new Error('Redis Client Error');
-            })
-            .connect();
-        },
-        inject: [REDIS_CONFIGURATION_LOADER],
-      },
+      createInstance(),
       {
         provide: RedisBaseService,
         useFactory: (baseService: RedisBaseService, redis: RedisClientType) => {
