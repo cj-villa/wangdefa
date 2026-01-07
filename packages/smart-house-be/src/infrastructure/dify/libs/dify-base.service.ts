@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DIFY_CONFIGURATION_TOKEN } from '../constant';
 import type { DifyModuleConfig } from '../dify.type';
 import axios from 'axios';
-import { InjectLogger, LokiLogger } from '@/interface/middleware/inject-logger';
+import { InjectLogger, LokiLogger } from '@/interface/decorate/inject-logger';
 
 @Injectable()
 export class DifyBaseService {

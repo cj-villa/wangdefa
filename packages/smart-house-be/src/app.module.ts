@@ -11,10 +11,13 @@ import { DifyModule } from '@/infrastructure/dify';
 import { GuardProviders } from 'src/interface/guard';
 import { WechatModule } from '@/interface/modules/wechat/wechat.module';
 import { FallbackModule } from '@/interface/modules/fallback/fallback.module';
+import { AuthModule } from '@/interface/modules/auth/auth.module';
 import { CacheableMemory, Keyv } from 'cacheable';
 import KeyvRedis from '@keyv/redis';
 import { RedisClientType } from 'redis';
 import { ScheduleModule } from '@nestjs/schedule';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TokenModule } from '@/interface/modules/token/token.module';
 
 @Module({
   imports: [
@@ -40,6 +43,16 @@ import { ScheduleModule } from '@nestjs/schedule';
         return {
           ...dbConfig.redis,
           ...config.redis,
+        };
+      },
+      inject: [KvService, databaseConfig.KEY],
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory: async (kvService: KvService, dbConfig: ConfigType<typeof databaseConfig>) => {
+        const config = await kvService.get('db');
+        return {
+          ...dbConfig.mysql,
+          ...config.mysql,
         };
       },
       inject: [KvService, databaseConfig.KEY],
@@ -85,6 +98,8 @@ import { ScheduleModule } from '@nestjs/schedule';
      */
     FireflyModule,
     WechatModule,
+    AuthModule,
+    TokenModule,
     FallbackModule,
   ],
   providers: [...GuardProviders, ...ExceptionProvider],

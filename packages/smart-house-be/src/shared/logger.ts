@@ -1,7 +1,7 @@
 import winston from 'winston';
 import LokiTransport from 'winston-loki';
 import { deepMerge } from '@/shared/toolkits/object';
-import { envConfig, getConfig } from '@/infrastructure/config';
+import { type envConfig, getConfig } from '@/infrastructure/config';
 import { ConfigType } from '@nestjs/config';
 import { clc } from '@nestjs/common/utils/cli-colors.util';
 
@@ -44,7 +44,7 @@ export class LokiLogger {
     const loggerConfig =
       typeof this.loggerConfig === 'function' ? this.loggerConfig() : this.loggerConfig;
     const transports: winston.transport[] = [];
-    if (loggerConfig.loki) {
+    if (loggerConfig?.loki) {
       transports.push(
         new LokiTransport(
           deepMerge(loggerConfig.loki, {
@@ -56,7 +56,7 @@ export class LokiLogger {
         )
       );
     }
-    if (loggerConfig.console) {
+    if (loggerConfig?.console) {
       transports.push(
         new winston.transports.Console({
           debugStdout: true,

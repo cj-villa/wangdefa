@@ -4,7 +4,7 @@ import { ParsedMail } from 'mailparser';
 import { BillEmailVo, BillCommand, SingleAutomationService } from '@/core/firefly';
 import { envConfig } from '@/infrastructure/config';
 import { ConfigType } from '@nestjs/config';
-import { InjectLogger, type LokiLogger } from '@/interface/middleware/inject-logger';
+import { InjectLogger, type LokiLogger } from '@/interface/decorate/inject-logger';
 import { Kv } from '@/infrastructure/consul';
 import { REDIS_INSTANCE } from '@/infrastructure/redis';
 import type { RedisClientType } from 'redis';

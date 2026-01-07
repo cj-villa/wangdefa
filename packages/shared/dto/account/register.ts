@@ -7,7 +7,7 @@ export class RegisterDTO implements InsertType<UserModel> {
     message: '用户名不可长于32位',
   })
   @IsDefined({ message: '用户名不可为空' })
-  userName!: string;
+  username!: string;
 
   @MaxLength(128, {
     message: '密码不可长于32位',

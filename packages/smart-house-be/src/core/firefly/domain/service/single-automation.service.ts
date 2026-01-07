@@ -6,7 +6,8 @@ import { Cron } from '@nestjs/schedule';
 import { createLogger } from '@/shared/logger';
 import { checkLock } from '@/shared/lock';
 import { DIFY_BASE_SERVICE, DifyBaseService } from '@/infrastructure/dify';
-import { parseJson } from '@/shared/toolkits/object';
+
+import {parseJson} from "@/shared/toolkits/transform";
 
 @Injectable()
 export class SingleAutomationService {

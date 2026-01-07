@@ -1,6 +1,7 @@
 import type { SubscriptionSecureCommand, WechatMessageDto } from '@/core/wechat';
 import * as crypto from 'crypto';
-import { xml2Json } from '@/shared/toolkits/object';
+
+import {xml2Json} from "@/shared/toolkits/transform";
 
 export class SubscriptionDecryptionVO<T extends WechatMessageDto = WechatMessageDto> {
   private _payload?: T;

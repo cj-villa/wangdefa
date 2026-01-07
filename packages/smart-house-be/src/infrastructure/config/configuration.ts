@@ -6,7 +6,7 @@ import { registerAs } from '@nestjs/config';
 import * as process from 'node:process';
 import { deepMerge } from '@/shared/toolkits/object';
 import { get } from 'lodash';
-import { GlobalConfig } from '@/infrastructure/config/type';
+import { type GlobalConfig } from '@/infrastructure/config/type';
 
 const envPrefix = {
   development: 'dev',
@@ -30,17 +30,17 @@ export class ConfigLoader<T extends Record<string, any>> {
    */
   private loadFile(env?: boolean) {
     if (env && !envPrefix[process.env.NODE_ENV]) {
-      return {};
+      return {} as T;
     }
     const fileName = env ? `${this.token}.${envPrefix[process.env.NODE_ENV]}` : this.token;
     const filePath = join(ConfigLoader.YAML_CONFIG_DIR, `${fileName}.yaml`);
     if (!fs.existsSync(filePath)) {
-      return {};
+      return {} as T;
     }
     return yaml.load(readFileSync(filePath, 'utf8')) as T;
   }
 
-  private load() {
+  load() {
     const base = this.loadFile();
     const env = this.loadFile(true);
     const data = deepMerge(base, env);

@@ -1,0 +1,4 @@
+mysql:
+  autoLoadEntities: true
+  synchronized: true
+  database: "wangdefa"

@@ -7,7 +7,7 @@ import { Reflector } from '@nestjs/core';
 import { getIp } from '@/shared/toolkits/request';
 import { isDev } from '@/shared/toolkits/env';
 import { PrivateException } from 'src/interface/exception';
-import { InjectLogger, type LokiLogger } from '@/interface/middleware/inject-logger';
+import { InjectLogger, type LokiLogger } from '@/interface/decorate/inject-logger';
 
 const IS_PUBLIC_KEY = Symbol('isPublic');
 
@@ -32,7 +32,6 @@ export class PublicGuard implements CanActivate {
     if (isDev || ip === '127.0.0.1' || ip.startsWith('192.168')) {
       return true;
     }
-    // /tmp/cloudflare-v6-ddns/cloudflare-v6-ddns.sh
     throw new PrivateException();
   }
 }

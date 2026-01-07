@@ -1,6 +1,11 @@
 {
-  "$schema": "https://raw.githubusercontent.com/cj-villa/scaffold/refs/heads/master/.schema.json?token=GHSAT0AAAAAADN6QWXA5APJM5HNU7A5MHL22KJ6QHQ",
+  "$schema": "https://raw.githubusercontent.com/cj-villa/scaffold/refs/heads/master/.schema.json?token=GHSAT0AAAAAADSSHIH5IHZXNYLBABRPBL4S2K4WF2Q",
   "plugins": [
     "react"
-  ]
+  ],
+  "plugin-react": {
+    "pages": {
+      "account": "pages/account/index.tsx"
+    }
+  }
 }

@@ -4,9 +4,25 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import bodyParser from 'body-parser';
 import bodyParserXml from 'body-parser-xml';
+import { RequestContextInterceptor } from '@/interface/interceptor/request-context';
+import { ResponseFormatInterceptor } from '@/interface/interceptor/response-format';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const configService = app.get(ConfigService);
+  const whitelist = configService.get<string[]>('env.whitelist');
+
+  app.enableCors({
+    origin: (origin, callback) => {
+      if (!origin || whitelist.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  });
 
   bodyParserXml(bodyParser);
   app.use(
@@ -26,7 +42,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  const configService = app.get(ConfigService);
+  app.useGlobalInterceptors(new RequestContextInterceptor());
+  app.useGlobalInterceptors(new ResponseFormatInterceptor());
+
   const port = configService.get<number>('env.port') ?? 80;
 
   await app.listen(port).then(() => {

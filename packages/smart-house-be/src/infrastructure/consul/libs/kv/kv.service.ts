@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConsulBaseService } from '../consul-base.service';
-import { parseJson, stringifyJson } from '@/shared/toolkits/object';
 import {
   CONSUL_CONFIGURATION_TOKEN,
   CONSUL_GLOBAL_DATA,
@@ -8,7 +7,8 @@ import {
 } from '@/infrastructure/consul/constant';
 import type { ConsulKvModuleConfig } from '@/infrastructure/consul';
 import { get, type PropertyPath } from 'lodash';
-import { InjectLogger, LokiLogger } from '@/interface/middleware/inject-logger';
+import { InjectLogger, LokiLogger } from '@/interface/decorate/inject-logger';
+import { parseJson, stringifyJson } from '@/shared/toolkits/transform';
 
 @Injectable()
 export class KvService {
@@ -18,11 +18,14 @@ export class KvService {
 
   constructor(
     private consulBaseService: ConsulBaseService,
-    @Inject(CONSUL_CONFIGURATION_TOKEN) private config: ConsulKvModuleConfig
+    @Inject(CONSUL_CONFIGURATION_TOKEN) config: ConsulKvModuleConfig
   ) {
     global[CONSUL_GLOBAL_DATA] = {};
-    const preload = new Set<string>([...config.preload, ...global[CONSUL_PRE_FETCH_KEYS]]);
-    this.logger.info(`prefetch consul: ${stringifyJson([...preload])}`);
+    const preload = new Set<string>([
+      ...(config.preload ?? []),
+      ...(global[CONSUL_PRE_FETCH_KEYS] ?? []),
+    ]);
+    this.logger?.info(`prefetch consul: ${stringifyJson([...preload])}`);
     preload.forEach((key) => {
       this.subscribe(key);
     });

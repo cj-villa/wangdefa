@@ -1,4 +1,4 @@
-import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { type Request } from 'express';
 import {
   SubscriptionSecureCommand,
@@ -43,7 +43,7 @@ export const DecryptQuery = createParamDecorator((data: unknown, ctx: ExecutionC
   const legal = decryptionVO.verify();
   logger.debug(`decryptionVO.verify: ${legal}`);
   if (!legal) {
-    throw new UnauthorizedException();
+    throw new ForbiddenException();
   }
   return request.query;
 });
@@ -54,7 +54,7 @@ export const DecryptBody = createParamDecorator((data: unknown, ctx: ExecutionCo
   const legal = decryptionVO.verify();
   logger.debug(`decryptionVO.verify: ${legal}`);
   if (!legal) {
-    throw new UnauthorizedException();
+    throw new ForbiddenException();
   }
   return decryptionVO.getPayload();
 });
