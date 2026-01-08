@@ -5,7 +5,7 @@
   "email": "luchenjiemail@gmail.com",
   "scripts": {
     "dev": "lerna run dev --parallel --scope @l/smart-home --scope @l/app-a",
-    "start:lerna": "lerna run start:prod --parallel --scope @l/smart-home --scope @l/app-a",
+    "start:lerna": "lerna run start:prod --parallel --stream --scope @l/smart-home --scope @l/app-a",
     "start": "git clean -df && git pull && yarn --network-timeout 600000 && yarn build && yarn start:lerna",
     "build": "yarn build:fe && yarn build:be",
     "dev:fe": "lerna run dev --parallel --scope @l/smart-home",
