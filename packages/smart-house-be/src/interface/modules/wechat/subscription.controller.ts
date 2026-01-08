@@ -1,4 +1,4 @@
-import { All, Controller, Get, Inject, Post, Query } from '@nestjs/common';
+import { Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { NoAuth, Public } from 'src/interface/guard';
 import {
   type SubscriptionDecryptionRequestQueryDto,
@@ -27,7 +27,7 @@ export class SubscriptionController {
 
   @Public()
   @NoAuth()
-  @All('test')
+  @Get('test')
   async test(@Query() query: any) {
     return 'test';
   }

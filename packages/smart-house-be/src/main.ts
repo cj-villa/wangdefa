@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import bodyParserXml from 'body-parser-xml';
 import { RequestContextInterceptor } from '@/interface/interceptor/request-context';
 import { ResponseFormatInterceptor } from '@/interface/interceptor/response-format';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -44,6 +45,17 @@ async function bootstrap() {
 
   app.useGlobalInterceptors(new RequestContextInterceptor());
   app.useGlobalInterceptors(new ResponseFormatInterceptor());
+
+  if (process.env.NODE_ENV !== 'production') {
+    const config = new DocumentBuilder()
+      .setTitle('Wangdefa')
+      .setDescription('接口文档')
+      .setVersion('1.0')
+      .addBearerAuth()
+      .build();
+    const documentFactory = () => SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('docs', app, documentFactory);
+  }
 
   const port = configService.get<number>('env.port') ?? 80;
 
