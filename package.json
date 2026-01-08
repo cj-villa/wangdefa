@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "lerna run dev --parallel --scope @l/smart-home --scope @l/app-a",
     "start:lerna": "lerna run start:prod --parallel --scope @l/smart-home --scope @l/app-a",
-    "start": "git pull && yarn --network-timeout 600000 && yarn build:fe && yarn build:be && yarn start:lerna",
+    "start": "git pull && yarn --network-timeout 600000 && yarn build && yarn start:lerna",
+    "build": "yarn build:fe && yarn build:be",
     "dev:fe": "lerna run dev --parallel --scope @l/smart-home",
     "build:fe": "cd packages/smart-house && yarn build",
     "start:fe": "cd packages/smart-house && yarn start",
