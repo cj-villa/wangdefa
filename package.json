@@ -9,10 +9,10 @@
     "start": "git pull && yarn --network-timeout 600000 && yarn build:fe && yarn build:be && yarn start:lerna",
     "dev:fe": "lerna run dev --parallel --scope @l/smart-home",
     "build:fe": "cd packages/smart-house && yarn build",
-    "start:fe": "lerna run start:prod --parallel --scope @l/smart-home",
+    "start:fe": "cd packages/smart-house && yarn start",
     "dev:be": "lerna run dev --parallel --scope @l/app-a",
     "build:be": "cd packages/smart-house-be && yarn build",
-    "start:be": "lerna run start:prod --parallel --scope @l/smart-home-be",
+    "start:be": "cd packages/smart-house-be && yarn start:prod",
     "clear": "./shell/delete.sh",
     "bootstrap": "yarn clear && yarn",
     "prepare": "./packages/lint/shell/prepare.sh"
