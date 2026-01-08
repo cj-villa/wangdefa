@@ -17,4 +17,6 @@ const App = () => {
   );
 };
 
+console.log('alive');
+
 createRoot(document.body).render(<App />);

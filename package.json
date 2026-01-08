@@ -5,10 +5,14 @@
   "email": "luchenjiemail@gmail.com",
   "scripts": {
     "dev": "lerna run dev --parallel --scope @l/smart-home --scope @l/app-a",
+    "start:lerna": "lerna run start:prod --parallel --scope @l/smart-home --scope @l/app-a",
+    "start": "git pull && yarn --network-timeout 600000 && yarn build:fe && yarn build:be && yarn start:lerna",
     "dev:fe": "lerna run dev --parallel --scope @l/smart-home",
+    "build:fe": "cd packages/smart-house && yarn build",
+    "start:fe": "lerna run start:prod --parallel --scope @l/smart-home",
     "dev:be": "lerna run dev --parallel --scope @l/app-a",
-    "start:be": "cd packages/smart-house-be && yarn build && yarn start:prod",
-    "start": "git pull && yarn --network-timeout 600000 && yarn start:be",
+    "build:be": "cd packages/smart-house-be && yarn build",
+    "start:be": "lerna run start:prod --parallel --scope @l/smart-home-be",
     "clear": "./shell/delete.sh",
     "bootstrap": "yarn clear && yarn",
     "prepare": "./packages/lint/shell/prepare.sh"
@@ -17,6 +21,9 @@
     "packages": [
       "packages/**"
     ]
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
   },
   "devDependencies": {
     "lerna": "^6.5.1",

@@ -2,7 +2,10 @@
   "name": "@l/smart-home",
   "version": "0.0.1",
   "scripts": {
-    "dev": "sca dev"
+    "dev": "sca dev",
+    "build": "sca build",
+    "start": "http-server -p 4000",
+    "start:prod": "http-server -p 4000"
   },
   "devDependencies": {
     "@types/react": "^19.2.7",
