@@ -1,23 +1,21 @@
 import { parseStringPromise } from 'xml2js';
 import { BadRequestException } from '@nestjs/common';
-import { createLogger } from '@/shared/logger';
 
-const logger = createLogger('ObjectToolkit');
 export const parseJson = <T>(jsonStr: string, options: { defaultJson?: T } = {}): T => {
   const { defaultJson } = options;
   try {
     return JSON.parse(jsonStr);
   } catch (error) {
-    logger.error('parseJson error', error);
+    console.error('parseJson error', error);
     return defaultJson;
   }
 };
-export const stringifyJson = (json: any): string => {
+export const stringifyJson = (json: any, defaultText = ''): string => {
   try {
     return JSON.stringify(json);
   } catch (error) {
-    logger.error('stringify Json error', error);
-    return '';
+    console.error('stringify Json error', error);
+    return defaultText;
   }
 };
 export const xml2Json = <T>(xml: string): Promise<T> => {
@@ -27,7 +25,7 @@ export const xml2Json = <T>(xml: string): Promise<T> => {
       trim: true,
     });
   } catch (error) {
-    logger.error('parse xml error', error);
+    console.error('parse xml error', error);
     throw new BadRequestException('xml格式错误');
   }
 };

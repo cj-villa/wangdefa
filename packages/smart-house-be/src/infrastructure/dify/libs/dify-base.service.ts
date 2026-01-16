@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DIFY_CONFIGURATION_TOKEN } from '../constant';
 import type { DifyModuleConfig } from '../dify.type';
-import axios from 'axios';
 import { InjectLogger, LokiLogger } from '@/interface/decorate/inject-logger';
+import { http } from '@/shared/request';
 
 @Injectable()
 export class DifyBaseService {
@@ -13,12 +13,11 @@ export class DifyBaseService {
 
   async get(path: string, params?: any) {
     const { host, token } = this.config;
-    return axios
+    return http
       .get(`${host}/v1${path}`, {
         params,
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       })
-      .then((res) => res.data)
       .catch((err) => {
         this.logger.error(err.response?.data?.message);
       });
@@ -26,7 +25,7 @@ export class DifyBaseService {
 
   async post(path: string, data?: any) {
     const { host, token } = this.config;
-    return axios
+    return http
       .post(`${host}/v1${path}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -89,6 +89,7 @@ export class EBillVo {
           // TODO 反选非
           if (!item.paymentMethod?.includes('余额')) {
             item.direction === '支出' && (item.paymentMethod = '支付宝余额');
+            item.direction === '收入' && !item.paymentMethod && (item.paymentMethod = '支付宝余额');
             billList.push(item);
           }
           break;

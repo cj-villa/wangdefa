@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Kv } from '@/infrastructure/consul';
-import axios from 'axios';
 import { type AccountCommand } from '@/core/firefly/application/commands/account-command';
 import { FireflyAccount, JournalCommand } from '@/core/firefly';
 import { type TransactionBatchCommand } from '@/core/firefly/application/commands/transaction-command';
 import { FireflyTransaction } from '@/core/firefly/application/query/transaction';
 import { TransactionType } from '@/core/firefly/application/enum/transaction-type';
 import { InjectLogger, type LokiLogger } from '@/interface/decorate/inject-logger';
+import { http } from '@/shared/request';
+import { stringifyJson } from '@/shared/toolkits/transform';
 
 type FireflyData<Item = any> = {
   type: string;
@@ -27,17 +28,18 @@ export class InsertJournalService {
 
   private async post<D extends any = any, T = any>(
     path: string,
-    params: any = {}
+    data: any = {}
   ): Promise<FireflyData<D>> {
-    return axios
-      .post<T, { data: FireflyData<D> }>(`${this.domain}${path}`, {
-        params: { limit: 10, ...params },
+    return http
+      .post<T, FireflyData<D>>(`${this.domain}${path}`, data, {
         headers: {
           Authorization: `Bearer ${this.token}`,
           accept: 'application/vnd.api+json',
         },
       })
-      .then((res) => res.data);
+      .catch((error) => {
+        throw new HttpException(stringifyJson(error.data, error.statusText), error.status);
+      });
   }
 
   async insertAssetAccounts(names: string[]) {
@@ -48,7 +50,8 @@ export class InsertJournalService {
           type: 'asset',
           account_role: 'defaultAsset',
         }).catch((error) => {
-          this.logger.error(error);
+          this.logger.error(`${name} ${error.message}`);
+          throw error;
         });
       })
     );
@@ -86,6 +89,31 @@ export class InsertJournalService {
         tags: item.tag && [item.tag],
         notes: item.hint,
       })),
+    }).catch((error) => {
+      this.logger.error(
+        `${stringifyJson({
+          error_if_duplicate_hash: false,
+          apply_rules: false,
+          fire_webhooks: true,
+          transactions: journals.map((item) => ({
+            type: {
+              expense: TransactionType.Withdrawal,
+              income: TransactionType.Deposit,
+              transfer: TransactionType.Transfer,
+            }[item.type],
+            date: item.time,
+            amount: item.amount,
+            description: item.description,
+            budget_name: item.budget,
+            internal_reference: item.tradeNo,
+            category_name: item.category,
+            source_name: item.source,
+            destination_name: item.target,
+            tags: item.tag && [item.tag],
+          })),
+        })} ${error.message}`
+      );
+      throw error;
     });
   }
 }

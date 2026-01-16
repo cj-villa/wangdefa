@@ -4,6 +4,7 @@ import { deepMerge } from '@/shared/toolkits/object';
 import { type envConfig, getConfig } from '@/infrastructure/config';
 import { ConfigType } from '@nestjs/config';
 import { clc } from '@nestjs/common/utils/cli-colors.util';
+import { stringifyJson } from '@/shared/toolkits/transform';
 
 export const createLogger = (context: string) => {
   return new LokiLogger(() => {
@@ -72,7 +73,9 @@ export class LokiLogger {
               const prefix = LokiLogger.colorizeLevel(level, `[${appName}] ${pid}  -`);
 
               const msg =
-                typeof message === 'string' ? LokiLogger.colorizeLevel(level, message) : message;
+                typeof message === 'string'
+                  ? LokiLogger.colorizeLevel(level, message)
+                  : stringifyJson(message, (message as any)?.message ?? '');
 
               return `${prefix} ${timestamp}     ${upperLevel}${clc.yellow(
                 context ? ' [' + context + ']' : ''

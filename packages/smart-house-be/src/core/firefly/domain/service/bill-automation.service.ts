@@ -70,7 +70,7 @@ export class BillAutomationService implements OnModuleInit {
         /** 自己用的，不管高并发了 */
         const billEmailVo = new BillEmailVo(msg.text, msg.attachments, this.billMap);
         await this.storeBill(billEmailVo);
-        // markSeen();
+        markSeen();
       }
     });
   }

@@ -6,10 +6,10 @@ import { Cron } from '@nestjs/schedule';
 import { createLogger } from '@/shared/logger';
 import { checkLock } from '@/shared/lock';
 import { DIFY_BASE_SERVICE, DifyBaseService } from '@/infrastructure/dify';
-import { parseJson } from '@/shared/toolkits/transform';
 import { JournalPretreatmentService } from './journal-pretreatment.service';
 import { JournalCommand } from '../../application/commands/journal-command';
 import { InsertJournalService } from '@/core/firefly/domain/service/insert-juornal.service';
+import { parseJson } from '@/shared/toolkits/transform';
 
 @Injectable()
 export class SingleAutomationService {
@@ -52,12 +52,14 @@ export class SingleAutomationService {
     return this.redis.lmPop(this.HintKey, 'LEFT', { COUNT: length });
   }
 
-  private async askHintFromDify(hints?: string[]) {
+  private async askHintFromDify(
+    hints?: string[]
+  ): Promise<{ order: JournalCommand[]; missing_accounts: string[] }> {
     return this.difyBaseModule
       .post('/workflows/run', {
         inputs: {
           order: hints.join('\n'),
-          address: '10.10.1.86',
+          address: 'http://10.10.5.102:8000',
           token: '12b12e66-25a8-4bf0-8399-2efad65a0050',
         },
         response_mode: 'streaming',
@@ -96,9 +98,17 @@ export class SingleAutomationService {
     for (const item of order) {
       journals.push(item);
     }
-    this.journalPretreatmentService.batchSavePretreatmentRule(difyHints, journals);
-    await this.insertJournalService.insertAssetAccounts(missing_accounts);
-    await this.insertJournalService.insertTransaction(journals);
+    if (difyHints.length) {
+      this.journalPretreatmentService
+        .batchSavePretreatmentRule(difyHints, journals)
+        .catch((error) => {
+          this.logger.error(error);
+        });
+    }
+    await this.insertJournalService.insertAssetAccounts(missing_accounts.filter(Boolean));
+    for (const journal of journals) {
+      await this.insertJournalService.insertTransaction([journal]);
+    }
     return {
       missing_accounts,
       difyHints,

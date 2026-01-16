@@ -134,8 +134,8 @@ export class JournalPretreatmentService {
           });
           const isExist = await this.fireflyParsingRules.findOneBy(fireflyParsingRule);
           if (!isExist) {
-            await this.fireflyParsingRules.save(fireflyParsingRule).catch((err) => {
-              this.logger.error(err);
+            await this.fireflyParsingRules.save(fireflyParsingRule).catch((error) => {
+              this.logger.error(error);
             });
           }
         }
