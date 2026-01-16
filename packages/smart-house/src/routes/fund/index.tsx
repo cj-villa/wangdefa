@@ -56,14 +56,7 @@ export const FundPage = () => {
           },
         },
       ]}
-      request={async (params) => {
-        const { data } = await request.listFund(params);
-        return {
-          data: data?.list || [],
-          total: data?.total || 0,
-          success: true,
-        };
-      }}
+      request={request.listFund}
       toolBarRender={() => [
         <Button
           key="button"

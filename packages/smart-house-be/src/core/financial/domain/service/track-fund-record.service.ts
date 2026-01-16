@@ -59,7 +59,6 @@ export class TrackFundRecordService {
     if (code) {
       query.andWhere('trackFund.code LIKE :code', { code: `%${code}%` });
     }
-    console.log('sql', query.getSql());
     return query.getManyAndCount();
   }
 }
