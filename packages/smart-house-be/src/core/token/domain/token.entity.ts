@@ -21,13 +21,14 @@ export class Token {
   @Column({ comment: '三方调用token', type: 'uuid', unique: true })
   token: string;
 
-  @CreateDateColumn({ type: 'datetime', precision: 6 })
+  @CreateDateColumn({ name: 'created_at', type: 'datetime', precision: 6 })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'datetime', precision: 6 })
+  @UpdateDateColumn({ name: 'updated_at', type: 'datetime', precision: 6 })
   updatedAt: Date;
 
   @DeleteDateColumn({
+    name: 'deleted_at',
     type: 'datetime',
     precision: 6,
     nullable: true,

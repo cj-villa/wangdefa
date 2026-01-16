@@ -18,6 +18,8 @@ import { RedisClientType } from 'redis';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TokenModule } from '@/interface/modules/token/token.module';
+import { interceptors } from '@/interface/interceptor';
+import { JournalMeta } from '@/core/firefly/domain/entities/journal-meta.entity';
 
 @Module({
   imports: [
@@ -43,6 +45,19 @@ import { TokenModule } from '@/interface/modules/token/token.module';
         return {
           ...dbConfig.redis,
           ...config.redis,
+        };
+      },
+      inject: [KvService, databaseConfig.KEY],
+    }),
+    // mysql模块
+    TypeOrmModule.forRootAsync({
+      name: '__firefly__',
+      useFactory: async (kvService: KvService, dbConfig: ConfigType<typeof databaseConfig>) => {
+        const config = await kvService.get('db');
+        return {
+          ...dbConfig.firefly,
+          ...config.firefly,
+          entities: [JournalMeta],
         };
       },
       inject: [KvService, databaseConfig.KEY],
@@ -102,6 +117,6 @@ import { TokenModule } from '@/interface/modules/token/token.module';
     TokenModule,
     FallbackModule,
   ],
-  providers: [...GuardProviders, ...ExceptionProvider],
+  providers: [...GuardProviders, ...ExceptionProvider, ...interceptors],
 })
 export class AppModule {}

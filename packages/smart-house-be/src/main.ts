@@ -5,7 +5,6 @@ import { ValidationPipe } from '@nestjs/common';
 import bodyParser from 'body-parser';
 import bodyParserXml from 'body-parser-xml';
 import { RequestContextInterceptor } from '@/interface/interceptor/request-context';
-import { ResponseFormatInterceptor } from '@/interface/interceptor/response-format';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -42,9 +41,6 @@ async function bootstrap() {
   );
 
   app.useGlobalPipes(new ValidationPipe());
-
-  app.useGlobalInterceptors(new RequestContextInterceptor());
-  app.useGlobalInterceptors(new ResponseFormatInterceptor());
 
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()

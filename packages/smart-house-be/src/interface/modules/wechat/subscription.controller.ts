@@ -6,6 +6,7 @@ import {
   DecryptBody,
   SubscriptionService,
 } from '@/core/wechat';
+import {SkipFormat} from "@/interface/interceptor/response-format";
 
 @Controller('/api/open/wechat')
 export class SubscriptionController {
@@ -13,6 +14,7 @@ export class SubscriptionController {
 
   @Public()
   @NoAuth()
+  @SkipFormat()
   @Get('')
   verify(@DecryptQuery() query: SubscriptionDecryptionRequestQueryDto) {
     return query.echostr;
@@ -20,6 +22,7 @@ export class SubscriptionController {
 
   @Public()
   @NoAuth()
+  @SkipFormat()
   @Post('')
   onMessage(@DecryptBody() body) {
     return this.subscriptionService.onMessage(body);

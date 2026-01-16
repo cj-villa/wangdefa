@@ -1,12 +1,14 @@
-import { requestContext } from '@/interface/interceptor/request-context';
-import { get, type PropertyPath } from 'lodash';
+import { requestContext, RequestStore } from '@/interface/interceptor/request-context';
+import { get } from 'lodash';
 
-export const InjectRequest = (key: PropertyPath) => {
+type Keys<TObject extends object> = keyof TObject | [keyof TObject];
+
+export const InjectRequest = (key?: Keys<RequestStore>) => {
   return (target: Object, propertyKey: string | symbol) => {
     Object.defineProperty(target, propertyKey, {
       get: () => {
         const request = requestContext.getStore();
-        return get(request, key);
+        return key ? get(request, key) : request;
       },
       enumerable: true,
       configurable: true,

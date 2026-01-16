@@ -51,10 +51,26 @@ export class ConsulModule {
     };
   }
 
+  private static createKvService(): Provider {
+    return {
+      provide: KvService,
+      useFactory: async (baseService, config) => {
+        const kvService = new KvService(baseService, config);
+        await kvService.preLoad();
+        return kvService;
+      },
+      inject: [CONSUL_BASE_SERVICE, CONSUL_CONFIGURATION_TOKEN],
+    };
+  }
+
   private static createModule(options: CombineOptions): DynamicModule {
     return {
       module: ConsulModule,
-      providers: [this.createCfgProvider(options), this.createBaseService(), KvService],
+      providers: [
+        this.createCfgProvider(options),
+        this.createBaseService(),
+        this.createKvService(),
+      ],
       exports: [ConsulBaseService, KvService],
     };
   }

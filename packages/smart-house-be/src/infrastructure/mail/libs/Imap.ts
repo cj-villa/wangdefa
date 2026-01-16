@@ -41,22 +41,31 @@ export class Imap extends EventEmitter {
     await this._connect();
   }
 
+  // 检索未读邮件
+  private async fetchUnSeen() {
+    const { client } = this;
+    try {
+      for await (let msg of client.fetch({ seen: false }, { source: true })) {
+        let data = await simpleParser(msg.source);
+        this.emit('message', data, () => {
+          client.messageFlagsAdd(msg.uid, ['\\Seen'], { uid: true });
+        });
+      }
+    } catch (err) {
+      this.logger.error('获取新邮件详情失败:', err);
+    }
+  }
+
   private async _listening() {
     const { client } = this;
     this.mailLock = await client.getMailboxLock('INBOX');
     try {
+      this.logger.debug('启动检索未读邮件...');
+      await this.fetchUnSeen();
       this.logger.debug('正在监听新邮件...');
       client.on('exists', async (data) => {
         this.logger.info(`检测到新邮件！当前文件夹总数: ${data.count}`);
-        try {
-          for await (let msg of client.fetch({ seen: false }, { source: true })) {
-            client.messageFlagsAdd(msg.uid, ['\\Seen'], { uid: true });
-            let data = await simpleParser(msg.source);
-            this.emit('message', data);
-          }
-        } catch (err) {
-          this.logger.error('获取新邮件详情失败:', err);
-        }
+        this.fetchUnSeen();
       });
     } catch (err) {
       this.logger.error('监听程序启动失败，10秒后重试:', err.message);

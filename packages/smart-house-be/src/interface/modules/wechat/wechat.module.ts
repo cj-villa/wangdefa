@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { SubscriptionService } from '@/core/wechat';
-import { SingleAutomationService } from '@/core/firefly';
 import { SubscriptionController } from './subscription.controller';
+import { FireflyModule } from '@/interface/modules/firefly/firefly.module';
 
 @Module({
+  imports: [FireflyModule],
   controllers: [SubscriptionController],
-  providers: [SubscriptionService, SingleAutomationService],
+  providers: [SubscriptionService],
 })
 export class WechatModule {}

@@ -80,12 +80,21 @@ export class EBillVo {
   }
 
   private filter(list: BillCommand[]) {
-    return list.filter((item) => {
-      if (this.channel === 'alipay') {
-        return item.paymentMethod?.includes('余额');
+    return list.reduce<BillCommand[]>((billList, item) => {
+      if (!item.tradeNo) {
+        return billList;
       }
-      return false;
-    });
+      switch (this.channel) {
+        case 'alipay':
+          // TODO 反选非
+          if (!item.paymentMethod?.includes('余额')) {
+            item.direction === '支出' && (item.paymentMethod = '支付宝余额');
+            billList.push(item);
+          }
+          break;
+      }
+      return billList;
+    }, []);
   }
 
   toJSON() {

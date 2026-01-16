@@ -29,13 +29,14 @@ export class User {
   @Column({ comment: '密码', type: 'varchar', length: 256 })
   password: string;
 
-  @CreateDateColumn({ type: 'datetime', precision: 6 })
+  @CreateDateColumn({ name: 'created_at', type: 'datetime', precision: 6 })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'datetime', precision: 6 })
+  @UpdateDateColumn({ name: 'updated_at', type: 'datetime', precision: 6 })
   updatedAt: Date;
 
   @DeleteDateColumn({
+    name: 'deleted_at',
     type: 'datetime',
     precision: 6,
     nullable: true,

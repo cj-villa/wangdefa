@@ -18,17 +18,20 @@ export class KvService {
 
   constructor(
     private consulBaseService: ConsulBaseService,
-    @Inject(CONSUL_CONFIGURATION_TOKEN) config: ConsulKvModuleConfig
+    @Inject(CONSUL_CONFIGURATION_TOKEN) private readonly config: ConsulKvModuleConfig
   ) {
     global[CONSUL_GLOBAL_DATA] = {};
+  }
+
+  async preLoad() {
     const preload = new Set<string>([
-      ...(config.preload ?? []),
+      ...(this.config.preload ?? []),
       ...(global[CONSUL_PRE_FETCH_KEYS] ?? []),
     ]);
     this.logger?.info(`prefetch consul: ${stringifyJson([...preload])}`);
-    preload.forEach((key) => {
-      this.subscribe(key);
-    });
+    for (const key of preload) {
+      await this.subscribe(key, 0);
+    }
   }
 
   /** 解码consul kv的值，并尝试parse */
@@ -47,18 +50,20 @@ export class KvService {
    */
   private async subscribe(key: string, index?: number, failedCount = 0) {
     if (failedCount > this.maxSubscribeFailedCount) {
-      throw new Error('subscribe failed');
+      throw new Error(`subscribe ${key} failed`);
     }
+    this.logger.debug(`subscribe key: ${key} index: ${index} failedCount: ${failedCount}`);
     return this.consulBaseService
       .get(`/v1/kv/wangdefa/${key}`, {
-        params: {
-          index: index ?? 0,
-          wait: '60s',
-        },
+        index: index ?? 0,
+        wait: '60s',
       })
       .then((res) => {
         global[CONSUL_GLOBAL_DATA][key] = this.decodeValue(res[0].Value);
         if (index !== undefined) {
+          if (index !== res[0].ModifyIndex) {
+            this.logger.info(`consul key ${key} updated ${index} to ${res[0].ModifyIndex}`);
+          }
           this.subscribe(key, res[0].ModifyIndex);
         }
         return global[CONSUL_GLOBAL_DATA][key];
@@ -75,7 +80,8 @@ export class KvService {
    * @param subscribe 是否订阅配置的变更，默认订阅
    * */
   get<T extends any = any>(key: string, subscribe: boolean = true): Promise<T> {
-    return this.subscribe(key, subscribe ? 0 : undefined);
+    const cacheData = KvService.get<T>(key);
+    return Promise.resolve(cacheData) || this.subscribe(key, subscribe ? 0 : undefined);
   }
 
   /**

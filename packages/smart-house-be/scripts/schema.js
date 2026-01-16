@@ -18,7 +18,7 @@ const main = async () => {
     `import { DataSource } from 'typeorm';
   module.exports = new DataSource({
     ...${JSON.stringify({ ...data.mysql, ...dbConfig.mysql })},
-    entities: ['src/**/*.entity.ts'],
+    entities: ['src/**/!(*journal-meta*).entity.ts'],
     migrations: ['scripts/migrations/*.ts'],
   });`
   );

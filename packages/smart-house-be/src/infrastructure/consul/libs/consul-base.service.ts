@@ -19,6 +19,6 @@ export class ConsulBaseService {
 
   async post(path: string, data?: any) {
     const { host, token } = this.config;
-    return axios.post(`${host}${path}`, { data }, { headers: { 'X-Consul-Token': token } });
+    return axios.post(`${host}${path}`, data, { headers: { 'X-Consul-Token': token } });
   }
 }
