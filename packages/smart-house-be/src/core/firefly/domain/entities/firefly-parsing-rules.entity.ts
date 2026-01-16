@@ -11,8 +11,8 @@ import { type BillFieldType } from '../../application/enum/bill-field-type';
 
 @Entity({ name: 'firefly_parsing_rules', comment: 'firefly解析规则表' })
 export class FireflyParsingRules {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', comment: '解析后的字段类型' })
   type: JournalFieldType;

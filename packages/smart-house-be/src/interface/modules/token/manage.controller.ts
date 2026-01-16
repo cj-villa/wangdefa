@@ -27,7 +27,7 @@ export class ManageController {
   }
 
   @Post('delete')
-  signIn(@Body() body: TokenDeleteDto) {
+  delete(@Body() body: TokenDeleteDto) {
     return this.tokenManageService.delete(body.id);
   }
 }

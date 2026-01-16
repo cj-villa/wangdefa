@@ -7,19 +7,19 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'token', comment: 'token表' })
-export class Token {
+@Entity({ name: 'track_fund', comment: '正在追踪的基金记录表' })
+export class TrackFund {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'name', type: 'varchar', length: 32 })
+  @Column({ type: 'varchar', unique: true, length: 32, comment: '基金的名称' })
   name: string;
 
-  @Column({ name: 'user_id', type: 'uuid' })
-  userId: string;
+  @Column({ type: 'varchar', unique: true, length: 32, comment: '基金编码' })
+  code: string;
 
-  @Column({ comment: '三方调用token', type: 'uuid', unique: true })
-  token: string;
+  @Column({ name: 'user_id', type: 'uuid', comment: '绑定的用户' })
+  userId: string;
 
   @CreateDateColumn({ name: 'created_at', type: 'datetime', precision: 6 })
   createdAt: Date;
@@ -28,8 +28,8 @@ export class Token {
   updatedAt: Date;
 
   @DeleteDateColumn({
-    name: 'deleted_at',
     type: 'datetime',
+    name: 'deleted_at',
     precision: 6,
     nullable: true,
   })

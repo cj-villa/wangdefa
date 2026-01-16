@@ -1,10 +1,14 @@
 import { createBrowserRouter, type RouteObject } from 'react-router';
 import { Layout } from 'src/layout';
-import { Dashboard } from 'src/routes/dashboard';
 import { TokenPage } from 'src/routes/token';
+import { FundPage } from 'src/routes/fund';
 
 export const routes = [
-  { name: '主页', path: '', children: [{ path: '/', name: '概览', Component: Dashboard }] },
+  {
+    name: '源数据管理',
+    path: '',
+    children: [{ path: 'fund', name: '基金管理', Component: FundPage }],
+  },
   {
     name: '设置',
     path: 'config',

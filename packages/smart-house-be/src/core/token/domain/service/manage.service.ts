@@ -23,7 +23,7 @@ export class TokenManageService {
     return this.tokensRepository.save(token);
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const token = await this.tokensRepository.findOneBy({ id });
     if (token?.userId !== this.user.userId) {
       return {

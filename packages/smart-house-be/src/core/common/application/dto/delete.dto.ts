@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class TokenDeleteDto {
+export class DeleteDto {
   @IsNotEmpty()
   id: string;
 }

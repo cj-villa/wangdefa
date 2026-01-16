@@ -20,6 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TokenModule } from '@/interface/modules/token/token.module';
 import { interceptors } from '@/interface/interceptor';
 import { JournalMeta } from '@/core/firefly/domain/entities/journal-meta.entity';
+import { FinancialModule } from '@/interface/modules/financial/financial.module';
 
 @Module({
   imports: [
@@ -115,6 +116,7 @@ import { JournalMeta } from '@/core/firefly/domain/entities/journal-meta.entity'
     WechatModule,
     AuthModule,
     TokenModule,
+    FinancialModule,
     FallbackModule,
   ],
   providers: [...GuardProviders, ...ExceptionProvider, ...interceptors],

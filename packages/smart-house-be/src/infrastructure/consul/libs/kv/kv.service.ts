@@ -81,7 +81,7 @@ export class KvService {
    * */
   get<T extends any = any>(key: string, subscribe: boolean = true): Promise<T> {
     const cacheData = KvService.get<T>(key);
-    return Promise.resolve(cacheData) || this.subscribe(key, subscribe ? 0 : undefined);
+    return cacheData ? Promise.resolve(cacheData) : this.subscribe(key, subscribe ? 0 : undefined);
   }
 
   /**
