@@ -1,4 +1,9 @@
 {
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register"
+    ]
+  },
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
@@ -13,7 +18,9 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "lib": ["es2017"],
+    "lib": [
+      "es2017"
+    ],
     // "strictNullChecks": false,
     // "noImplicitAny": false,
     // "strictBindCallApply": false,
@@ -25,7 +32,9 @@
       "./src/types"
     ],
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": [
+        "./src/*"
+      ],
       "@entities/*": [
         "./src/entities/*"
       ]

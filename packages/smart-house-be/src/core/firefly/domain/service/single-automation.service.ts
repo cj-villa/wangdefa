@@ -60,7 +60,7 @@ export class SingleAutomationService {
         inputs: {
           order: hints.join('\n'),
           address: 'http://10.10.5.102:8000',
-          token: '12b12e66-25a8-4bf0-8399-2efad65a0050',
+          token: '73f77ccf-b6a6-4a8f-ac3d-c8984d0d694e',
         },
         response_mode: 'streaming',
         user: 'system',

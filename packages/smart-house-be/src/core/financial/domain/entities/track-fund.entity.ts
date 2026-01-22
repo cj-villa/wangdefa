@@ -5,17 +5,19 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  Index,
 } from 'typeorm';
 
 @Entity({ name: 'track_fund', comment: '正在追踪的基金记录表' })
+@Index('idx_code_user_id', ['code', 'userId'], { unique: true })
 export class TrackFund {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', unique: true, length: 32, comment: '基金的名称' })
+  @Column({ type: 'varchar', length: 32, comment: '基金的名称' })
   name: string;
 
-  @Column({ type: 'varchar', unique: true, length: 32, comment: '基金编码' })
+  @Column({ type: 'varchar', length: 32, comment: '基金编码' })
   code: string;
 
   @Column({ name: 'user_id', type: 'uuid', comment: '绑定的用户' })

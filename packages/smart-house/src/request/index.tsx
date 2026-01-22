@@ -1,6 +1,6 @@
 import { request } from './request';
 import type { Page } from 'src/request/type/common';
-import type { Fund } from 'src/request/type/fund';
+import type { Fund, FundTransaction, FundTransactionType } from 'src/request/type/fund';
 
 export default {
   /** token */
@@ -12,4 +12,10 @@ export default {
   createFund: (data: Omit<Fund, 'id'>) => request.post('/api/fund/create', data),
   deleteFund: (data: { id: string }) => request.post('/api/fund/delete', data),
   updateFund: (data: Fund) => request.post('/api/fund/update', data),
+  /** 基金交易相关 */
+  listFundTransaction: (params: Page & { fundId?: string; transactionType?: FundTransactionType }) => 
+    request.get('/api/fund/transaction/list', { params }),
+  createFundTransaction: (data: Omit<FundTransaction, 'id'>) => request.post('/api/fund/transaction/create', data),
+  deleteFundTransaction: (data: { id: string }) => request.post('/api/fund/transaction/delete', data),
+  updateFundTransaction: (data: FundTransaction) => request.post('/api/fund/transaction/update', data),
 };

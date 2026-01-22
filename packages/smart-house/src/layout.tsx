@@ -4,10 +4,18 @@ import { routes } from 'src/routes';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import * as React from 'react';
 import { Breadcrumb, type BreadcrumbProps } from 'antd';
+import { useEffect } from 'react';
 
 export const Layout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      navigate('/fund');
+    }
+  }, []);
+
   return (
     <ProLayout
       prefixCls="wdf"
@@ -23,7 +31,7 @@ export const Layout = () => {
             onClick={() => {
               const path =
                 menuProps.menuRenderType === 'header'
-                  ? [item.path, item.firstChildPath].filter(Boolean).join('/')
+                  ? [item.path, item.firstChildPath].join('/')
                   : item.path;
               navigate(path || '/');
             }}

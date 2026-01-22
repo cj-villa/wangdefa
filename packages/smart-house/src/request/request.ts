@@ -33,8 +33,8 @@ request.interceptors.response.use(
   (response) => {
     return response.data?.data ?? response.data;
   },
-  (error: AxiosError) => {
-    const response = error.response;
+  (axiosError: AxiosError) => {
+    const response = axiosError.response;
     if (response?.status === 401) {
       // 避免重复跳转
       if (!location.pathname.startsWith('/account')) {
@@ -42,11 +42,16 @@ request.interceptors.response.use(
       }
     }
 
-    const msg = (response?.data as any)?.error?.[0];
+    const data = (response?.data ?? {}) as any;
+
+    const msg = Array.isArray(data.error) ? data.error[0] : data.error;
+
     if (msg) {
       message.error(msg, 3);
     }
 
+    const error = new Error(msg, { cause: data.stack });
+    error.stack = data.stack;
     return Promise.reject(error);
   }
 );
