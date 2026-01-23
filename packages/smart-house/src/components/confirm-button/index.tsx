@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, type ButtonProps, Popconfirm, Spin, Typography } from 'antd';
 import { useRequest } from 'ahooks';
-import { asyncNoop } from 'src/share/empty';
+import { asyncNoop } from 'src/share/toolkits/empty';
 
 interface ConfirmButtonProps extends Omit<ButtonProps, 'type' | 'loading'> {
   type?: 'text' | 'button';

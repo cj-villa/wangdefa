@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Token, TokenManageService, TokenSearchService } from '@/core/token';
-import { ManageController } from '@/interface/modules/token/manage.controller';
+import { TokenController } from '@/interface/modules/system/token/token.controller';
 import { AuthModule } from '@/interface/modules/auth/auth.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Token]), AuthModule],
   providers: [TokenManageService, TokenSearchService],
-  controllers: [ManageController],
+  controllers: [TokenController],
   exports: [TokenSearchService],
 })
 export class TokenModule {}

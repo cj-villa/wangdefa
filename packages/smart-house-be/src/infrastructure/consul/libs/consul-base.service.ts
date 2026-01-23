@@ -7,7 +7,7 @@ import { http } from '@/shared/request';
 export class ConsulBaseService {
   constructor(@Inject(CONSUL_CONFIGURATION_TOKEN) private config: ConsulKvModuleConfig) {}
 
-  async get(path: string, params?: any) {
+  async get<T = any>(path: string, params?: any): Promise<T> {
     const { host, token } = this.config;
     return http.get(`${host}${path}`, {
       params,
@@ -18,5 +18,10 @@ export class ConsulBaseService {
   async post(path: string, data?: any) {
     const { host, token } = this.config;
     return http.post(`${host}${path}`, data, { headers: { 'X-Consul-Token': token } });
+  }
+
+  async put(path: string, data?: any) {
+    const { host, token } = this.config;
+    return http.put(`${host}${path}`, data, { headers: { 'X-Consul-Token': token } });
   }
 }

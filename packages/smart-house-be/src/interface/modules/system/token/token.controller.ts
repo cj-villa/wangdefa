@@ -7,8 +7,8 @@ import {
 } from '@/core/token';
 import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
 
-@Controller('/api/token')
-export class ManageController {
+@Controller('/api/system')
+export class TokenController {
   @Inject()
   private readonly tokenManageService: TokenManageService;
 

@@ -14,7 +14,7 @@ import { getIp } from '@/shared/toolkits/request';
 import { InjectLogger, type LokiLogger } from '@/interface/decorate/inject-logger';
 import { JwtService } from '@nestjs/jwt';
 import { TokenSearchService } from '@/core/token';
-import { JwtUser } from '@/core/user';
+import { JwtUser, UserService } from '@/core/user';
 
 const IS_NO_AUTH_KEY = Symbol('isNoAuth');
 
@@ -26,7 +26,8 @@ export class AuthGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private jwtService: JwtService,
-    private tokenSearchService: TokenSearchService
+    private tokenSearchService: TokenSearchService,
+    private userService: UserService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -55,6 +56,10 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token);
+      const user = await this.userService.getUserById(payload.userId);
+      if (!user) {
+        this.throwException(request, token);
+      }
       request['user'] = payload;
     } catch {
       this.throwException(request, token);
@@ -85,8 +90,9 @@ export class AuthGuard implements CanActivate {
     if (accessToken) {
       return {
         token: accessToken,
-        type: 'accessToken'
-      };    }
+        type: 'accessToken',
+      };
+    }
   }
 
   private throwException(request: Request, token: string = '') {

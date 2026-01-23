@@ -7,6 +7,7 @@ export interface ConsulKvModuleConfig {
   host: string;
   token?: string;
   preload?: string[];
+  prefix?: string;
 }
 
 /** 配置模块的创建参数 */

@@ -1,9 +1,11 @@
-import { Form, Select, DatePicker, InputNumber, message } from 'antd';
-import React, { useEffect } from 'react';
+import { BetaSchemaForm } from '@ant-design/pro-components';
+import { Form, message } from 'antd';
+import React from 'react';
 import request from 'src/request';
-import { Fund, FundTransaction, FundTransactionType } from 'src/request/type/fund';
-
-const { Option } = Select;
+import { type FundTransaction, FundTransactionType } from 'src/request/type/fund';
+import { ProFormColumnsType } from '@ant-design/pro-form/es/components/SchemaForm/typing';
+import { ListSelect } from 'src/components';
+import { configModal } from 'src/share/ui/show-modal';
 
 interface CreateFundTransactionProps {
   initialValues?: FundTransaction;
@@ -12,108 +14,86 @@ interface CreateFundTransactionProps {
 
 export const CreateFundTransaction = ({ initialValues, onSuccess }: CreateFundTransactionProps) => {
   const [form] = Form.useForm();
-  const [funds, setFunds] = React.useState<Fund[]>([]);
 
-  useEffect(() => {
-    const loadFunds = async () => {
+  configModal({
+    async onConfirm() {
       try {
-        const response = await request.listFund({ current: 1, pageSize: 100 });
-        setFunds(response.data?.list || []);
+        const formData = await form.validateFields();
+        if (initialValues?.id) {
+          await request.updateFundTransaction({ ...formData, id: initialValues.id });
+          message.success('更新成功');
+        } else {
+          await request.createFundTransaction(formData);
+          message.success('创建成功');
+        }
+        onSuccess?.();
       } catch (error) {
-        message.error('加载基金列表失败');
+        message.error(initialValues?.id ? '更新失败' : '创建失败');
+        throw error;
       }
-    };
-    loadFunds();
-  }, []);
+    },
+  });
 
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue({
-        ...initialValues,
-        transactionDate: initialValues.transactionDate
-          ? new Date(initialValues.transactionDate)
-          : undefined,
-      });
-    }
-  }, [initialValues, form]);
-
-  const handleSubmit = async (formData: any) => {
-    try {
-      if (initialValues?.id) {
-        await request.updateFundTransaction({ ...formData, id: initialValues.id });
-        message.success('更新成功');
-      } else {
-        await request.createFundTransaction(formData);
-        message.success('创建成功');
-      }
-      onSuccess?.();
-    } catch (error) {
-      message.error(initialValues?.id ? '更新失败' : '创建失败');
-    }
-  };
+  const columns: ProFormColumnsType[] = [
+    {
+      title: '基金',
+      dataIndex: 'fundId',
+      formItemProps: {
+        rules: [{ required: true, message: '请选择基金' }],
+      },
+      renderFormItem: () => (
+        <ListSelect request="/api/fund/list" fieldNames={{ label: 'name', value: 'id' }} />
+      ),
+    },
+    {
+      title: '交易类型',
+      dataIndex: 'transactionType',
+      valueType: 'select',
+      fieldProps: {
+        placeholder: '请选择交易类型',
+        options: [
+          { label: '买入', value: FundTransactionType.BUY },
+          { label: '卖出', value: FundTransactionType.SELL },
+        ],
+      },
+      formItemProps: {
+        rules: [{ required: true, message: '请选择交易类型' }],
+      },
+      initialValue: FundTransactionType.BUY,
+    },
+    {
+      title: '交易份额',
+      dataIndex: 'shares',
+      valueType: 'digit',
+      fieldProps: {
+        placeholder: '请输入交易份额',
+        min: 1,
+        precision: 0,
+        style: { width: '100%' },
+      },
+      formItemProps: {
+        rules: [{ required: true, message: '请输入交易份额' }],
+      },
+    },
+    {
+      title: '份额确认日期',
+      dataIndex: 'transactionDate',
+      valueType: 'date',
+      fieldProps: {
+        allowClear: true,
+        placeholder: '默认根据当前时间T+1进行计算',
+        style: { width: '100%' },
+      },
+    },
+  ];
 
   return (
-    <Form
+    <BetaSchemaForm
+      layoutType="Form"
       form={form}
-      layout="vertical"
-      onFinish={handleSubmit}
-      initialValues={{
-        transactionType: FundTransactionType.BUY,
-        transactionDate: new Date(),
-      }}
-    >
-      <Form.Item name="fundId" label="基金" rules={[{ required: true, message: '请选择基金' }]}>
-        <Select placeholder="请选择基金" disabled={!!initialValues}>
-          {funds.map((fund) => (
-            <Option key={fund.id} value={fund.id}>
-              {fund.name} ({fund.code})
-            </Option>
-          ))}
-        </Select>
-      </Form.Item>
-
-      <Form.Item
-        name="transactionType"
-        label="交易类型"
-        rules={[{ required: true, message: '请选择交易类型' }]}
-      >
-        <Select placeholder="请选择交易类型">
-          <Option value={FundTransactionType.BUY}>买入</Option>
-          <Option value={FundTransactionType.SELL}>卖出</Option>
-        </Select>
-      </Form.Item>
-
-      <Form.Item
-        name="amount"
-        label="交易金额"
-        rules={[{ required: true, message: '请输入交易金额' }]}
-      >
-        <InputNumber style={{ width: '100%' }} placeholder="请输入交易金额" min={0} precision={2} />
-      </Form.Item>
-
-      <Form.Item
-        name="shares"
-        label="交易份额"
-        rules={[{ required: true, message: '请输入交易份额' }]}
-      >
-        <InputNumber style={{ width: '100%' }} placeholder="请输入交易份额" min={0} precision={4} />
-      </Form.Item>
-
-      <Form.Item
-        name="transactionPrice"
-        label="交易价格"
-        rules={[{ required: true, message: '请输入交易价格' }]}
-      >
-        <InputNumber style={{ width: '100%' }} placeholder="请输入交易价格" min={0} precision={4} />
-      </Form.Item>
-
-      <Form.Item
-        name="transactionDate"
-        label="交易日期"
-        rules={[{ required: true, message: '请选择交易日期' }]}
-      >
-        <DatePicker style={{ width: '100%' }} placeholder="请选择交易日期" />
-      </Form.Item>
-    </Form>
+      columns={columns}
+      initialValues={initialValues}
+      submitter={{ render: () => null }}
+    />
   );
 };

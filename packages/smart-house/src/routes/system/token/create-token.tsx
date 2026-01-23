@@ -1,5 +1,5 @@
 import { BetaSchemaForm } from '@ant-design/pro-components';
-import { configModal } from 'src/share/show-modal';
+import { configModal } from 'src/share/ui/show-modal';
 import { Form, message } from 'antd';
 import request from 'src/request';
 
@@ -27,9 +27,6 @@ export const CreateToken = () => {
           },
         },
       ]}
-      onFinish={async (values) => {
-        console.log(values);
-      }}
     />
   );
 };

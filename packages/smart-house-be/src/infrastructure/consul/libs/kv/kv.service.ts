@@ -43,6 +43,10 @@ export class KvService {
     return decodeStr;
   }
 
+  private getKeyPath(key: string) {
+    return this.config.prefix ? `${this.config.prefix}/${key}` : key;
+  }
+
   /**
    * @description 订阅某一个key的配置变更，并更新值内存中
    * @param key 配置的key
@@ -54,7 +58,7 @@ export class KvService {
     }
     this.logger.debug(`subscribe key: ${key} index: ${index} failedCount: ${failedCount}`);
     return this.consulBaseService
-      .get(`/v1/kv/wangdefa/${key}`, {
+      .get(`/v1/kv/${this.getKeyPath(key)}`, {
         index: index ?? 0,
         wait: '60s',
       })
@@ -69,7 +73,7 @@ export class KvService {
         return global[CONSUL_GLOBAL_DATA][key];
       })
       .catch((error) => {
-        console.error(error);
+        this.logger.error(error, `subscribe key: ${key} failed`);
         this.subscribe(key, index, failedCount + 1);
       });
   }
@@ -82,6 +86,17 @@ export class KvService {
   get<T extends any = any>(key: string, subscribe: boolean = true): Promise<T> {
     const cacheData = KvService.get<T>(key);
     return cacheData ? Promise.resolve(cacheData) : this.subscribe(key, subscribe ? 0 : undefined);
+  }
+
+  list() {
+    return this.consulBaseService.get<string[]>(`/v1/kv/${this.config.prefix}`, {
+      keys: '',
+      separator: '%2F',
+    });
+  }
+
+  update(key: string, value: Object) {
+    return this.consulBaseService.put(`/v1/kv/${this.getKeyPath(key)}`, value);
   }
 
   /**

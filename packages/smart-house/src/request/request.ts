@@ -48,9 +48,11 @@ request.interceptors.response.use(
 
     if (msg) {
       message.error(msg, 3);
+    } else {
+      console.error(axiosError);
     }
 
-    const error = new Error(msg, { cause: data.stack });
+    const error = new Error(msg ?? '请求失败', { cause: data.stack });
     error.stack = data.stack;
     return Promise.reject(error);
   }

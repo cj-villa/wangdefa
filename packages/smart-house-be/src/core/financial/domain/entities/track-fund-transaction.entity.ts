@@ -5,8 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { FundTransactionType } from '@/core/financial/application/enum/fund-transaction-type';
+import { TrackFund } from '@/core/financial/domain/entities/track-fund.entity';
 
 @Entity({ name: 'track_fund_transaction', comment: '基金交易记录表' })
 export class FundTransaction {
@@ -23,25 +26,12 @@ export class FundTransaction {
     name: 'transaction_type',
     type: 'enum',
     enum: FundTransactionType,
-    // enum: ['BUY', 'SELL'],
     comment: '交易类型：BUY-买入，SELL-卖出',
   })
   transactionType: FundTransactionType;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, comment: '交易金额' })
-  amount: number;
-
-  @Column({ type: 'decimal', precision: 12, scale: 4, comment: '交易份额' })
+  @Column({ type: 'decimal', precision: 10, scale: 0, comment: '交易份额' })
   shares: number;
-
-  @Column({
-    name: 'transaction_price',
-    type: 'decimal',
-    precision: 8,
-    scale: 4,
-    comment: '交易价格',
-  })
-  transactionPrice: number;
 
   @Column({
     name: 'transaction_date',
@@ -63,4 +53,10 @@ export class FundTransaction {
     nullable: true,
   })
   deletedAt?: Date;
+
+  @ManyToOne(() => TrackFund, {
+    createForeignKeyConstraints: false,
+  })
+  @JoinColumn({ name: 'id' })
+  fund: TrackFund[];
 }

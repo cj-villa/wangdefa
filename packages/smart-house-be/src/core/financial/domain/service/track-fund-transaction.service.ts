@@ -1,17 +1,23 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { FundTransaction } from '@/core/financial/domain/entities/track-fund-transaction.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { TrackFundTransactionCreateDto } from '@/core/financial/application/dto/track-fund-transaction-create.dto';
 import { InjectRequest } from '@/interface/decorate/inject-request';
 import { JwtUser } from '@/core/user';
 import { TrackFundTransactionUpdateDto } from '@/core/financial/application/dto/track-fund-transaction-update.dto';
 import { TrackFundTransactionQuery } from '@/core/financial/application/query/track-fund-transaction.query';
+import dayjs from 'dayjs';
+import { TrackFund } from '@/core/financial/domain/entities/track-fund.entity';
+import { batchKeys, mergeEntity } from '@/shared/toolkits/sql';
 
 @Injectable()
 export class TrackFundTransactionService {
   @InjectRepository(FundTransaction)
   private readonly transactionRepo: Repository<FundTransaction>;
+
+  @InjectRepository(TrackFund)
+  private readonly trackFundRepo: Repository<TrackFund>;
 
   @InjectRequest('user')
   private user: JwtUser;
@@ -20,6 +26,7 @@ export class TrackFundTransactionService {
   async create(data: TrackFundTransactionCreateDto) {
     const transaction = this.transactionRepo.create({
       ...data,
+      transactionDate: data.transactionDate ?? dayjs().add(1, 'day').toDate(),
       userId: this.user.userId,
     });
     return this.transactionRepo.save(transaction);
@@ -71,10 +78,24 @@ export class TrackFundTransactionService {
       queryBuilder.andWhere({ transactionType });
     }
 
-    // 按交易日期倒序排列
     queryBuilder.orderBy('transaction.transactionDate', 'DESC');
 
-    return queryBuilder.getManyAndCount();
+    const transactions = await queryBuilder.getManyAndCount();
+
+    if (!transactions[0].length) {
+      return transactions;
+    }
+
+    const funds = await this.trackFundRepo.find({
+      select: ['id', 'name', 'code'],
+      where: {
+        id: In(batchKeys(transactions[0], 'fundId')),
+      },
+    });
+
+    mergeEntity(transactions[0], funds, ['fundId', 'fund'], 'id');
+
+    return transactions;
   }
 
   /** 根据ID查询交易记录 */

@@ -4,22 +4,36 @@ import React, { useRef } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
 import { CreateFund } from 'src/routes/fund/create-fund';
-import { showModal } from 'src/share/show-modal';
-import { ConfirmButton } from 'src/components';
+import { showModal } from 'src/share/ui/show-modal';
+import { ConfirmButton, useConsulSelectOptions } from 'src/components';
+import { useRoute } from 'src/share/hooks/use-route';
+import { DEFAULT_TAB_KEY } from 'src/share/hooks/use-tabs';
 
 export const FundTab = () => {
+  const { setParams } = useRoute();
   const fundActionRef = useRef<ActionType>(null);
+
+  const { valueEnum } = useConsulSelectOptions('fund_channel');
 
   return (
     <ProTable
       actionRef={fundActionRef}
+      scroll={{ x: 700 }}
       columns={[
-        { title: '基金名称', dataIndex: 'name', width: 150 },
-        { title: '基金编码', dataIndex: 'code', width: 120 },
+        { title: '基金名称', dataIndex: 'name', width: 250 },
+        {
+          title: '购买渠道',
+          dataIndex: 'channel',
+          width: 100,
+          valueEnum,
+        },
+        { title: '基金编码', dataIndex: 'code', width: 90 },
         {
           title: '操作',
           dataIndex: 'action',
-          width: 200,
+          fixed: 'right',
+          hideInSearch: true,
+          width: 150,
           render(_, entity) {
             return (
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -38,7 +52,13 @@ export const FundTab = () => {
                 >
                   编辑
                 </Button>
-                <Button type="link" size="small">
+                <Button
+                  type="link"
+                  size="small"
+                  onClick={() => {
+                    setParams({ code: entity.code, [DEFAULT_TAB_KEY]: 'transactions' });
+                  }}
+                >
                   查看交易
                 </Button>
                 <ConfirmButton
@@ -50,7 +70,6 @@ export const FundTab = () => {
                   }}
                   type="text"
                   size="small"
-                  danger
                 >
                   删除
                 </ConfirmButton>

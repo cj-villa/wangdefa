@@ -18,7 +18,6 @@ export class TrackFundRecordService {
 
   /** 绑定基金 */
   async create(data: TrackFundCreateDto) {
-    console.log('this.user.userId', this.user.userId);
     const trackFund = this.trackFundRepo.create({
       ...data,
       userId: this.user.userId,

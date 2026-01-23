@@ -12,7 +12,6 @@ const main = async () => {
   const consulBaseService = new ConsulBaseService(consulConfig);
   const kvService = new KvService(consulBaseService, consulConfig);
   const data = await kvService.get('db');
-  console.log('data', { ...data.mysql, ...dbConfig.mysql });
   fs.writeFileSync(
     path.resolve(__dirname, '../static/.schema.ts'),
     `import { DataSource } from 'typeorm';

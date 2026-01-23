@@ -1,7 +1,8 @@
 import { createBrowserRouter, type RouteObject } from 'react-router';
 import { Layout } from 'src/layout';
-import { TokenPage } from 'src/routes/token';
+import { TokenPage } from 'src/routes/system/token';
 import { FundPage } from 'src/routes/fund';
+import { SystemConfig } from 'src/routes/system/config';
 
 export const routes = [
   {
@@ -10,15 +11,15 @@ export const routes = [
     children: [{ path: 'fund', name: '基金管理', Component: FundPage }],
   },
   {
-    name: '设置',
-    path: 'config',
+    name: '系统管理',
+    path: 'system',
     children: [
-      { path: 'token', name: '密钥设置', Component: TokenPage },
       {
-        path: 'token2',
-        name: '密钥设置2',
-        Component: TokenPage,
+        path: 'config',
+        name: '系统设置',
+        Component: SystemConfig,
       },
+      { path: 'token', name: '密钥设置', Component: TokenPage },
     ],
   },
 ].map((item) => {

@@ -2,7 +2,7 @@ import { Modal } from 'antd';
 import React, { useContext, useEffect } from 'react';
 
 interface ModalContextStateConfig {
-  onConfirm?: () => Promise<any> | any;
+  onConfirm?: (close: VoidFunction) => Promise<any> | any;
 }
 
 interface ModalContextState {
@@ -65,7 +65,7 @@ export const showModal = ({
     ...params,
     content: <ModalProvider configRef={configRef}>{content}</ModalProvider>,
     onOk: async (close) => {
-      const state = await configRef.current.onConfirm?.();
+      const state = await configRef.current.onConfirm?.(close);
       return onOk?.(close, state);
     },
     icon: null,

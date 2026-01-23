@@ -13,6 +13,7 @@ import type {
 import { deepMerge } from '@/shared/toolkits/object';
 import { ConsulOpenModule } from './libs/consul-open.module';
 import { ConsulBaseService } from '@/infrastructure/consul/libs/consul-base.service';
+import { KvRecordService } from '@/infrastructure/consul/libs/kv/record.service';
 
 type CombineOptions = ConsulKvModuleConfig | CfgProviderConfig;
 
@@ -70,8 +71,9 @@ export class ConsulModule {
         this.createCfgProvider(options),
         this.createBaseService(),
         this.createKvService(),
+        KvRecordService,
       ],
-      exports: [ConsulBaseService, KvService],
+      exports: [ConsulBaseService, KvService, KvRecordService],
     };
   }
 

@@ -1,8 +1,9 @@
 import { BetaSchemaForm } from '@ant-design/pro-components';
-import { configModal } from 'src/share/show-modal';
+import { configModal } from 'src/share/ui/show-modal';
 import { Form, message } from 'antd';
 import request from 'src/request';
 import React from 'react';
+import { ConsulSelect } from 'src/components';
 
 interface CreateFundProps {
   initialValues?: any;
@@ -51,6 +52,18 @@ export const CreateFund: React.FC<CreateFundProps> = ({ initialValues }) => {
               { max: 32, message: '基金名称不能超过32个字符' },
             ],
           },
+          fieldProps: {
+            maxLength: 32,
+            showCount: true,
+          },
+        },
+        {
+          title: '购买渠道',
+          dataIndex: 'channel',
+          formItemProps: {
+            rules: [{ required: true, message: '请选择购买渠道' }],
+          },
+          renderFormItem: (_, props) => <ConsulSelect {...props} name="fund_channel" />,
         },
         {
           title: '基金编码',
@@ -64,6 +77,10 @@ export const CreateFund: React.FC<CreateFundProps> = ({ initialValues }) => {
                 message: '基金编码只能包含字母和数字',
               },
             ],
+          },
+          fieldProps: {
+            maxLength: 32,
+            showCount: true,
           },
         },
       ]}

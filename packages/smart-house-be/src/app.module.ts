@@ -17,7 +17,7 @@ import KeyvRedis from '@keyv/redis';
 import { RedisClientType } from 'redis';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TokenModule } from '@/interface/modules/token/token.module';
+import { SystemModule } from '@/interface/modules/system/system.module';
 import { interceptors } from '@/interface/interceptor';
 import { JournalMeta } from '@/core/firefly/domain/entities/journal-meta.entity';
 import { FinancialModule } from '@/interface/modules/financial/financial.module';
@@ -115,7 +115,7 @@ import { FinancialModule } from '@/interface/modules/financial/financial.module'
     FireflyModule,
     WechatModule,
     AuthModule,
-    TokenModule,
+    SystemModule,
     FinancialModule,
     FallbackModule,
   ],

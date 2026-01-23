@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import bodyParserXml from 'body-parser-xml';
 import { RequestContextInterceptor } from '@/interface/interceptor/request-context';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { createLogger, LokiLogger } from '@/shared/logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -57,6 +58,12 @@ async function bootstrap() {
 
   await app.listen(port).then(() => {
     console.log(`Application is running on: http://localhost:${port}`);
+  });
+
+  let logger: LokiLogger;
+  process.on('unhandledRejection', (error: Error) => {
+    logger = logger || createLogger('system');
+    logger.error(error.message);
   });
 }
 

@@ -72,6 +72,7 @@ export class LokiLogger {
 
               const prefix = LokiLogger.colorizeLevel(level, `[${appName}] ${pid}  -`);
 
+              // TODO 处理错误信息
               const msg =
                 typeof message === 'string'
                   ? LokiLogger.colorizeLevel(level, message)

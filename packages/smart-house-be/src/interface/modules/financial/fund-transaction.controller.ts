@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Inject, Post, Query, UseInterceptors } from '@nestjs/common';
 import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
 import { DeleteDto } from '@/core/common/application/dto/delete.dto';
-import { TrackFundTransactionService } from '@/core/financial/domain/service/track-fund-transaction';
+import { TrackFundTransactionService } from '@/core/financial/domain/service/track-fund-transaction.service';
 import type { TrackFundTransactionQuery } from '@/core/financial/application/query/track-fund-transaction.query';
 import type { TrackFundTransactionCreateDto } from '@/core/financial/application/dto/track-fund-transaction-create.dto';
 import type { TrackFundTransactionUpdateDto } from '@/core/financial/application/dto/track-fund-transaction-update.dto';
