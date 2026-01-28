@@ -1,7 +1,7 @@
 /**
  * @description: 列表选择器，可以传入Select的所有 props 用 options 或 request 作为数据源，当传入request时，自动使用request的返回值作为 options，并在5s内缓存结果，多个相同request的select合并请求，支持滚动分页加载更多数据
  */
-import { Select, SelectProps, Spin } from 'antd';
+import { Select, SelectProps, Space, Spin, Typography } from 'antd';
 import React, { useEffect, useState, useRef } from 'react';
 import { request } from 'src/request/request';
 
@@ -16,6 +16,8 @@ interface ListSelectProps extends SelectProps {
   pageSize?: number;
   /** 是否启用滚动分页，默认true */
   enableScrollPagination?: boolean;
+  /** 额外的提示性信息 */
+  tips?: string;
 }
 
 // 缓存管理器
@@ -40,6 +42,7 @@ export const ListSelect: React.FC<ListSelectProps> = (props) => {
     pageSize = 20,
     enableScrollPagination = true,
     filterKey = 'search',
+    tips,
     ...selectProps
   } = props;
   const [loading, setLoading] = useState(false);
@@ -266,6 +269,16 @@ export const ListSelect: React.FC<ListSelectProps> = (props) => {
         </>
       )}
       notFoundContent={loading ? <Spin size="small" /> : null}
+      optionRender={(option) =>
+        !tips || !option.data[tips] ? (
+          option.label
+        ) : (
+          <Space>
+            {option.label}
+            <Typography.Text type="secondary">{option.data[tips]}</Typography.Text>
+          </Space>
+        )
+      }
     />
   );
 };

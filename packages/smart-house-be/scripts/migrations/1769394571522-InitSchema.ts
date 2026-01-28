@@ -1,0 +1,14 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class InitSchema1769394571522 implements MigrationInterface {
+    name = 'InitSchema1769394571522'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE \`financial_trend\` (\`id\` varchar(36) NOT NULL, \`code\` varchar(32) NOT NULL COMMENT '基金编码', \`date\` varchar(8) NOT NULL COMMENT '净值年月，如：202601', \`type\` enum ('net', 'profit') NOT NULL COMMENT '基金类型，net为单位净值，profit为万份收益' DEFAULT 'net', \`salePrice01\` decimal(10,6) NOT NULL COMMENT '当月1号的单位净值/万份收益（元）', \`salePrice02\` decimal(10,6) NOT NULL COMMENT '当月2号的单位净值/万份收益（元）', \`salePrice03\` decimal(10,6) NOT NULL COMMENT '当月3号的单位净值/万份收益（元）', \`salePrice04\` decimal(10,6) NOT NULL COMMENT '当月4号的单位净值/万份收益（元）', \`salePrice05\` decimal(10,6) NOT NULL COMMENT '当月5号的单位净值/万份收益（元）', \`salePrice06\` decimal(10,6) NOT NULL COMMENT '当月6号的单位净值/万份收益（元）', \`salePrice07\` decimal(10,6) NOT NULL COMMENT '当月7号的单位净值/万份收益（元）', \`salePrice08\` decimal(10,6) NOT NULL COMMENT '当月8号的单位净值/万份收益（元）', \`salePrice09\` decimal(10,6) NOT NULL COMMENT '当月9号的单位净值/万份收益（元）', \`salePrice10\` decimal(10,6) NOT NULL COMMENT '当月10号的单位净值/万份收益（元）', \`salePrice11\` decimal(10,6) NOT NULL COMMENT '当月11号的单位净值/万份收益（元）', \`salePrice12\` decimal(10,6) NOT NULL COMMENT '当月12号的单位净值/万份收益（元）', \`salePrice13\` decimal(10,6) NOT NULL COMMENT '当月13号的单位净值/万份收益（元）', \`salePrice14\` decimal(10,6) NOT NULL COMMENT '当月14号的单位净值/万份收益（元）', \`salePrice15\` decimal(10,6) NOT NULL COMMENT '当月15号的单位净值/万份收益（元）', \`salePrice16\` decimal(10,6) NOT NULL COMMENT '当月16号的单位净值/万份收益（元）', \`salePrice17\` decimal(10,6) NOT NULL COMMENT '当月17号的单位净值/万份收益（元）', \`salePrice18\` decimal(10,6) NOT NULL COMMENT '当月18号的单位净值/万份收益（元）', \`salePrice19\` decimal(10,6) NOT NULL COMMENT '当月19号的单位净值/万份收益（元）', \`salePrice20\` decimal(10,6) NOT NULL COMMENT '当月20号的单位净值/万份收益（元）', \`salePrice21\` decimal(10,6) NOT NULL COMMENT '当月21号的单位净值/万份收益（元）', \`salePrice22\` decimal(10,6) NOT NULL COMMENT '当月22号的单位净值/万份收益（元）', \`salePrice23\` decimal(10,6) NOT NULL COMMENT '当月23号的单位净值/万份收益（元）', \`salePrice24\` decimal(10,6) NOT NULL COMMENT '当月24号的单位净值/万份收益（元）', \`salePrice25\` decimal(10,6) NOT NULL COMMENT '当月25号的单位净值/万份收益（元）', \`salePrice26\` decimal(10,6) NOT NULL COMMENT '当月26号的单位净值/万份收益（元）', \`salePrice27\` decimal(10,6) NOT NULL COMMENT '当月27号的单位净值/万份收益（元）', \`salePrice28\` decimal(10,6) NOT NULL COMMENT '当月28号的单位净值/万份收益（元）', \`salePrice29\` decimal(10,6) NOT NULL COMMENT '当月29号的单位净值/万份收益（元）', \`salePrice30\` decimal(10,6) NOT NULL COMMENT '当月30号的单位净值/万份收益（元）', \`salePrice31\` decimal(10,6) NOT NULL COMMENT '当月31号的单位净值/万份收益（元）', PRIMARY KEY (\`id\`)) ENGINE=InnoDB COMMENT="正在追踪的基金记录表"`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`DROP TABLE \`financial_trend\``);
+    }
+
+}

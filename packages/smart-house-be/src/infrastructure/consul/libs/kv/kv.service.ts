@@ -73,7 +73,7 @@ export class KvService {
         return global[CONSUL_GLOBAL_DATA][key];
       })
       .catch((error) => {
-        this.logger.error(error, `subscribe key: ${key} failed`);
+        this.logger.error(`subscribe key: ${key} failed`);
         this.subscribe(key, index, failedCount + 1);
       });
   }

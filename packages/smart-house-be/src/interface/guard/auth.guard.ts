@@ -46,6 +46,10 @@ export class AuthGuard implements CanActivate {
       await this.authByAccessToken(request, token);
     }
 
+    this.logger.info(
+      `user ${request['user'].userId} auth success method: ${request.method}; path: ${request.path};`
+    );
+
     return true;
   }
 

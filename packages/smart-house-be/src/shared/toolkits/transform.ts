@@ -14,7 +14,7 @@ export const stringifyJson = (json: any, defaultText = ''): string => {
   try {
     return JSON.stringify(json);
   } catch (error) {
-    console.error('stringify Json error', error);
+    console.error('stringify Json error', error, json);
     return defaultText;
   }
 };

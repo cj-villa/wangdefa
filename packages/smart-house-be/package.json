@@ -7,9 +7,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "start": "NODE_ENV=development nest start",
-    "dev": "NODE_ENV=development nest start --debug --watch",
-    "start:prod": "NODE_ENV=production node dist/main",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development nest start",
+    "dev": "NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development nest start --debug --watch",
+    "start:prod": "NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=production node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "migration": "node scripts/schema.js && typeorm-ts-node-commonjs migration:generate scripts/migrations/InitSchema -d static/.schema.ts && typeorm-ts-node-commonjs migration:run -d static/.schema.ts",
     "test": "jest",

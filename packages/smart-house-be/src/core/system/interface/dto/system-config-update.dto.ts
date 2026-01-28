@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsEnum, IsNumberString } from 'class-validator';
-import { FundTransactionType } from '@/core/financial/application/enum/fund-transaction-type';
+import { FinancialTransactionType } from '@/core/financial/application/enum/financial-transaction-type';
 import { ObjectType } from 'typeorm';
 
 export class SystemConfigUpdateDto {

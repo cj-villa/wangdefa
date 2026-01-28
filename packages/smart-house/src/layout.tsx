@@ -12,7 +12,7 @@ export const Layout = () => {
 
   useEffect(() => {
     if (location.pathname === '/') {
-      navigate('/fund');
+      navigate('/financial');
     }
   }, []);
 

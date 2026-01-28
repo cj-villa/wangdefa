@@ -3,21 +3,22 @@ import request from 'src/request';
 import React, { useRef } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
-import { CreateFund } from 'src/routes/fund/create-fund';
+import { CreateFinancial } from 'src/routes/financial/create-financial';
 import { showModal } from 'src/share/ui/show-modal';
 import { ConfirmButton, useConsulSelectOptions } from 'src/components';
 import { useRoute } from 'src/share/hooks/use-route';
 import { DEFAULT_TAB_KEY } from 'src/share/hooks/use-tabs';
+import dayjs from 'dayjs';
 
-export const FundTab = () => {
+export const FinancialTab = () => {
   const { setParams } = useRoute();
-  const fundActionRef = useRef<ActionType>(null);
+  const financialActionRef = useRef<ActionType>(null);
 
-  const { valueEnum } = useConsulSelectOptions('fund_channel');
+  const { valueEnum } = useConsulSelectOptions('financial_channel');
 
   return (
     <ProTable
-      actionRef={fundActionRef}
+      actionRef={financialActionRef}
       scroll={{ x: 700 }}
       columns={[
         { title: '基金名称', dataIndex: 'name', width: 250 },
@@ -33,7 +34,7 @@ export const FundTab = () => {
           dataIndex: 'action',
           fixed: 'right',
           hideInSearch: true,
-          width: 150,
+          width: 260,
           render(_, entity) {
             return (
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -43,15 +44,31 @@ export const FundTab = () => {
                   onClick={() => {
                     showModal({
                       title: '编辑基金',
-                      content: <CreateFund initialValues={entity} />,
+                      content: <CreateFinancial initialValues={entity} />,
                       onOk: () => {
-                        fundActionRef.current?.reload();
+                        financialActionRef.current?.reload();
                       },
                     });
                   }}
                 >
                   编辑
                 </Button>
+                <ConfirmButton
+                  type="text"
+                  size="small"
+                  onClick={() =>
+                    request
+                      .updateFinancialNetValue({
+                        code: entity.code,
+                        from: dayjs().subtract(1, 'y').valueOf(),
+                      })
+                      .then(() => {
+                        message.success('更新成功');
+                      })
+                  }
+                >
+                  更新净值
+                </ConfirmButton>
                 <Button
                   type="link"
                   size="small"
@@ -64,8 +81,8 @@ export const FundTab = () => {
                 <ConfirmButton
                   confirmText={`是否确认删除基金 "${entity.name}"？`}
                   onClick={async () => {
-                    await request.deleteFund({ id: entity.id });
-                    fundActionRef.current?.reload();
+                    await request.deleteFinancial({ id: entity.id });
+                    financialActionRef.current?.reload();
                     message.success('删除成功');
                   }}
                   type="text"
@@ -78,7 +95,7 @@ export const FundTab = () => {
           },
         },
       ]}
-      request={request.listFund}
+      request={request.listFinancial}
       toolBarRender={() => [
         <Button
           key="button"
@@ -86,9 +103,9 @@ export const FundTab = () => {
           onClick={() => {
             showModal({
               title: '添加基金',
-              content: <CreateFund />,
+              content: <CreateFinancial />,
               onOk: () => {
-                fundActionRef.current?.reload();
+                financialActionRef.current?.reload();
               },
             });
           }}

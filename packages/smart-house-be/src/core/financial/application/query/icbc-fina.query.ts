@@ -13,7 +13,7 @@ export class ICBCFinaQuery {
   // 产品类型 0-年化产品 1-净值产品
   prodType: string;
   // 万份收益/净值
-  salePrice: string;
+  salePrice: number;
   tableType: string;
   // 7日年化
   totValue: string;

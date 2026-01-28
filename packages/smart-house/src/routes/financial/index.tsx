@@ -1,26 +1,26 @@
 import React from 'react';
 import { Tabs, Card } from 'antd';
-import { FundTab } from './fund';
-import { FundTransaction } from 'src/routes/fund/fund-transaction';
+import { FinancialTab } from './financial';
+import { FinancialTransaction } from 'src/routes/financial/financial-transaction';
 import { useTab } from 'src/share/hooks/use-tabs';
 import { TabsProps } from 'antd/es/tabs';
 import { useRoute } from 'src/share/hooks/use-route';
 
 const tabItems: NonNullable<TabsProps['items']> = [
   {
-    label: '基金列表',
-    key: 'funds',
-    children: <FundTab />,
+    label: '理财列表',
+    key: 'financials',
+    children: <FinancialTab />,
   },
   {
-    label: '基金交易',
+    label: '理财交易',
     key: 'transactions',
-    children: <FundTransaction />,
+    children: <FinancialTransaction />,
   },
 ];
 
-export const FundPage = () => {
-  const { activeKey, onChange } = useTab(['funds', 'transactions']);
+export const FinancialPage = () => {
+  const { activeKey, onChange } = useTab(['financials', 'transactions']);
   const { removeParam } = useRoute();
 
   return (

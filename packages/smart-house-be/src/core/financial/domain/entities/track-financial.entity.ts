@@ -8,12 +8,12 @@ import {
   Index,
   OneToMany,
 } from 'typeorm';
-import { FundTransaction } from '@/core/financial/domain/entities/track-fund-transaction.entity';
+import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
 import { FinancialChannel } from '@/core/financial/application/enum/financial-channel';
 
-@Entity({ name: 'track_fund', comment: '正在追踪的基金记录表' })
+@Entity({ name: 'track_financial', comment: '正在追踪的基金记录表' })
 @Index('idx_code_user_id', ['code', 'userId'], { unique: true })
-export class TrackFund {
+export class TrackFinancial {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -43,8 +43,8 @@ export class TrackFund {
   })
   deletedAt?: Date;
 
-  @OneToMany(() => FundTransaction, (transaction) => transaction.fund, {
+  @OneToMany(() => FinancialTransaction, (transaction) => transaction.financial, {
     createForeignKeyConstraints: false,
   })
-  transactions: FundTransaction[];
+  transactions: FinancialTransaction[];
 }

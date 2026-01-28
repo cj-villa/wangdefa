@@ -1,3 +1,4 @@
+/** 招行基金 */
 export class MCBFundQuery {
   annualRevenueRate: string;
   changePCT: string;
@@ -8,7 +9,7 @@ export class MCBFundQuery {
   millionUnitsRevenue: string;
   name: string;
   // 单位净值（元）
-  netValue: string;
+  netValue: number;
   returnOneDay: string;
   // 净值日期：2025-12-09 00:00:00
   updateTime: string;

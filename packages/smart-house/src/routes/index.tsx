@@ -1,14 +1,14 @@
 import { createBrowserRouter, type RouteObject } from 'react-router';
 import { Layout } from 'src/layout';
 import { TokenPage } from 'src/routes/system/token';
-import { FundPage } from 'src/routes/fund';
+import { FinancialPage } from 'src/routes/financial';
 import { SystemConfig } from 'src/routes/system/config';
 
 export const routes = [
   {
     name: '源数据管理',
     path: '',
-    children: [{ path: 'fund', name: '基金管理', Component: FundPage }],
+    children: [{ path: 'financial', name: '基金管理', Component: FinancialPage }],
   },
   {
     name: '系统管理',

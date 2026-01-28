@@ -5,7 +5,7 @@ import { asyncNoop } from 'src/share/toolkits/empty';
 
 interface ConfirmButtonProps extends Omit<ButtonProps, 'type' | 'loading'> {
   type?: 'text' | 'button';
-  confirmText: string;
+  confirmText?: string;
 }
 
 export const ConfirmButton: React.FC<React.PropsWithChildren<ConfirmButtonProps>> = (props) => {
@@ -20,20 +20,29 @@ export const ConfirmButton: React.FC<React.PropsWithChildren<ConfirmButtonProps>
     }
   );
 
-  if (type !== 'button') {
-    return (
+  const wrapConfirm = (children: React.ReactNode) =>
+    !confirmText ? (
+      React.isValidElement(children) ? (
+        React.cloneElement<any>(children, { onClick: runAsync })
+      ) : (
+        children
+      )
+    ) : (
       <Popconfirm title={confirmText} onConfirm={runAsync} okText="确认" cancelText="取消">
-        <Spin wrapperClassName="inline-block" spinning={loading}>
-          <Typography.Link {...rest}>{children}</Typography.Link>
-        </Spin>
+        {children}
       </Popconfirm>
     );
+
+  if (type !== 'button') {
+    return wrapConfirm(
+      <Spin wrapperClassName="inline-block" spinning={loading}>
+        <Typography.Link {...rest}>{children}</Typography.Link>
+      </Spin>
+    );
   }
-  return (
-    <Popconfirm title={confirmText} onConfirm={runAsync} okText="确认" cancelText="取消">
-      <Button loading={loading} {...rest}>
-        {children}
-      </Button>
-    </Popconfirm>
+  return wrapConfirm(
+    <Button loading={loading} {...rest}>
+      {children}
+    </Button>
   );
 };

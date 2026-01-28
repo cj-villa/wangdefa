@@ -5,11 +5,11 @@ import request from 'src/request';
 import React from 'react';
 import { ConsulSelect } from 'src/components';
 
-interface CreateFundProps {
+interface CreateFinancialProps {
   initialValues?: any;
 }
 
-export const CreateFund: React.FC<CreateFundProps> = ({ initialValues }) => {
+export const CreateFinancial: React.FC<CreateFinancialProps> = ({ initialValues }) => {
   const [form] = Form.useForm();
 
   React.useEffect(() => {
@@ -24,11 +24,11 @@ export const CreateFund: React.FC<CreateFundProps> = ({ initialValues }) => {
       try {
         if (initialValues) {
           // 编辑模式
-          await request.updateFund({ ...formData, id: initialValues.id });
+          await request.updateFinancial({ ...formData, id: initialValues.id });
           message.success('更新成功');
         } else {
           // 创建模式
-          await request.createFund(formData);
+          await request.createFinancial(formData);
           message.success('创建成功');
         }
       } catch (error) {
@@ -63,7 +63,7 @@ export const CreateFund: React.FC<CreateFundProps> = ({ initialValues }) => {
           formItemProps: {
             rules: [{ required: true, message: '请选择购买渠道' }],
           },
-          renderFormItem: (_, props) => <ConsulSelect {...props} name="fund_channel" />,
+          renderFormItem: (_, props) => <ConsulSelect {...props} name="financial_channel" />,
         },
         {
           title: '基金编码',

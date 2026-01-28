@@ -1,20 +1,20 @@
-export interface Fund {
+export interface Financial {
   id: string;
   name: string;
   code: string;
 }
 
-export enum FundTransactionType {
+export enum FinancialTransactionType {
   BUY = 'BUY',
   SELL = 'SELL',
 }
 
-export interface FundTransaction {
+export interface FinancialTransaction {
   id: string;
-  fundId: string;
-  fundName?: string;
-  fundCode?: string;
-  transactionType: FundTransactionType;
+  financialId: string;
+  financialName?: string;
+  financialCode?: string;
+  transactionType: FinancialTransactionType;
   amount: number;
   shares: number;
   transactionPrice: number;

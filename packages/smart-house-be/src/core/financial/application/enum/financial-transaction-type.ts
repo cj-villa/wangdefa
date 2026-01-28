@@ -3,7 +3,7 @@
  * BUY-买入
  * SELL-卖出
  */
-export enum FundTransactionType {
+export enum FinancialTransactionType {
   // 买入
   BUY = 'BUY',
   // 卖出

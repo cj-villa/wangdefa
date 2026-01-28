@@ -10,5 +10,5 @@ export class MCBFinaQuery {
   // 累计净值
   znavVal: string;
   // 单位净值
-  znavCtl: string;
+  znavCtl: number;
 }

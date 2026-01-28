@@ -1,8 +1,13 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
-/** 创建实例 */
-export const http: AxiosInstance = axios.create({
+import https from 'https';
+
+const legacyAgent = new https.Agent({
+  secureOptions: require('constants').SSL_OP_LEGACY_SERVER_CONNECT,
 });
+
+/** 创建实例 */
+export const http: AxiosInstance = axios.create({ httpsAgent: legacyAgent });
 
 /** 响应拦截 */
 http.interceptors.response.use(
@@ -10,6 +15,6 @@ http.interceptors.response.use(
     return response.data;
   },
   (error: AxiosError) => {
-    return Promise.reject(error.response);
+    return Promise.reject(error.response ?? error.cause);
   }
 );

@@ -1,6 +1,10 @@
 import { request } from './request';
 import type { Page } from 'src/request/type/common';
-import type { Fund, FundTransaction, FundTransactionType } from 'src/request/type/fund';
+import type {
+  Financial,
+  FinancialTransaction,
+  FinancialTransactionType,
+} from 'src/request/type/financial';
 import {
   SystemConfig,
   SystemConfigListResponse,
@@ -21,18 +25,23 @@ export default {
     request.post('/api/system/config/update', data),
 
   /** 理财相关 */
-  listFund: (params: Page & Partial<Omit<Fund, 'id'>>) => request.get('/api/fund/list', { params }),
-  createFund: (data: Omit<Fund, 'id'>) => request.post('/api/fund/create', data),
-  deleteFund: (data: { id: string }) => request.post('/api/fund/delete', data),
-  updateFund: (data: Fund) => request.post('/api/fund/update', data),
+  listFinancial: (params: Page & Partial<Omit<Financial, 'id'>>) =>
+    request.get('/api/financial/list', { params }),
+  createFinancial: (data: Omit<Financial, 'id'>) => request.post('/api/financial/create', data),
+  deleteFinancial: (data: { id: string }) => request.post('/api/financial/delete', data),
+  updateFinancial: (data: Financial) => request.post('/api/financial/update', data),
+  updateFinancialValue: (data: { code: string; from?: number }) =>
+    request.post('/api/financial/clean', data),
+  updateFinancialNetValue: (data: { code: string; from?: number }) =>
+    request.post('/api/financial/clean-net-value', data),
   /** 基金交易相关 */
-  listFundTransaction: (
-    params: Page & { fundId?: string; transactionType?: FundTransactionType }
-  ) => request.get('/api/fund/transaction/list', { params }),
-  createFundTransaction: (data: Omit<FundTransaction, 'id'>) =>
-    request.post('/api/fund/transaction/create', data),
-  deleteFundTransaction: (data: { id: string }) =>
-    request.post('/api/fund/transaction/delete', data),
-  updateFundTransaction: (data: FundTransaction) =>
-    request.post('/api/fund/transaction/update', data),
+  listFinancialTransaction: (
+    params: Page & { financialId?: string; transactionType?: FinancialTransactionType }
+  ) => request.get('/api/financial/transaction/list', { params }),
+  createFinancialTransaction: (data: Omit<FinancialTransaction, 'id'>) =>
+    request.post('/api/financial/transaction/create', data),
+  deleteFinancialTransaction: (data: { id: string }) =>
+    request.post('/api/financial/transaction/delete', data),
+  updateFinancialTransaction: (data: FinancialTransaction) =>
+    request.post('/api/financial/transaction/update', data),
 };
