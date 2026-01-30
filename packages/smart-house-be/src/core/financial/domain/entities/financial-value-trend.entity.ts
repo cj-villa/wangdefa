@@ -7,18 +7,18 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'financial_value_trend', comment: '基金价值表' })
+@Entity({ name: 'financial_value_trend', comment: '理财价值表' })
 export class FinancialValueTrendEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 32, comment: '基金编码' })
-  code: string;
+  @Column({ name: 'financial_id', type: 'uuid', comment: '理财Id' })
+  financialId: string;
 
   @Column({ type: 'datetime', precision: 6, comment: '当前净值时间' })
   date: Date;
 
-  @Column({ type: 'decimal', precision: 13, scale: 6, comment: '价值（元）' })
+  @Column({ type: 'decimal', precision: 13, scale: 6, comment: '当前价值（元）' })
   balance: number;
 
   @CreateDateColumn({ name: 'created_at', type: 'datetime', precision: 6 })

@@ -8,6 +8,7 @@ import { TrackFinancialUpdateDto } from '@/core/financial/application/dto/track-
 import { FinancialNetValueCleanService } from '@/core/financial/domain/service/financial-net-value-clean.service';
 import { TrackFinancialCleanDto } from '@/core/financial/application/dto/track-financial-clean.dto';
 import { FinancialValueCleanService } from '@/core/financial/domain/service/financial-value-clean.service';
+import { FinancialValueSummaryService } from '@/core/financial/domain/service/financial-value-summary.service';
 
 @Controller('/api/financial')
 export class FinancialController {
@@ -20,10 +21,18 @@ export class FinancialController {
   @Inject()
   private readonly financialCleanService: FinancialValueCleanService;
 
+  @Inject()
+  private readonly financialValueSummaryService: FinancialValueSummaryService;
+
   @Get('list')
   @UseInterceptors(PaginationFormatInterceptor)
-  list(@Query() query: TrackFinancialQuery) {
-    return this.trackFinancialRecordService.list(query);
+  async list(@Query() query: TrackFinancialQuery) {
+    const list = await this.trackFinancialRecordService.list(query);
+    for (const financial of list[0]) {
+      const summary = await this.financialValueSummaryService.getFinancialSummary(financial.id);
+      Object.assign(financial, summary);
+    }
+    return list;
   }
 
   @Post('create')

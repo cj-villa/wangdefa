@@ -16,10 +16,10 @@ export class TrackFinancialTransactionCreateDto {
   @IsEnum(FinancialTransactionType)
   transactionType: FinancialTransactionType;
 
-  @ApiProperty({ example: '1000.0000', description: '交易份额' })
+  @ApiProperty({ example: '1000.0000', description: '交易金额' })
   @IsNotEmpty()
-  @IsNumberString({ no_symbols: false })
-  shares: number;
+  @IsNumberString({ no_symbols: true })
+  amount: number;
 
   @ApiProperty({ example: '2024-01-01T10:00:00Z', description: '交易日期' })
   @IsNotEmpty()

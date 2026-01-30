@@ -30,17 +30,17 @@ export class FinancialTransaction {
   })
   transactionType: FinancialTransactionType;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, comment: '交易份额' })
-  shares: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, comment: '交易金额' })
+  amount: number;
 
   @Column({
-    name: 'current_shares',
     type: 'decimal',
-    precision: 10,
-    scale: 0,
-    comment: '当前总份额',
+    precision: 13,
+    scale: 6,
+    comment: '交易份额，确认份额后会更新，年化的类型没有份额',
+    default: 0,
   })
-  currentShares: number;
+  shares: number;
 
   @Column({
     name: 'ensure_date',

@@ -70,21 +70,21 @@ export const CreateFinancialTransaction = ({
       initialValue: FinancialTransactionType.BUY,
     },
     {
-      title: '交易份额',
-      dataIndex: 'shares',
+      title: '交易金额',
+      dataIndex: 'amount',
       valueType: 'digit',
       fieldProps: {
-        placeholder: '请输入交易份额',
+        placeholder: '请输入交易金额',
         min: 1,
         precision: 2,
         style: { width: '100%' },
       },
       formItemProps: {
-        rules: [{ required: true, message: '请输入交易份额' }],
+        rules: [{ required: true, message: '请输入交易金额' }],
       },
     },
     {
-      title: '购买日期',
+      title: '交易日期',
       dataIndex: 'transactionDate',
       valueType: 'date',
       fieldProps: { style: { width: '100%' } },

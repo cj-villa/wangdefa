@@ -11,6 +11,8 @@ import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/f
 import { FinancialValueCleanService } from '@/core/financial/domain/service/financial-value-clean.service';
 import { FinancialScheduleService } from '@/core/financial/domain/service/financial.schedule.service';
 import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
+import { FinancialNetValueService } from '@/core/financial/domain/service/financial-net-value.serivce';
+import { FinancialValueSummaryService } from '@/core/financial/domain/service/financial-value-summary.service';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/fina
     FinancialNetValueCleanService,
     FinancialValueCleanService,
     FinancialScheduleService,
+    FinancialNetValueService,
+    FinancialValueSummaryService,
   ],
 })
 export class FinancialModule {}

@@ -1,5 +1,5 @@
 /** 资金记录服务 */
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -57,7 +57,7 @@ export class TrackFinancialRecordService {
       query.andWhere('trackFinancial.name LIKE :name', { name: `%${name}%` });
     }
     if (code) {
-      query.andWhere('trackFinancial.code LIKE :code', { code: `%${code}%` });
+      query.andWhere({ code });
     }
     return query.getManyAndCount();
   }

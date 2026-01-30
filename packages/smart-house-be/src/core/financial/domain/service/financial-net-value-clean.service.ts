@@ -1,4 +1,4 @@
-/** 资金净值清洗服务 */
+/** 爬取理财每日的净值 */
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { FinancialChannel } from '@/core/financial/application/enum/financial-channel';
 import { http } from '@/shared/request';
@@ -15,6 +15,7 @@ import dayjs from 'dayjs';
 import { LokiLogger } from '@/shared/logger';
 import { InjectLogger } from '@/interface/decorate/inject-logger';
 import { stringifyJson } from '@/shared/toolkits/transform';
+import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
 
 @Injectable()
 export class FinancialNetValueCleanService {
@@ -29,6 +30,9 @@ export class FinancialNetValueCleanService {
 
   @InjectLogger(FinancialNetValueCleanService.name)
   private readonly logger: LokiLogger;
+
+  @Inject()
+  private readonly trackFinancialTransactionService: TrackFinancialTransactionService;
 
   // 获取当月净值
   private async getNetValue(code: string, channel: FinancialChannel, pageSize = 10, page = 1) {
@@ -98,7 +102,6 @@ export class FinancialNetValueCleanService {
     });
     // 不存在数据，直接开刷
     if (!lastTrend) {
-      console.log("dayjs().diff(dayjsFrom, 'day')", dayjs().diff(dayjsFrom, 'day'));
       return {
         deadLine: dayjsFrom,
         pageSize: 30,
@@ -144,8 +147,14 @@ export class FinancialNetValueCleanService {
     while (needContinue && current - page < maxRound) {
       // 需要补充的直接就来30天，没有的话就来10天
       const trends = await this.getNetValue(code, financial.channel, pageSize, current++);
+      // 没有数据，说明已经完结了
+      if (!trends?.length) {
+        needContinue = false;
+      }
       for (const trend of trends) {
-        this.logger.info(`[${current} / ${trends.length}] ${code} save ${trend.date} trend`);
+        this.logger.info(
+          `[${current - page} / ${maxRound}] ${code} save ${trends.length} ${trend.date} trend`
+        );
         // 理论不会存在
         const isExist = await this.financialTrendRepository.findOneBy({ date: trend.date, code });
         if (isExist) {
@@ -153,10 +162,12 @@ export class FinancialNetValueCleanService {
         } else {
           await this.financialTrendRepository.save(trend);
         }
+        await this.trackFinancialTransactionService.updateTransactionShares(trend);
         if (!dayjs(trend.date).isAfter(deadLine)) {
           needContinue = false;
         }
       }
+      this.logger.info(`${code} 清洗 trend 完成`);
     }
   }
 }

@@ -1,7 +1,10 @@
+/**
+ * 计算基金每日的价值
+ */
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
-import { Between, MoreThanOrEqual, Repository } from 'typeorm';
+import { Between, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
 import { InjectRequest } from '@/interface/decorate/inject-request';
 import { JwtUser } from '@/core/user';
@@ -45,7 +48,7 @@ export class FinancialValueCleanService {
     return calculation(trend, 'value', (prev, cur) => prev + Number(cur), 0);
   }
 
-  // 计算某一天的当前账户余额
+  // 计算万份年化的理财的某一天的当前账户余额
   private async calcProfitValue(
     financial: TrackFinancial,
     date: dayjs.Dayjs,
@@ -88,7 +91,7 @@ export class FinancialValueCleanService {
         dayjs(next?.ensureDate ?? date.add(1, 'day'))
       );
       const shares = Number(
-        current.transactionType === FinancialTransactionType.BUY ? current.shares : -current.shares
+        current.transactionType === FinancialTransactionType.BUY ? current.amount : -current.amount
       );
       total = (total + shares) * (profit / 10000 + 1);
     }
@@ -109,19 +112,21 @@ export class FinancialValueCleanService {
       throw new BadRequestException('基金不存在');
     }
     const dayjsFrom = dayjs(date);
-    const netValue = await this.financialTrendRepository.findOneBy({
-      code,
-      date: dayjsFrom.toDate(),
+    // 一直往前取，没有的话就爆炸
+    const netValue = await this.financialTrendRepository.findOne({
+      where: { code, date: LessThanOrEqual(dayjsFrom.toDate()) },
+      order: { date: 'desc' },
     });
     if (!netValue) {
       throw new BadRequestException('基金净值不存在');
     }
     const { type, value } = netValue;
+    // 这个时间点当前理财的价值
     let financialValue = 0;
     // 净值类型的基金价值直接计算
     if (type === 'net') {
-      const currentShares = await this.trackFinancialTransactionService.getFinancialRestShares(
-        financial.id,
+      const currentShares = await this.trackFinancialTransactionService.getFinancialShares(
+        financial,
         dayjsFrom.toDate()
       );
       financialValue = currentShares ? value * currentShares : 0;
@@ -130,12 +135,20 @@ export class FinancialValueCleanService {
     if (type === 'profit') {
       financialValue = await this.calcProfitValue(financial, dayjsFrom, valueTrend);
     }
+    // upsert value trend
     const financialValueTrend = this.financialValueTrendEntity.create({
-      code,
+      financialId: financial.id,
       date: dayjsFrom.toDate(),
       balance: financialValue,
     });
-    return this.financialValueTrendEntity.save(financialValueTrend);
+    const currentTrend = await this.financialValueTrendEntity.findOneBy({
+      financialId: financial.id,
+      date: dayjsFrom.toDate(),
+    });
+    await (currentTrend
+      ? this.financialValueTrendEntity.update(currentTrend.id, financialValueTrend)
+      : this.financialValueTrendEntity.save(financialValueTrend));
+    return financialValueTrend;
   }
 
   /** 从某天开始清理基金价值至最后有净值的一天 */

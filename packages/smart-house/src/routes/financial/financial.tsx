@@ -29,6 +29,14 @@ export const FinancialTab = () => {
           valueEnum,
         },
         { title: '基金编码', dataIndex: 'code', width: 90 },
+        { title: '余额', fixed: 'right', dataIndex: 'balance', width: 90, valueType: 'money' },
+        {
+          title: '昨日收益',
+          fixed: 'right',
+          dataIndex: 'yesterdayProfit',
+          width: 90,
+          valueType: 'money',
+        },
         {
           title: '操作',
           dataIndex: 'action',

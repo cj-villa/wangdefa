@@ -7,12 +7,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'financial_net_value_trend', comment: '基金净值表' })
+@Entity({ name: 'financial_net_value_trend', comment: '理财净值表' })
 export class FinancialNetValueTrendEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 32, comment: '基金编码' })
+  @Column({ type: 'varchar', length: 32, comment: '理财编码' })
   code: string;
 
   @Column({ type: 'datetime', precision: 6, comment: '当前净值时间' })
@@ -21,7 +21,7 @@ export class FinancialNetValueTrendEntity {
   @Column({
     type: 'enum',
     enum: ['net', 'profit'],
-    comment: '基金类型，net为单位净值，profit为万份收益',
+    comment: '理财类型，net为单位净值，profit为万份收益',
     default: 'net',
   })
   type: 'net' | 'profit';
