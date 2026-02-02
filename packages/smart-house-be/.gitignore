@@ -36,4 +36,4 @@ lerna-debug.log*
 
 .smart
 static/
-#scripts/migrations
+scripts/migrations
