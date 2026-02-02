@@ -51,12 +51,12 @@ export const FinancialTransaction = () => {
       title: '操作',
       dataIndex: 'action',
       fixed: 'right',
-      width: 200,
+      width: 170,
       render(_, entity: any) {
         return (
           <div style={{ display: 'flex', gap: '8px' }}>
-            <Button
-              type="link"
+            <ConfirmButton
+              type="text"
               size="small"
               onClick={() => {
                 showModal({
@@ -69,7 +69,7 @@ export const FinancialTransaction = () => {
               }}
             >
               编辑
-            </Button>
+            </ConfirmButton>
             <ConfirmButton
               type="text"
               size="small"

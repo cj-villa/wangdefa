@@ -21,6 +21,6 @@ export const useTableColumns = <DataSource, ValueType = 'text'>(
         }
         return column;
       }),
-    [columns]
+    [columns, params]
   );
 };
