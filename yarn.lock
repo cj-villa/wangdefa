@@ -1522,6 +1522,13 @@
     reactcss "^1.2.3"
     tinycolor2 "^1.4.2"
 
+"@cj-villa/scaffold-cli@1.0.2":
+  version "1.0.2"
+  resolved "https://npm.pkg.github.com/download/@cj-villa/scaffold-cli/1.0.2/44d77d670867e0b9bbfd4cb8c7b24f705cd1ee33#44d77d670867e0b9bbfd4cb8c7b24f705cd1ee33"
+  integrity sha512-DXoBYvWN3DbIDw2jf+jJOO+9CF6nsRTnJ044VaaRoO5zEb1/fGajzOjCN0x83YksteWssbP+TzSXM7fuHXVC9A==
+  dependencies:
+    "@cj-villa/scaffold" "1.0.2"
+
 "@cj-villa/scaffold-plugin-react@^1.0.2":
   version "1.0.2"
   resolved "https://npm.pkg.github.com/download/@cj-villa/scaffold-plugin-react/1.0.2/59921afd6abf860271762d3504a240d80726f020#59921afd6abf860271762d3504a240d80726f020"
