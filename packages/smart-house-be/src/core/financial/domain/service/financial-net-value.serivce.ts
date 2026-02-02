@@ -4,11 +4,22 @@ import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/f
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import dayjs from 'dayjs';
+import { FinancialNetValueQuery } from '@/core/financial/application/query/financial-net-value.query';
 
 @Injectable()
 export class FinancialNetValueService {
   @InjectRepository(FinancialNetValueTrendEntity)
   private readonly financialNetValueTrendEntity: Repository<FinancialNetValueTrendEntity>;
+
+  async getNetValueList(query: FinancialNetValueQuery) {
+    const { code, current = 1, pageSize = 10 } = query;
+    return this.financialNetValueTrendEntity.findAndCount({
+      where: { code },
+      order: { date: 'DESC' },
+      take: pageSize,
+      skip: (current - 1) * pageSize,
+    });
+  }
 
   /** 获取某个时间点理财的净值 */
   async getFinancialNetValueTrend(

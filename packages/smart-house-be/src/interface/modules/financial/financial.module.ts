@@ -13,6 +13,7 @@ import { FinancialScheduleService } from '@/core/financial/domain/service/financ
 import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
 import { FinancialNetValueService } from '@/core/financial/domain/service/financial-net-value.serivce';
 import { FinancialValueSummaryService } from '@/core/financial/domain/service/financial-value-summary.service';
+import { FinancialNetValueController } from '@/interface/modules/financial/financial-net-value.controller';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { FinancialValueSummaryService } from '@/core/financial/domain/service/fi
       FinancialValueTrendEntity,
     ]),
   ],
-  controllers: [FinancialController, FinancialTransactionController],
+  controllers: [FinancialController, FinancialTransactionController, FinancialNetValueController],
   providers: [
     TrackFinancialRecordService,
     TrackFinancialTransactionService,

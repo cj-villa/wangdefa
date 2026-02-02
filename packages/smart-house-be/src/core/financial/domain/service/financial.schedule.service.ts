@@ -26,8 +26,9 @@ export class FinancialScheduleService {
     const codes = await this.trackFinancialRecordService.listCode();
     for (const code of codes) {
       this.logger.info(`计算基金 ${code} 的价值`);
-      const current = dayjs().subtract(1, 'day');
+      // 有些T+2，洗两天
       try {
+        const current = dayjs().subtract(2, 'day');
         await this.financialNetValueCleanService.fillNetValue(code, current);
         await this.financialValueCleanService.calcFinancialValue(code, current);
         this.logger.info(`计算基金 ${code} 的价值完成`);

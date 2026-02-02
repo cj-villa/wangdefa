@@ -3,7 +3,7 @@ import request from 'src/request';
 import React, { useRef } from 'react';
 import { TransactionOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
-import { CreateFinancialTransaction } from 'src/routes/financial/create-Financial-transaction';
+import { CreateFinancialTransaction } from './create-Financial-transaction';
 import { showModal } from 'src/share/ui/show-modal';
 import { ConfirmButton } from 'src/components';
 import { useTableColumns } from 'src/share/hooks/use-table-columns';

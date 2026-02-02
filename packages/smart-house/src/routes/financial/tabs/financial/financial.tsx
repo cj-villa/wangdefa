@@ -3,12 +3,12 @@ import request from 'src/request';
 import React, { useRef } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
-import { CreateFinancial } from 'src/routes/financial/create-financial';
+import { CreateFinancial } from 'src/routes/financial/tabs/financial/create-financial';
 import { showModal } from 'src/share/ui/show-modal';
 import { ConfirmButton, useConsulSelectOptions } from 'src/components';
 import { useRoute } from 'src/share/hooks/use-route';
 import { DEFAULT_TAB_KEY } from 'src/share/hooks/use-tabs';
-import dayjs from 'dayjs';
+import { NetValueTable } from 'src/routes/financial/tabs/financial/net-value-table';
 
 export const FinancialTab = () => {
   const { setParams } = useRoute();
@@ -22,20 +22,20 @@ export const FinancialTab = () => {
       scroll={{ x: 700 }}
       columns={[
         { title: '基金名称', dataIndex: 'name', width: 250 },
-        {
-          title: '购买渠道',
-          dataIndex: 'channel',
-          width: 100,
-          valueEnum,
-        },
         { title: '基金编码', dataIndex: 'code', width: 90 },
-        { title: '余额', fixed: 'right', dataIndex: 'balance', width: 90, valueType: 'money' },
         {
           title: '昨日收益',
           fixed: 'right',
           dataIndex: 'yesterdayProfit',
           width: 90,
           valueType: 'money',
+        },
+        { title: '余额', dataIndex: 'balance', width: 90, valueType: 'money' },
+        {
+          title: '购买渠道',
+          dataIndex: 'channel',
+          width: 100,
+          valueEnum,
         },
         {
           title: '操作',
@@ -46,8 +46,8 @@ export const FinancialTab = () => {
           render(_, entity) {
             return (
               <div style={{ display: 'flex', gap: '8px' }}>
-                <Button
-                  type="link"
+                <ConfirmButton
+                  type="text"
                   size="small"
                   onClick={() => {
                     showModal({
@@ -60,22 +60,19 @@ export const FinancialTab = () => {
                   }}
                 >
                   编辑
-                </Button>
+                </ConfirmButton>
                 <ConfirmButton
                   type="text"
                   size="small"
                   onClick={() =>
-                    request
-                      .updateFinancialNetValue({
-                        code: entity.code,
-                        from: dayjs().subtract(1, 'y').valueOf(),
-                      })
-                      .then(() => {
-                        message.success('更新成功');
-                      })
+                    showModal({
+                      width: 600,
+                      title: `${entity.name}净值`,
+                      content: <NetValueTable code={entity.code} />,
+                    })
                   }
                 >
-                  更新净值
+                  查看净值
                 </ConfirmButton>
                 <Button
                   type="link"

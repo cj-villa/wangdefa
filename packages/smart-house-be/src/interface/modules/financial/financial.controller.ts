@@ -50,12 +50,6 @@ export class FinancialController {
     return this.trackFinancialRecordService.update(body);
   }
 
-  @Post('clean-net-value')
-  async cleanNetValue(@Body() body: TrackFinancialCleanDto) {
-    // 清洗基金净值
-    await this.financialNetCleanService.fillNetValue(body.code, body.from);
-  }
-
   @Post('clean')
   async clean(@Body() body: TrackFinancialCleanDto) {
     // 清洗基金净值

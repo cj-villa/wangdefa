@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Card } from 'antd';
-import { FinancialTab } from './financial';
-import { FinancialTransaction } from 'src/routes/financial/financial-transaction';
+import { FinancialTab } from './tabs/financial/financial';
+import { FinancialTransaction } from './tabs/financial-transaction/financial-transaction';
 import { useTab } from 'src/share/hooks/use-tabs';
 import { TabsProps } from 'antd/es/tabs';
 import { useRoute } from 'src/share/hooks/use-route';

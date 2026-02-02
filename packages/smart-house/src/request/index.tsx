@@ -33,7 +33,9 @@ export default {
   updateFinancialValue: (data: { code: string; from?: number }) =>
     request.post('/api/financial/clean', data),
   updateFinancialNetValue: (data: { code: string; from?: number }) =>
-    request.post('/api/financial/clean-net-value', data),
+    request.post('/api/financial/net-value/clean', data),
+  listFinancialNetValue: (params: { code: string }) =>
+    request.get('/api/financial/net-value/list', { params }),
   /** 基金交易相关 */
   listFinancialTransaction: (
     params: Page & { financialId?: string; transactionType?: FinancialTransactionType }
