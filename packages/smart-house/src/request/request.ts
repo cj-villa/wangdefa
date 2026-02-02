@@ -2,7 +2,8 @@ import { message } from 'antd';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
 /** 默认接口域名 */
-const DEFAULT_BASE_URL = 'http://localhost:8000';
+const port = process.env.NODE_ENV === 'development' ? 8000 : 3010;
+const DEFAULT_BASE_URL = `http://${window.location.hostname}:${port}`;
 
 /** 创建实例 */
 export const request: AxiosInstance = axios.create({
