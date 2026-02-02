@@ -9,6 +9,7 @@ import { ConfirmButton, useConsulSelectOptions } from 'src/components';
 import { useRoute } from 'src/share/hooks/use-route';
 import { DEFAULT_TAB_KEY } from 'src/share/hooks/use-tabs';
 import { NetValueTable } from 'src/routes/financial/tabs/financial/net-value-table';
+import { FinancialProfitDashboard } from 'src/routes/financial/tabs/financial/dashboard';
 
 export const FinancialTab = () => {
   const { setParams } = useRoute();
@@ -17,112 +18,118 @@ export const FinancialTab = () => {
   const { valueEnum } = useConsulSelectOptions('financial_channel');
 
   return (
-    <ProTable
-      actionRef={financialActionRef}
-      scroll={{ x: 700 }}
-      columns={[
-        { title: '基金名称', dataIndex: 'name', width: 250 },
-        { title: '基金编码', dataIndex: 'code', width: 90 },
-        {
-          title: '昨日收益',
-          fixed: 'right',
-          dataIndex: 'yesterdayProfit',
-          width: 90,
-          valueType: 'money',
-        },
-        { title: '余额', dataIndex: 'balance', width: 90, valueType: 'money' },
-        {
-          title: '购买渠道',
-          dataIndex: 'channel',
-          width: 100,
-          valueEnum,
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          fixed: 'right',
-          hideInSearch: true,
-          width: 260,
-          render(_, entity) {
-            return (
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <ConfirmButton
-                  type="text"
-                  size="small"
-                  onClick={() => {
-                    showModal({
-                      title: '编辑基金',
-                      content: <CreateFinancial initialValues={entity} />,
-                      onOk: () => {
-                        financialActionRef.current?.reload();
-                      },
-                    });
-                  }}
-                >
-                  编辑
-                </ConfirmButton>
-                <ConfirmButton
-                  type="text"
-                  size="small"
-                  onClick={() =>
-                    showModal({
-                      width: 600,
-                      title: `${entity.name}净值`,
-                      content: <NetValueTable code={entity.code} />,
-                    })
-                  }
-                >
-                  查看净值
-                </ConfirmButton>
-                <Button
-                  type="link"
-                  size="small"
-                  onClick={() => {
-                    setParams({ code: entity.code, [DEFAULT_TAB_KEY]: 'transactions' });
-                  }}
-                >
-                  查看交易
-                </Button>
-                <ConfirmButton
-                  confirmText={`是否确认删除基金 "${entity.name}"？`}
-                  onClick={async () => {
-                    await request.deleteFinancial({ id: entity.id });
-                    financialActionRef.current?.reload();
-                    message.success('删除成功');
-                  }}
-                  type="text"
-                  size="small"
-                >
-                  删除
-                </ConfirmButton>
-              </div>
-            );
+    <div>
+      {/* 收益看板 */}
+      <FinancialProfitDashboard />
+
+      {/* 基金列表表格 */}
+      <ProTable
+        actionRef={financialActionRef}
+        scroll={{ x: 700 }}
+        columns={[
+          { title: '基金名称', dataIndex: 'name', width: 250 },
+          { title: '基金编码', dataIndex: 'code', width: 90 },
+          {
+            title: '昨日收益',
+            fixed: 'right',
+            dataIndex: 'yesterdayProfit',
+            width: 90,
+            valueType: 'money',
           },
-        },
-      ]}
-      request={request.listFinancial}
-      toolBarRender={() => [
-        <Button
-          key="button"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            showModal({
-              title: '添加基金',
-              content: <CreateFinancial />,
-              onOk: () => {
-                financialActionRef.current?.reload();
-              },
-            });
-          }}
-          type="primary"
-        >
-          新建基金
-        </Button>,
-      ]}
-      rowKey="id"
-      pagination={{
-        pageSize: 10,
-      }}
-    />
+          { title: '余额', dataIndex: 'balance', width: 90, valueType: 'money' },
+          {
+            title: '购买渠道',
+            dataIndex: 'channel',
+            width: 100,
+            valueEnum,
+          },
+          {
+            title: '操作',
+            dataIndex: 'action',
+            fixed: 'right',
+            hideInSearch: true,
+            width: 260,
+            render(_, entity) {
+              return (
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <ConfirmButton
+                    type="text"
+                    size="small"
+                    onClick={() => {
+                      showModal({
+                        title: '编辑基金',
+                        content: <CreateFinancial initialValues={entity} />,
+                        onOk: () => {
+                          financialActionRef.current?.reload();
+                        },
+                      });
+                    }}
+                  >
+                    编辑
+                  </ConfirmButton>
+                  <ConfirmButton
+                    type="text"
+                    size="small"
+                    onClick={() =>
+                      showModal({
+                        width: 600,
+                        title: `${entity.name}净值`,
+                        content: <NetValueTable code={entity.code} />,
+                      })
+                    }
+                  >
+                    查看净值
+                  </ConfirmButton>
+                  <ConfirmButton
+                    type="text"
+                    size="small"
+                    onClick={() => {
+                      setParams({ code: entity.code, [DEFAULT_TAB_KEY]: 'transactions' });
+                    }}
+                  >
+                    查看交易
+                  </ConfirmButton>
+                  <ConfirmButton
+                    confirmText={`是否确认删除基金 "${entity.name}"？`}
+                    onClick={async () => {
+                      await request.deleteFinancial({ id: entity.id });
+                      financialActionRef.current?.reload();
+                      message.success('删除成功');
+                    }}
+                    type="text"
+                    size="small"
+                  >
+                    删除
+                  </ConfirmButton>
+                </div>
+              );
+            },
+          },
+        ]}
+        request={request.listFinancial}
+        toolBarRender={() => [
+          <Button
+            key="button"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              showModal({
+                title: '添加基金',
+                content: <CreateFinancial />,
+                onOk: () => {
+                  financialActionRef.current?.reload();
+                },
+              });
+            }}
+            type="primary"
+          >
+            新建基金
+          </Button>,
+        ]}
+        rowKey="id"
+        pagination={{
+          pageSize: 10,
+        }}
+      />
+    </div>
   );
 };
