@@ -5,6 +5,7 @@ import { type envConfig, getConfig } from '@/infrastructure/config';
 import { ConfigType } from '@nestjs/config';
 import { clc } from '@nestjs/common/utils/cli-colors.util';
 import { stringifyJson } from '@/shared/toolkits/transform';
+import { format } from 'node:util';
 
 export const createLogger = (context: string) => {
   return new LokiLogger(() => {
@@ -60,19 +61,18 @@ export class LokiLogger {
     if (loggerConfig?.console) {
       transports.push(
         new winston.transports.Console({
-          debugStdout: true,
           format: winston.format.combine(
             winston.format.timestamp({
               format: 'MM/DD/YYYY, h:mm:ss A',
             }),
-            winston.format.printf(({ level, message, timestamp }) => {
+            winston.format.printf((data) => {
+              const { level, message, timestamp, stack = '' } = data;
               const pid = process.pid;
               const appName = 'Wangdefa';
               const upperLevel = LokiLogger.colorizeLevel(level, level.toUpperCase());
 
               const prefix = LokiLogger.colorizeLevel(level, `[${appName}] ${pid}  -`);
 
-              // TODO 处理错误信息
               const msg =
                 typeof message === 'string'
                   ? LokiLogger.colorizeLevel(level, message)
@@ -80,7 +80,7 @@ export class LokiLogger {
 
               return `${prefix} ${timestamp}     ${upperLevel}${clc.yellow(
                 context ? ' [' + context + ']' : ''
-              )} ${msg}`;
+              )} ${msg}${LokiLogger.colorizeLevel(level, stack ? '\n' + stack : '')}`;
             })
           ),
         })
@@ -89,6 +89,10 @@ export class LokiLogger {
     if (transports.length > 0) {
       this._logger = winston.createLogger({
         level: loggerConfig.level,
+        format: winston.format.combine(
+          winston.format.errors({ stack: true }),
+          winston.format.json()
+        ),
         transports,
       });
     }
@@ -96,22 +100,22 @@ export class LokiLogger {
   }
 
   info(message: any, ...optionalParams: any[]) {
-    this.logger?.info(message, ...optionalParams);
+    this.logger?.info(format(message, ...optionalParams));
   }
 
   error(message: any, ...optionalParams: any[]) {
-    this.logger?.error(message, ...optionalParams);
+    this.logger?.error(format(message, ...optionalParams));
   }
 
   warn(message: any, ...optionalParams: any[]) {
-    this.logger?.warn(message, ...optionalParams);
+    this.logger?.warn(format(message, ...optionalParams));
   }
 
   debug?(message: any, ...optionalParams: any[]) {
-    this.logger?.debug(message, ...optionalParams);
+    this.logger?.debug(format(message, ...optionalParams));
   }
 
   verbose?(message: any, ...optionalParams: any[]) {
-    this.logger?.verbose(message, ...optionalParams);
+    this.logger?.verbose(format(message, ...optionalParams));
   }
 }

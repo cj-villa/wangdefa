@@ -1,9 +1,12 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { isProd } from '@/shared/toolkits/env';
+import { createLogger, LokiLogger } from '@/shared/logger';
 
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {
+  private logger: LokiLogger;
+
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -27,7 +30,8 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
     };
 
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-      console.error(exception);
+      this.logger = this.logger || createLogger('global-exception');
+      this.logger.error(exception);
     }
 
     response.status(status).json(errorResponse);

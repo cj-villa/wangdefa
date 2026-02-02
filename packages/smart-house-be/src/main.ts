@@ -63,7 +63,7 @@ async function bootstrap() {
   let logger: LokiLogger;
   process.on('unhandledRejection', (error: Error) => {
     logger = logger || createLogger('system');
-    logger.error(error.message);
+    logger.error(error);
   });
 }
 
