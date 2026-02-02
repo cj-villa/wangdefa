@@ -1529,10 +1529,10 @@
   dependencies:
     "@cj-villa/scaffold" "1.0.2"
 
-"@cj-villa/scaffold-plugin-react@^1.0.2":
-  version "1.0.2"
-  resolved "https://npm.pkg.github.com/download/@cj-villa/scaffold-plugin-react/1.0.2/59921afd6abf860271762d3504a240d80726f020#59921afd6abf860271762d3504a240d80726f020"
-  integrity sha512-Kd/3YwuyditeASxLtmGmuIrU4lJphxVJ5o9xqrkYjuee9no/tYSTHyWNgrDNtrgY0dIISDc7sP9ZdnNTS16eEg==
+"@cj-villa/scaffold-plugin-react@^1.0.3":
+  version "1.0.3"
+  resolved "https://npm.pkg.github.com/download/@cj-villa/scaffold-plugin-react/1.0.3/d15b7f098cdd0cfe7d8bdeb7d580ccd39cdfda28#d15b7f098cdd0cfe7d8bdeb7d580ccd39cdfda28"
+  integrity sha512-sTCgLFwVcKqgqjtdUYNsDm7VmtoGA9xGXgkpCgn0qR+cb8gjUgf4rz+UK60oI6SNSP+2JFqPB1vNgIHQ+RNLQg==
   dependencies:
     "@babel/core" "^7.26.0"
     "@babel/preset-env" "^7.26.0"
