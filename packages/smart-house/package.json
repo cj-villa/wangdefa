@@ -4,8 +4,8 @@
   "scripts": {
     "dev": "sca dev",
     "build": "sca build",
-    "start": "http-serve -p 4000 -f index.html",
-    "start:prod": "cd dist && http-serve -p 4000 -f index.html"
+    "start": "http-serve -p 4000 -f /",
+    "start:prod": "cd dist && http-serve -p 4000 -f /"
   },
   "devDependencies": {
     "@cj-villa/scaffold-plugin-react": "^1.0.3",
