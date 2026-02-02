@@ -1,0 +1,35 @@
+# -----------------------------
+# 基础镜像
+# -----------------------------
+FROM node:20-alpine
+
+# 安装 Git
+# 使用阿里云镜像源
+RUN echo "http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.22/main" > /etc/apk/repositories \
+    && echo "http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.22/community" >> /etc/apk/repositories \
+    && apk update \
+    && apk add --no-cache git bash \
+    && apk add --no-cache git openssh \
+    && git config --global --add safe.directory /tmp
+
+# -----------------------------
+# 设置工作目录
+# -----------------------------
+WORKDIR /tmp
+
+# -----------------------------
+# 安装依赖
+# -----------------------------
+# RUN cd node
+# RUN yarn
+
+# -----------------------------
+# 暴露端口（根据你的应用调整）
+# -----------------------------
+EXPOSE 3000
+
+# -----------------------------
+# 默认启动命令
+# 使用 PM2 通过 ts-node 启动 TS 文件
+# -----------------------------
+CMD ["npm", "--prefix", "./node", "run", "remote"]

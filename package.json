@@ -27,6 +27,7 @@
     "http-server": "^14.1.1"
   },
   "devDependencies": {
+    "@cj-villa/scaffold": "1.0.2",
     "lerna": "^6.5.1",
     "typescript": "^5.0.0"
   }

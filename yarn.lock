@@ -1522,16 +1522,16 @@
     reactcss "^1.2.3"
     tinycolor2 "^1.4.2"
 
-"@cj-villa/scaffold-plugin-react@^1.0.1":
-  version "1.0.1"
-  resolved "https://npm.pkg.github.com/download/@cj-villa/scaffold-plugin-react/1.0.1/d97327305f837e5761305e304fd8b6ac50e908a9#d97327305f837e5761305e304fd8b6ac50e908a9"
-  integrity sha512-vMeRKqnAejI7tOkTBECm5wB9TXgmLWQLDACwxHb4/jY9e5IkYMu60iX9IP9KeGR/tWDBDEOufMAf5GZNjLz+jw==
+"@cj-villa/scaffold-plugin-react@^1.0.2":
+  version "1.0.2"
+  resolved "https://npm.pkg.github.com/download/@cj-villa/scaffold-plugin-react/1.0.2/59921afd6abf860271762d3504a240d80726f020#59921afd6abf860271762d3504a240d80726f020"
+  integrity sha512-Kd/3YwuyditeASxLtmGmuIrU4lJphxVJ5o9xqrkYjuee9no/tYSTHyWNgrDNtrgY0dIISDc7sP9ZdnNTS16eEg==
   dependencies:
     "@babel/core" "^7.26.0"
     "@babel/preset-env" "^7.26.0"
     "@babel/preset-react" "^7.26.3"
-    "@cj-villa/scaffold" "1.0.1"
-    "@cj-villa/scaffold-share" "1.0.1"
+    "@cj-villa/scaffold" "1.0.2"
+    "@cj-villa/scaffold-share" "1.0.2"
     "@pmmmwh/react-refresh-webpack-plugin" "^0.5.15"
     "@svgr/webpack" "^8.1.0"
     babel-eslint "^10.1.0"
@@ -1559,22 +1559,22 @@
     webpack-hot-middleware "^2.26.1"
     webpack-merge "^6.0.1"
 
-"@cj-villa/scaffold-share@1.0.1":
-  version "1.0.1"
-  resolved "https://npm.pkg.github.com/download/@cj-villa/scaffold-share/1.0.1/66fc12c45bae6479e1fb3ddaf8e0229904ced6a9#66fc12c45bae6479e1fb3ddaf8e0229904ced6a9"
-  integrity sha512-9NnDES5eAI42m7Y6iM/WvNMmet9LpW2BGUt0WZSNppasYemNTxLbUIl/GNPzq0qcWRBjYQf67KGYO6hwAf4qrw==
+"@cj-villa/scaffold-share@1.0.2":
+  version "1.0.2"
+  resolved "https://npm.pkg.github.com/download/@cj-villa/scaffold-share/1.0.2/2761385437ada7fdd5f7f88d3c814dafd638c237#2761385437ada7fdd5f7f88d3c814dafd638c237"
+  integrity sha512-UeRa24YKR5JdzIkikeowcEY6ZjiQLexb6ws0WcOkhoDp1IFHNA1lfbMdHpLU2FnMwU9Im5pY9wXCxoLRBhhKrA==
   dependencies:
     debug "^4.4.3"
     dependency-cruiser "^17.3.6"
     glob "^11.0.3"
     lodash-es "^4.17.21"
 
-"@cj-villa/scaffold@1.0.1":
-  version "1.0.1"
-  resolved "https://npm.pkg.github.com/download/@cj-villa/scaffold/1.0.1/552463d2458ff75ec30857ce484db2505f34303d#552463d2458ff75ec30857ce484db2505f34303d"
-  integrity sha512-Wyv+ZrB5vUd+tQw3djkmN9zos6DEG6+SVO1flzxagMchw6+U7LNZEeZfIzlV2rNHQrAh2yp6iRI+ASFGBm0xCw==
+"@cj-villa/scaffold@1.0.2":
+  version "1.0.2"
+  resolved "https://npm.pkg.github.com/download/@cj-villa/scaffold/1.0.2/9c9150f67b60bf97a6a9bae14260d2dc7a2a3775#9c9150f67b60bf97a6a9bae14260d2dc7a2a3775"
+  integrity sha512-sRC2ggvsSe/XRSX7mBWCGLCYfHDStjLORiBc2yISztCfG3DXezjl9yZv8e1uGnetsGXnp6oKYlruS1YPRJfx0Q==
   dependencies:
-    "@cj-villa/scaffold-share" "1.0.1"
+    "@cj-villa/scaffold-share" "1.0.2"
     chalk "^5.6.2"
     commander "^14.0.1"
     lodash-es "^4.17.21"
