@@ -10,10 +10,12 @@ import { useRoute } from 'src/share/hooks/use-route';
 import { DEFAULT_TAB_KEY } from 'src/share/hooks/use-tabs';
 import { NetValueTable } from 'src/routes/financial/tabs/financial/net-value-table';
 import { FinancialProfitDashboard } from 'src/routes/financial/tabs/financial/dashboard';
+import { useNavigate } from 'react-router-dom';
 
 export const FinancialTab = () => {
   const { setParams } = useRoute();
   const financialActionRef = useRef<ActionType>(null);
+  const navigate = useNavigate();
 
   const { valueEnum } = useConsulSelectOptions('financial_channel');
 
@@ -48,10 +50,17 @@ export const FinancialTab = () => {
             dataIndex: 'action',
             fixed: 'right',
             hideInSearch: true,
-            width: 260,
+            width: 300,
             render(_, entity) {
               return (
                 <div style={{ display: 'flex', gap: '8px' }}>
+                  <Button
+                    type="link"
+                    size="small"
+                    onClick={() => navigate(`/financial/detail?id=${entity.id}`)}
+                  >
+                    查看详情
+                  </Button>
                   <ConfirmButton
                     type="text"
                     size="small"

@@ -14,6 +14,8 @@ import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/fina
 import { FinancialNetValueService } from '@/core/financial/domain/service/financial-net-value.serivce';
 import { FinancialValueSummaryService } from '@/core/financial/domain/service/financial-value-summary.service';
 import { FinancialNetValueController } from '@/interface/modules/financial/financial-net-value.controller';
+import { FinancialAnalyzeService } from '@/core/financial/domain/service/financial-analyze.service';
+import { FinancialAnalyzeController } from '@/interface/modules/financial/financial-analyze.controller';
 
 @Module({
   imports: [
@@ -24,7 +26,12 @@ import { FinancialNetValueController } from '@/interface/modules/financial/finan
       FinancialValueTrendEntity,
     ]),
   ],
-  controllers: [FinancialController, FinancialTransactionController, FinancialNetValueController],
+  controllers: [
+    FinancialController,
+    FinancialTransactionController,
+    FinancialNetValueController,
+    FinancialAnalyzeController,
+  ],
   providers: [
     TrackFinancialRecordService,
     TrackFinancialTransactionService,
@@ -33,6 +40,7 @@ import { FinancialNetValueController } from '@/interface/modules/financial/finan
     FinancialScheduleService,
     FinancialNetValueService,
     FinancialValueSummaryService,
+    FinancialAnalyzeService,
   ],
 })
 export class FinancialModule {}

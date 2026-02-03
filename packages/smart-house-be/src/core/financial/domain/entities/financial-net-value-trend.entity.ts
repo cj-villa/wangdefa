@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'financial_net_value_trend', comment: '理财净值表' })
+@Index('ux_code_date', ['code', 'date'], { unique: true })
 export class FinancialNetValueTrendEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -15,7 +17,7 @@ export class FinancialNetValueTrendEntity {
   @Column({ type: 'varchar', length: 32, comment: '理财编码' })
   code: string;
 
-  @Column({ type: 'datetime', precision: 6, comment: '当前净值时间' })
+  @Column({ type: 'date', comment: '当前净值日期' })
   date: Date;
 
   @Column({
@@ -42,4 +44,9 @@ export class FinancialNetValueTrendEntity {
     nullable: true,
   })
   deletedAt?: Date;
+
+  // 将金额转为份数
+  getSharesByAmount(amount: number) {
+    return Math.abs(this.type === 'profit' ? amount : Number((amount / this.value).toFixed(6)));
+  }
 }

@@ -1,15 +1,12 @@
 import { request } from './request';
 import type { Page } from 'src/request/type/common';
-import type {
+import {
   Financial,
+  FinancialSummary,
   FinancialTransaction,
   FinancialTransactionType,
 } from 'src/request/type/financial';
-import {
-  SystemConfig,
-  SystemConfigListResponse,
-  UpdateSystemConfigRequest,
-} from 'src/request/type/system';
+import { UpdateSystemConfigRequest } from 'src/request/type/system';
 
 export default {
   /** system */
@@ -36,7 +33,8 @@ export default {
     request.post('/api/financial/net-value/clean', data),
   listFinancialNetValue: (params: { code: string }) =>
     request.get('/api/financial/net-value/list', { params }),
-  /** 基金交易相关 */
+
+  /** 理财交易相关 */
   listFinancialTransaction: (
     params: Page & { financialId?: string; transactionType?: FinancialTransactionType }
   ) => request.get('/api/financial/transaction/list', { params }),
@@ -46,4 +44,9 @@ export default {
     request.post('/api/financial/transaction/delete', data),
   updateFinancialTransaction: (data: FinancialTransaction) =>
     request.post('/api/financial/transaction/update', data),
+
+  /** 理财详情相关 */
+  getFinancialSummary: () => request.get<null, FinancialSummary>('/api/financial-analyze/summary'),
+  getFinancialDetail: (params: { id: string; range?: 'day' | 'week' | 'month' | 'year' }) =>
+    request.get('/api/financial/detail', { params }),
 };

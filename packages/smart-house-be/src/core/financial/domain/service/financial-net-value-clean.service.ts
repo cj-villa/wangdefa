@@ -43,7 +43,7 @@ export class FinancialNetValueCleanService {
       );
       return res.data.list.map((item) => {
         const trend = new FinancialNetValueTrendEntity();
-        trend.date = dayjs(item.workDate).startOf('day').toDate();
+        trend.date = dayjs(item.workDate).toDate();
         trend.code = code;
         trend.type = String(item.prodType) === '0' ? 'profit' : 'net';
         trend.value = item.salePrice;
@@ -61,7 +61,7 @@ export class FinancialNetValueCleanService {
       );
       return res.body.data.map((item) => {
         const trend = new FinancialNetValueTrendEntity();
-        trend.date = dayjs(item.znavDat).startOf('day').toDate();
+        trend.date = dayjs(item.znavDat).toDate();
         trend.code = code;
         trend.value = item.znavCtl;
         return trend;
@@ -73,7 +73,7 @@ export class FinancialNetValueCleanService {
       );
       return res.body.list.map((item) => {
         const trend = new FinancialNetValueTrendEntity();
-        trend.date = dayjs(item.updateTime).startOf('day').toDate();
+        trend.date = dayjs(item.updateTime).toDate();
         trend.code = code;
         trend.value = item.netValue;
         return trend;

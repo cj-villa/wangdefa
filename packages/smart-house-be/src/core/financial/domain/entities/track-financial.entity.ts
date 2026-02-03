@@ -12,7 +12,7 @@ import { FinancialTransaction } from '@/core/financial/domain/entities/track-fin
 import { FinancialChannel } from '@/core/financial/application/enum/financial-channel';
 
 @Entity({ name: 'track_financial', comment: '正在追踪的基金记录表' })
-@Index('idx_code_user_id', ['code', 'userId'], { unique: true })
+@Index('ux_code_user_id', ['code', 'userId'], { unique: true })
 export class TrackFinancial {
   @PrimaryGeneratedColumn('uuid')
   id: string;

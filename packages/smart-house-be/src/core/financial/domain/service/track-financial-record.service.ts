@@ -23,7 +23,10 @@ export class TrackFinancialRecordService {
       ...data,
       userId: this.user.userId,
     });
-    const isExist = await this.trackFinancialRepo.findOneBy(trackFinancial);
+    const isExist = await this.trackFinancialRepo.findOneBy({
+      code: trackFinancial.code,
+      userId: this.user.userId,
+    });
     if (isExist) {
       throw new BadRequestException('当前基金已存在');
     }
@@ -50,9 +53,10 @@ export class TrackFinancialRecordService {
     const { current = 1, pageSize = 10, name, code } = data;
     const query = this.trackFinancialRepo
       .createQueryBuilder('trackFinancial')
-      .limit(pageSize)
-      .offset((current - 1) * pageSize)
       .where({ userId: this.user.userId });
+    if (pageSize !== Infinity) {
+      query.limit(pageSize).offset((current - 1) * pageSize);
+    }
     if (name) {
       query.andWhere('trackFinancial.name LIKE :name', { name: `%${name}%` });
     }

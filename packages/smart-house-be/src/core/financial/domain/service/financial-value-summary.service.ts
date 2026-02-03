@@ -9,7 +9,6 @@ import { InjectRequest } from '@/interface/decorate/inject-request';
 import { JwtUser } from '@/core/user';
 import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
 import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
-import dayjs from 'dayjs';
 
 @Injectable()
 export class FinancialValueSummaryService {

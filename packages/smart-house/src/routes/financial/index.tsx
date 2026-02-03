@@ -4,7 +4,6 @@ import { FinancialTab } from './tabs/financial/financial';
 import { FinancialTransaction } from './tabs/financial-transaction/financial-transaction';
 import { useTab } from 'src/share/hooks/use-tabs';
 import { TabsProps } from 'antd/es/tabs';
-import { useRoute } from 'src/share/hooks/use-route';
 
 const tabItems: NonNullable<TabsProps['items']> = [
   {
@@ -21,7 +20,6 @@ const tabItems: NonNullable<TabsProps['items']> = [
 
 export const FinancialPage = () => {
   const { activeKey, onChange } = useTab(['financials', 'transactions']);
-  const { removeParam } = useRoute();
 
   return (
     <Card>

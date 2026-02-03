@@ -28,7 +28,7 @@ export class FinancialNetValueService {
   ): Promise<FinancialNetValueTrendEntity> {
     return this.financialNetValueTrendEntity.findOneBy({
       code: financial.code,
-      date: dayjs(date).startOf('day').toDate(),
+      date: dayjs(date).toDate(),
     });
   }
 }

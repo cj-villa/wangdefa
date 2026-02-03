@@ -3,12 +3,20 @@ import { Layout } from 'src/layout';
 import { TokenPage } from 'src/routes/system/token';
 import { FinancialPage } from 'src/routes/financial';
 import { SystemConfig } from 'src/routes/system/config';
+import { FinancialDetailPage } from 'src/routes/financial/tabs/financial-detail/financial-detail';
 
 export const routes = [
   {
     name: '源数据管理',
     path: '',
-    children: [{ path: 'financial', name: '基金管理', Component: FinancialPage }],
+    children: [
+      {
+        path: 'financial',
+        name: '基金管理',
+        Component: FinancialPage,
+        children: [{ path: 'detail', name: '基金详情', Component: FinancialDetailPage }],
+      },
+    ],
   },
   {
     name: '系统管理',

@@ -13,7 +13,6 @@ import { batchKeys, mergeEntity } from '@/shared/toolkits/sql';
 import { FinancialNetValueService } from '@/core/financial/domain/service/financial-net-value.serivce';
 import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
 import { TrackFinancialRecordService } from '@/core/financial/domain/service/track-financial-record.service';
-import { FinancialTransactionType } from '@/core/financial/application/enum/financial-transaction-type';
 
 @Injectable()
 export class TrackFinancialTransactionService {
@@ -54,10 +53,7 @@ export class TrackFinancialTransactionService {
     );
 
     if (netValueTrend) {
-      transaction.shares =
-        netValueTrend.type === 'profit'
-          ? transaction.amount
-          : Number((transaction.amount / netValueTrend.value).toFixed(6));
+      transaction.shares = netValueTrend.getSharesByAmount(transaction.amount);
     }
 
     return this.transactionRepo.save(transaction);
@@ -172,9 +168,7 @@ export class TrackFinancialTransactionService {
       to: date,
     });
     return transactions.reduce((shares, transaction) => {
-      return transaction.transactionType === FinancialTransactionType.BUY
-        ? shares + Number(transaction.shares)
-        : shares - Number(transaction.shares);
+      return shares + Number(transaction.sharesWithSymbol);
     }, 0);
   }
 
@@ -185,9 +179,7 @@ export class TrackFinancialTransactionService {
       to: date,
     });
     return transactions.reduce((amount, transaction) => {
-      return transaction.transactionType === FinancialTransactionType.BUY
-        ? amount + Number(transaction.amount)
-        : amount - Number(transaction.amount);
+      return amount + Number(transaction.value);
     }, 0);
   }
 
@@ -203,10 +195,7 @@ export class TrackFinancialTransactionService {
       ensureDate: date,
     });
     for (const transaction of transactions) {
-      transaction.shares =
-        trend.type === 'profit'
-          ? transaction.amount
-          : Number((transaction.amount / trend.value).toFixed(6));
+      transaction.shares = trend.getSharesByAmount(transaction.amount);
       await this.transactionRepo.save(transaction);
     }
   }

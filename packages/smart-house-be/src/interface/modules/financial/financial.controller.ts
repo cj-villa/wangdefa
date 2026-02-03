@@ -9,6 +9,9 @@ import { FinancialNetValueCleanService } from '@/core/financial/domain/service/f
 import { TrackFinancialCleanDto } from '@/core/financial/application/dto/track-financial-clean.dto';
 import { FinancialValueCleanService } from '@/core/financial/domain/service/financial-value-clean.service';
 import { FinancialValueSummaryService } from '@/core/financial/domain/service/financial-value-summary.service';
+// 导入新增的服务和查询
+import { FinancialAnalyzeService } from '@/core/financial/domain/service/financial-analyze.service';
+import { FinancialDetailQuery } from '@/core/financial/application/query/financial-detail.query';
 
 @Controller('/api/financial')
 export class FinancialController {
@@ -23,6 +26,9 @@ export class FinancialController {
 
   @Inject()
   private readonly financialValueSummaryService: FinancialValueSummaryService;
+
+  @Inject()
+  private readonly financialDetailService: FinancialAnalyzeService;
 
   @Get('list')
   @UseInterceptors(PaginationFormatInterceptor)
@@ -55,5 +61,10 @@ export class FinancialController {
     // 清洗基金净值
     await this.financialNetCleanService.fillNetValue(body.code, body.from);
     await this.financialCleanService.cleanFinancialValueTrend(body.code, body.from);
+  }
+
+  @Get('detail')
+  async getDetail(@Query() query: FinancialDetailQuery) {
+    return this.financialDetailService.getFinancialDetail(query);
   }
 }

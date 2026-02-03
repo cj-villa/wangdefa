@@ -7,9 +7,12 @@ import {
   DeleteDateColumn,
   ManyToOne,
   JoinColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import { FinancialTransactionType } from '@/core/financial/application/enum/financial-transaction-type';
 import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
+import dayjs from 'dayjs';
 
 @Entity({ name: 'track_financial_transaction', comment: '基金交易记录表' })
 export class FinancialTransaction {
@@ -44,8 +47,8 @@ export class FinancialTransaction {
 
   @Column({
     name: 'ensure_date',
-    type: 'datetime',
-    comment: '确认份额的时间',
+    type: 'date',
+    comment: '确认份额的日期',
   })
   ensureDate: Date;
 
@@ -75,4 +78,19 @@ export class FinancialTransaction {
   })
   @JoinColumn({ name: 'id' })
   financial: TrackFinancial[];
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  formatDate() {
+    console.log('12312321');
+    this.ensureDate = dayjs(this.ensureDate).toDate();
+  }
+
+  get value() {
+    return this.transactionType === FinancialTransactionType.BUY ? this.amount : -this.amount;
+  }
+
+  get sharesWithSymbol() {
+    return this.transactionType === FinancialTransactionType.BUY ? this.shares : -this.shares;
+  }
 }
