@@ -53,7 +53,7 @@ export class TrackFinancialTransactionService {
     );
 
     if (netValueTrend) {
-      transaction.shares = netValueTrend.getSharesByAmount(transaction.amount);
+      transaction.shares = netValueTrend.getSharesByAmount(financial, transaction.amount);
     }
 
     return this.transactionRepo.save(transaction);
@@ -100,10 +100,7 @@ export class TrackFinancialTransactionService {
     );
 
     if (netValueTrend) {
-      rest.shares =
-        netValueTrend.type === 'profit'
-          ? rest.amount
-          : Number((rest.amount / netValueTrend.value).toFixed(6));
+      rest.shares = netValueTrend.getSharesByAmount(financial, rest.amount);
     }
 
     return this.transactionRepo.update(id, rest);
@@ -195,7 +192,7 @@ export class TrackFinancialTransactionService {
       ensureDate: date,
     });
     for (const transaction of transactions) {
-      transaction.shares = trend.getSharesByAmount(transaction.amount);
+      transaction.shares = trend.getSharesByAmount(financial, transaction.amount);
       await this.transactionRepo.save(transaction);
     }
   }

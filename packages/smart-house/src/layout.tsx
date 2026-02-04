@@ -1,10 +1,12 @@
-import { PageContainer, ProLayout } from '@ant-design/pro-components';
+import { PageContainer, PageHeader, ProBreadcrumb, ProLayout } from '@ant-design/pro-components';
 import { ReactComponent as Logo } from 'src/assets/logo.svg';
 import { routes } from 'src/routes';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import * as React from 'react';
-import { Breadcrumb, type BreadcrumbProps } from 'antd';
+import { Breadcrumb } from 'antd';
 import { useEffect } from 'react';
+import type { RouteContextType } from '@ant-design/pro-layout/lib/context/RouteContext';
+import { CustomPageHeader, PortalTarget } from 'src/components';
 
 export const Layout = () => {
   const navigate = useNavigate();
@@ -42,9 +44,19 @@ export const Layout = () => {
       }}
     >
       <PageContainer
-        breadcrumbRender={(props) => (
-          <Breadcrumb items={(props.breadcrumb as BreadcrumbProps)?.items} />
-        )}
+        pageHeaderRender={(props) => {
+          const deep = (props as RouteContextType).currentMenu?.pro_layout_parentKeys.length;
+          return (
+            <PortalTarget id="__page-header__">
+              <PageHeader
+                className="ant-pro-page-container-warp-page-header"
+                breadcrumb={<ProBreadcrumb />}
+                title={props.title}
+                onBack={deep > 1 ? () => navigate(-1) : undefined}
+              />
+            </PortalTarget>
+          );
+        }}
       >
         <Outlet />
       </PageContainer>

@@ -28,7 +28,7 @@ export class FinancialController {
   private readonly financialValueSummaryService: FinancialValueSummaryService;
 
   @Inject()
-  private readonly financialDetailService: FinancialAnalyzeService;
+  private readonly financialAnalyzeService: FinancialAnalyzeService;
 
   @Get('list')
   @UseInterceptors(PaginationFormatInterceptor)
@@ -65,6 +65,6 @@ export class FinancialController {
 
   @Get('detail')
   async getDetail(@Query() query: FinancialDetailQuery) {
-    return this.financialDetailService.getFinancialDetail(query);
+    return this.financialAnalyzeService.getFinancialDetail(query);
   }
 }

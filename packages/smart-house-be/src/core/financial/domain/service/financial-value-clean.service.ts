@@ -4,17 +4,19 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
-import { Between, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { Between, In, LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
 import { InjectRequest } from '@/interface/decorate/inject-request';
 import { JwtUser } from '@/core/user';
 import dayjs from 'dayjs';
 import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
-import { calculation } from '@/shared/toolkits/array';
+import { calculation, sum } from '@/shared/toolkits/array';
 import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
 import { FinancialTransactionType } from '@/core/financial/application/enum/financial-transaction-type';
 import { LokiLogger } from '@/shared/logger';
 import { InjectLogger } from '@/interface/decorate/inject-logger';
+import { FinancialType } from '@/core/financial/application/enum/financial-type';
+import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
 
 @Injectable()
 export class FinancialValueCleanService {
@@ -29,6 +31,9 @@ export class FinancialValueCleanService {
 
   @InjectRepository(FinancialValueTrendEntity)
   private readonly financialValueTrendEntity: Repository<FinancialValueTrendEntity>;
+
+  @InjectRepository(FinancialTransaction)
+  private readonly transactionRepo: Repository<FinancialTransaction>;
 
   @InjectRequest('user')
   private user: JwtUser;
@@ -96,6 +101,28 @@ export class FinancialValueCleanService {
     return total;
   }
 
+  // 计算某一日的收益
+  private async getCurrentProfit(
+    financial: TrackFinancial,
+    valueTrend: Pick<FinancialValueTrendEntity, 'date' | 'balance'>
+  ) {
+    const prevValueTrend = await this.financialValueTrendEntity.findOne({
+      where: {
+        financialId: financial.id,
+        date: LessThan(valueTrend.date),
+      },
+      order: { date: 'desc' },
+    });
+    if (!prevValueTrend) {
+      return 0;
+    }
+    const transaction = await this.transactionRepo.findBy({
+      financialId: financial.id,
+      ensureDate: valueTrend.date,
+    });
+    return valueTrend.balance - prevValueTrend.balance - sum(transaction, 'value');
+  }
+
   /**
    * 重新计算某一天基金的价值并记录
    */
@@ -118,12 +145,17 @@ export class FinancialValueCleanService {
     if (!netValue) {
       throw new BadRequestException('基金净值不存在');
     }
-    const { type, value } = netValue;
+    const { value } = netValue;
     // 这个时间点当前理财的价值
     let financialValue = 0;
+    // 份额
     let currentShares = 0;
+    // 当日的收益
+    let currentProfit = 0;
+
+    const { type } = financial;
     // 净值类型的基金价值直接计算
-    if (type === 'net') {
+    if (type === FinancialType.NET_VALUE) {
       currentShares = await this.trackFinancialTransactionService.getFinancialShares(
         financial,
         dayjsFrom.toDate()
@@ -131,7 +163,7 @@ export class FinancialValueCleanService {
       financialValue = currentShares ? value * currentShares : 0;
     }
     // 万份收益的需要把每一个阶段的价值都计算出来
-    if (type === 'profit') {
+    if (type === FinancialType.PROFIT) {
       financialValue = await this.calcProfitValue(financial, dayjsFrom, valueTrend);
       // 万份收益的价值就是当前份额
       currentShares = financialValue;
@@ -142,6 +174,10 @@ export class FinancialValueCleanService {
       date: dayjsFrom.toDate(),
       balance: financialValue,
       shares: currentShares,
+      profit: await this.getCurrentProfit(financial, {
+        date: dayjsFrom.toDate(),
+        balance: financialValue,
+      }),
     });
     const currentTrend = await this.financialValueTrendEntity.findOneBy({
       financialId: financial.id,

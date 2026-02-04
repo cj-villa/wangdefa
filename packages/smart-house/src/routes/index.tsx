@@ -3,7 +3,8 @@ import { Layout } from 'src/layout';
 import { TokenPage } from 'src/routes/system/token';
 import { FinancialPage } from 'src/routes/financial';
 import { SystemConfig } from 'src/routes/system/config';
-import { FinancialDetailPage } from 'src/routes/financial/tabs/financial-detail/financial-detail';
+import { FinancialDetailPage } from 'src/routes/financial-detail';
+import { renderOutLetFactory } from 'src/share/ui/renderOutLet';
 
 export const routes = [
   {
@@ -13,7 +14,8 @@ export const routes = [
       {
         path: 'financial',
         name: '基金管理',
-        Component: FinancialPage,
+        Component: renderOutLetFactory('/financial', FinancialPage),
+        hideChildrenInMenu: true,
         children: [{ path: 'detail', name: '基金详情', Component: FinancialDetailPage }],
       },
     ],

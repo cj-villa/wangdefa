@@ -10,21 +10,25 @@ import {
 } from 'typeorm';
 import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
 import { FinancialChannel } from '@/core/financial/application/enum/financial-channel';
+import { FinancialType } from '@/core/financial/application/enum/financial-type';
 
-@Entity({ name: 'track_financial', comment: '正在追踪的基金记录表' })
+@Entity({ name: 'track_financial', comment: '正在追踪的理财记录表' })
 @Index('ux_code_user_id', ['code', 'userId'], { unique: true })
 export class TrackFinancial {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 32, comment: '基金的名称' })
+  @Column({ type: 'varchar', length: 32, comment: '理财的名称' })
   name: string;
 
-  @Column({ type: 'varchar', length: 32, comment: '基金编码' })
+  @Column({ type: 'varchar', length: 32, comment: '理财编码' })
   code: string;
 
-  @Column({ type: 'enum', enum: FinancialChannel, comment: '基金的购买渠道' })
+  @Column({ type: 'enum', enum: FinancialChannel, comment: '理财的购买渠道' })
   channel: FinancialChannel;
+
+  @Column({ type: 'int', comment: '理财等待时间T+N', default: 1, unsigned: true })
+  delay: number;
 
   @Column({ name: 'user_id', type: 'uuid', comment: '绑定的用户' })
   userId: string;
@@ -47,4 +51,11 @@ export class TrackFinancial {
     createForeignKeyConstraints: false,
   })
   transactions: FinancialTransaction[];
+
+  // 理财的类型，根据渠道判断是年化产品还是普通理财
+  get type() {
+    return [FinancialChannel.ICBC_CURRENCY].includes(this.channel)
+      ? FinancialType.PROFIT
+      : FinancialType.NET_VALUE;
+  }
 }

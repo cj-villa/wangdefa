@@ -4,8 +4,8 @@ export class FinancialSummaryDto {
   totalAssets: number = 0;
   // 总支出
   totalCost: number = 0;
-  // 昨日收益
-  yesterdayProfit: number = 0;
+  // 最近一个收益
+  preDayProfit: number = 0;
   // 产品数量
   productCount: number = 0;
 }

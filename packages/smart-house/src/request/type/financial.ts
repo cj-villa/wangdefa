@@ -2,31 +2,19 @@ export interface Financial {
   id: string;
   name: string;
   code: string;
+  channel: string;
   balance?: number;
   totalProfit?: number;
-  yesterdayProfit?: number;
+  preDayProfit?: number;
 }
 
 export interface FinancialDetail {
   financial: Financial;
-  netValueTrends: Array<{
-    date: string;
-    value: number;
-    type: 'net' | 'profit';
-  }>;
-  valueTrends: Array<{
-    date: string;
-    balance: number;
-    shares?: number;
-  }>;
-  transactions: FinancialTransaction[];
-  statistics: {
-    totalProfit: number;
-    yesterdayProfit: number;
-    currentBalance: number;
-    totalInvestment: number;
-    totalWithdrawal: number;
-  };
+  totalAssets: number;
+  totalCost: number;
+  preDayProfit: number;
+  valueTrends: any[];
+  netValueTrends: any[];
 }
 
 export enum FinancialTransactionType {
@@ -54,7 +42,7 @@ export interface FinancialSummary {
   // 总支出
   totalCost: number;
   // 昨日收益
-  yesterdayProfit: number;
+  preDayProfit: number;
   // 产品数量
   productCount: number;
 }

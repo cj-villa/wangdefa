@@ -26,6 +26,9 @@ export class FinancialValueTrendEntity {
   @Column({ type: 'decimal', precision: 13, scale: 6, comment: '当前份额' })
   shares: number;
 
+  @Column({ type: 'decimal', precision: 13, scale: 6, comment: '当日盈利' })
+  profit: number;
+
   @CreateDateColumn({ name: 'created_at', type: 'datetime', precision: 6 })
   createdAt: Date;
 

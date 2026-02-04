@@ -1,0 +1,1 @@
+export const roundPrice = (price: number) => Math.round(price * 100) / 100;

@@ -8,7 +8,7 @@
     "start:prod": "cd dist && http-serve -p 4000 -f /"
   },
   "devDependencies": {
-    "@cj-villa/scaffold-plugin-react": "^1.0.3",
+    "@cj-villa/scaffold-plugin-react": "^1.0.4",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3"
   },

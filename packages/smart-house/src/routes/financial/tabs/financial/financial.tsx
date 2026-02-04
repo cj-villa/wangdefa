@@ -42,7 +42,7 @@ export const FinancialTab = () => {
           {
             title: '购买渠道',
             dataIndex: 'channel',
-            width: 100,
+            width: 130,
             valueEnum,
           },
           {
@@ -54,13 +54,13 @@ export const FinancialTab = () => {
             render(_, entity) {
               return (
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  <Button
-                    type="link"
+                  <ConfirmButton
+                    type="text"
                     size="small"
                     onClick={() => navigate(`/financial/detail?id=${entity.id}`)}
                   >
                     查看详情
-                  </Button>
+                  </ConfirmButton>
                   <ConfirmButton
                     type="text"
                     size="small"

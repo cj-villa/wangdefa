@@ -21,6 +21,7 @@ interface UseRouteReturn {
   removeParam: (key: string) => void;
   /** 清空所有参数 */
   clearParams: () => void;
+  location: ReturnType<typeof useLocation>;
 }
 
 /**
@@ -203,5 +204,6 @@ export const useRoute = (): UseRouteReturn => {
     setParam,
     removeParam,
     clearParams,
+    location,
   };
 };

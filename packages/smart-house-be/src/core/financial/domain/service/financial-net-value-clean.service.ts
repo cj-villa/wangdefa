@@ -45,7 +45,6 @@ export class FinancialNetValueCleanService {
         const trend = new FinancialNetValueTrendEntity();
         trend.date = dayjs(item.workDate).toDate();
         trend.code = code;
-        trend.type = String(item.prodType) === '0' ? 'profit' : 'net';
         trend.value = item.salePrice;
         return trend;
       });

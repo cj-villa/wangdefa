@@ -7,6 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { type TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
+import { FinancialType } from '@/core/financial/application/enum/financial-type';
 
 @Entity({ name: 'financial_net_value_trend', comment: '理财净值表' })
 @Index('ux_code_date', ['code', 'date'], { unique: true })
@@ -19,14 +21,6 @@ export class FinancialNetValueTrendEntity {
 
   @Column({ type: 'date', comment: '当前净值日期' })
   date: Date;
-
-  @Column({
-    type: 'enum',
-    enum: ['net', 'profit'],
-    comment: '理财类型，net为单位净值，profit为万份收益',
-    default: 'net',
-  })
-  type: 'net' | 'profit';
 
   @Column({ type: 'decimal', precision: 10, scale: 6, comment: '单位净值/万份收益（元）' })
   value: number;
@@ -46,7 +40,9 @@ export class FinancialNetValueTrendEntity {
   deletedAt?: Date;
 
   // 将金额转为份数
-  getSharesByAmount(amount: number) {
-    return Math.abs(this.type === 'profit' ? amount : Number((amount / this.value).toFixed(6)));
+  getSharesByAmount(financial: TrackFinancial, amount: number) {
+    return Math.abs(
+      financial.type === FinancialType.PROFIT ? amount : Number((amount / this.value).toFixed(6))
+    );
   }
 }

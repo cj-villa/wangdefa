@@ -4,6 +4,7 @@ import { Card, Row, Col, Statistic } from 'antd';
 import { useRequest } from 'ahooks';
 import request from 'src/request';
 import type { FinancialSummary } from 'src/request/type/financial';
+import { roundPrice } from 'src/share/toolkits/tookit';
 
 const DefaultData: FinancialSummary = {
   // 总资产
@@ -11,7 +12,7 @@ const DefaultData: FinancialSummary = {
   // 总支出
   totalCost: 0,
   // 昨日收益
-  yesterdayProfit: 0,
+  preDayProfit: 0,
   // 产品数量
   productCount: 0,
 };
@@ -27,21 +28,18 @@ export const FinancialProfitDashboard = () => {
         <Col span={6}>
           <Statistic
             title="总资产"
-            value={data.totalAssets}
-            precision={2}
+            value={roundPrice(data.totalAssets)}
             prefix="¥"
-            valueStyle={{ color: '#3f8600' }}
-            suffix={<DollarOutlined />}
+            valueStyle={{ color: '#cf1322' }}
             loading={loading}
           />
         </Col>
         <Col span={6}>
           <Statistic
             title="累计收益"
-            value={totalProfit}
-            precision={2}
+            value={roundPrice(totalProfit)}
             prefix="¥"
-            valueStyle={{ color: totalProfit >= 0 ? '#3f8600' : '#cf1322' }}
+            valueStyle={{ color: totalProfit >= 0 ? '#cf1322' : '#3f8600' }}
             suffix={totalProfit >= 0 ? <RiseOutlined /> : <FallOutlined />}
             loading={loading}
           />
@@ -49,11 +47,10 @@ export const FinancialProfitDashboard = () => {
         <Col span={6}>
           <Statistic
             title="昨日收益"
-            value={data.yesterdayProfit}
-            precision={2}
+            value={roundPrice(data.preDayProfit)}
             prefix="¥"
-            valueStyle={{ color: data.yesterdayProfit >= 0 ? '#3f8600' : '#cf1322' }}
-            suffix={data.yesterdayProfit >= 0 ? <RiseOutlined /> : <FallOutlined />}
+            valueStyle={{ color: data.preDayProfit >= 0 ? '#cf1322' : '#3f8600' }}
+            suffix={data.preDayProfit >= 0 ? <RiseOutlined /> : <FallOutlined />}
             loading={loading}
           />
         </Col>

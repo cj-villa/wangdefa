@@ -5,3 +5,9 @@ declare module '*.svg' {
   export { ReactComponent };
   export default src;
 }
+
+// global.d.ts
+declare module '*.module.less' {
+  const classes: Record<string, string>;
+  export default classes;
+}
