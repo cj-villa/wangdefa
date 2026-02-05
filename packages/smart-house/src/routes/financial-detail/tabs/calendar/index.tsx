@@ -70,11 +70,11 @@ export const CalendarStatistics: React.FC<{ detail: FinancialDetail }> = ({ deta
   return (
     <Card>
       <Calendar
-        validRange={[dayjs('20250403'), dayjs()]}
+        validRange={[dayjs(valueTrends[0].date), dayjs(valueTrends[valueTrends.length - 1].date)]}
         renderCell={(date, mode) => {
           if (mode === CalendarMode.Day) {
             const data = dailyInfo[getDateKey(date, 'd')];
-            if (!data) {
+            if (!data?.profit) {
               return null;
             }
             return (
@@ -86,7 +86,7 @@ export const CalendarStatistics: React.FC<{ detail: FinancialDetail }> = ({ deta
           }
           if (mode === CalendarMode.Month) {
             const data = monthInfo[getDateKey(date, 'm')];
-            if (!data) {
+            if (!data?.profit) {
               return null;
             }
             return (
@@ -98,7 +98,7 @@ export const CalendarStatistics: React.FC<{ detail: FinancialDetail }> = ({ deta
           }
           if (mode === CalendarMode.Year) {
             const data = yearInfo[getDateKey(date, 'y')];
-            if (!data) {
+            if (!data?.profit) {
               return null;
             }
             return (
