@@ -9,6 +9,7 @@ import { ProSkeleton } from '@ant-design/pro-components';
 import { Dashboard } from 'src/routes/financial-detail/dashboard';
 import { Transactions } from 'src/routes/financial-detail/tabs/transactions';
 import { Charts } from 'src/routes/financial-detail/tabs/charts';
+import { CalendarStatistics } from 'src/routes/financial-detail/tabs/calendar';
 
 export const FinancialDetailPage = () => {
   const { params } = useRoute();
@@ -37,6 +38,11 @@ export const FinancialDetailPage = () => {
       children: <Charts detail={detailData} />,
     },
     {
+      key: 'calendar',
+      label: '日历图',
+      children: <CalendarStatistics detail={detailData} />,
+    },
+    {
       key: 'transactions',
       label: '交易记录',
       children: <Transactions />,
@@ -52,7 +58,7 @@ export const FinancialDetailPage = () => {
       <Dashboard detail={detailData} />
 
       {/* 主要内容区域 */}
-      <Tabs items={tabItems} defaultActiveKey="charts" />
+      <Tabs items={tabItems} defaultActiveKey="calendar" />
     </>
   );
 };
