@@ -1,17 +1,15 @@
-import React, { useMemo } from 'react';
-import { Card, Flex } from 'antd';
 import { Line } from '@ant-design/charts';
+import { type LineConfig } from '@ant-design/plots/es/components/line';
+import { Card, Flex } from 'antd';
+import dayjs from 'dayjs';
+import React, { useMemo } from 'react';
 import { FinancialDetail } from 'src/request/type/financial';
 import { roundPrice } from 'src/share/toolkits/tookit';
-import { type LineConfig } from '@ant-design/plots/es/components/line';
-import dayjs from 'dayjs';
 
 const getStart = (count = 0) => Math.max(1 - 30 / count, 0);
 
 export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
   const { valueTrends, netValueTrends } = detail;
-
-  console.log(getStart(valueTrends.length), valueTrends.length);
 
   const lineValue = useMemo(
     () => valueTrends.map((i) => ({ ...i, balance: roundPrice(i.balance) })),
@@ -29,7 +27,7 @@ export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
     axis: {
       x: {
         size: 30,
-        labelFormatter: (d: any) => dayjs(d).format('MM/DD'),
+        labelFormatter: (d: string) => dayjs(d).format('MM/DD'),
       },
     },
     seriesField: 'type',
@@ -37,7 +35,7 @@ export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
     interactions: [{ type: 'marker-active' }],
     slider: {
       x: {
-        labelFormatter: (d: any) => dayjs(d).format('YYYY/M/D'),
+        labelFormatter: (d: string) => dayjs(d).format('YYYY/M/D'),
         values: [getStart(netValueTrends.length), 1],
       },
     },
@@ -50,14 +48,14 @@ export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
     axis: {
       x: {
         size: 30,
-        labelFormatter: (d: any) => dayjs(d).format('MM/DD'),
+        labelFormatter: (d: string) => dayjs(d).format('MM/DD'),
       },
     },
     color: '#faad14',
     interactions: [{ type: 'marker-active' }],
     slider: {
       x: {
-        labelFormatter: (d: any) => dayjs(d).format('YYYY/M/D'),
+        labelFormatter: (d: string) => dayjs(d).format('YYYY/M/D'),
         values: [getStart(valueTrends.length), 1],
       },
     },

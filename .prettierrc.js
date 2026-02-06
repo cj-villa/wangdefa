@@ -1,3 +1,3 @@
 module.exports = {
-  ...require('@l/lint/configs/prettierrc.js'),
-}
+  ...require('@cj-villa/design-paper/prettierrc.js'),
+};

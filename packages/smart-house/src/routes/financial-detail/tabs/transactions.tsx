@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card } from 'antd';
-import request from 'src/request';
 import { ProTable } from '@ant-design/pro-components';
+import { Card } from 'antd';
+import React from 'react';
+import request from 'src/request';
 import { FinancialTransactionType } from 'src/request/type/financial';
 
 export const Transactions = () => {

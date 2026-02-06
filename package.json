@@ -27,6 +27,7 @@
     "http-serve": "^1.0.1"
   },
   "devDependencies": {
+    "@cj-villa/design-paper": "^0.0.1-beta.0",
     "@cj-villa/scaffold-cli": "1.0.3",
     "lerna": "^6.5.1",
     "typescript": "^5.0.0"

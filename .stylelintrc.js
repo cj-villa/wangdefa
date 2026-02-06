@@ -1,3 +1,3 @@
 module.exports = {
-  extends: ['@l/lint/configs/style'],
+  extends: ['@cj-villa/design-paper/style.js'],
 };
