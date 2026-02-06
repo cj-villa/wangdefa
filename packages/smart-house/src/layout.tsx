@@ -45,7 +45,7 @@ export const Layout = () => {
     >
       <PageContainer
         pageHeaderRender={(props) => {
-          const deep = (props as RouteContextType).currentMenu?.pro_layout_parentKeys.length;
+          const deep = (props as RouteContextType).currentMenu?.pro_layout_parentKeys?.length ?? 0;
           return (
             <PortalTarget id="__page-header__">
               <PageHeader
