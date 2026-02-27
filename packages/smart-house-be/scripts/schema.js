@@ -1,9 +1,10 @@
-const { ConfigLoader } = require('../dist/infrastructure/config/configuration');
-const { ConsulBaseService } = require('../dist/infrastructure/consul/libs/consul-base.service');
-const { KvService } = require('../dist/infrastructure/consul');
-const process = require('node:process');
+/* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require('fs');
+const process = require('node:process');
 const path = require('path');
+const { ConfigLoader } = require('../dist/infrastructure/config/configuration');
+const { KvService } = require('../dist/infrastructure/consul');
+const { ConsulBaseService } = require('../dist/infrastructure/consul/libs/consul-base.service');
 
 const main = async () => {
   process.env.NODE_ENV = process.env.NODE_ENV || 'development';
