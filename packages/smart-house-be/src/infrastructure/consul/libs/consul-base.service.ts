@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { type ConsulKvModuleConfig } from '@/infrastructure/consul/consul.type';
 import { CONSUL_CONFIGURATION_TOKEN } from '@/infrastructure/consul/constant';
+import { type ConsulKvModuleConfig } from '@/infrastructure/consul/consul.type';
 import { http } from '@/shared/request';
 
 @Injectable()

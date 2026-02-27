@@ -1,4 +1,8 @@
+#redis:
+#  host: localhost
+#  port: 6379
+#  db: 0
+
 redis:
-  host: localhost
+  host: nas.lcj.com
   port: 6379
-  db: 0

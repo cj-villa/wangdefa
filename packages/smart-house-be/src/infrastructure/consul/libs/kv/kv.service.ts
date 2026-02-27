@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { get, type PropertyPath } from 'lodash';
 import { ConsulBaseService } from '../consul-base.service';
+import type { ConsulKvModuleConfig } from '@/infrastructure/consul';
 import {
   CONSUL_CONFIGURATION_TOKEN,
   CONSUL_GLOBAL_DATA,
   CONSUL_PRE_FETCH_KEYS,
 } from '@/infrastructure/consul/constant';
-import type { ConsulKvModuleConfig } from '@/infrastructure/consul';
-import { get, type PropertyPath } from 'lodash';
 import { InjectLogger, LokiLogger } from '@/interface/decorate/inject-logger';
 import { parseJson, stringifyJson } from '@/shared/toolkits/transform';
 
@@ -35,7 +35,7 @@ export class KvService {
   }
 
   /** 解码consul kv的值，并尝试parse */
-  private decodeValue(value: string): any {
+  private decodeValue(value: string): unknown {
     const decodeStr = Buffer.from(value, 'base64').toString('utf-8');
     if (decodeStr[0] === '{' || decodeStr[0] === '[') {
       return parseJson(decodeStr);
@@ -73,7 +73,7 @@ export class KvService {
         return global[CONSUL_GLOBAL_DATA][key];
       })
       .catch((error) => {
-        this.logger.error(`subscribe key: ${key} failed`);
+        this.logger.error(`subscribe key: ${key} failed`, error);
         this.subscribe(key, index, failedCount + 1);
       });
   }
@@ -83,7 +83,7 @@ export class KvService {
    * @param key 配置的key
    * @param subscribe 是否订阅配置的变更，默认订阅
    * */
-  get<T extends any = any>(key: string, subscribe: boolean = true): Promise<T> {
+  get<T = any>(key: string, subscribe: boolean = true): Promise<T> {
     const cacheData = KvService.get<T>(key);
     return cacheData ? Promise.resolve(cacheData) : this.subscribe(key, subscribe ? 0 : undefined);
   }
@@ -95,15 +95,16 @@ export class KvService {
     });
   }
 
-  update(key: string, value: Object) {
+  update(key: string, value: Record<string, any>) {
     return this.consulBaseService.put(`/v1/kv/${this.getKeyPath(key)}`, value);
   }
 
   /**
    * @description 获取某一个key的配置的值
    * @param key 配置的key
+   * @param path
    * */
-  static get<T extends any = any>(key: string, path?: PropertyPath): T {
+  static get<T = any>(key: string, path?: PropertyPath): T {
     const data = global[CONSUL_GLOBAL_DATA][key];
     return path ? get(data, path) : data;
   }

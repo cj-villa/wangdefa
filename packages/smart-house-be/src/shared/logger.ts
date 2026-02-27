@@ -1,11 +1,11 @@
+import { format } from 'node:util';
+import { clc } from '@nestjs/common/utils/cli-colors.util';
+import { ConfigType } from '@nestjs/config';
 import winston from 'winston';
 import LokiTransport from 'winston-loki';
-import { deepMerge } from '@/shared/toolkits/object';
 import { type envConfig, getConfig } from '@/infrastructure/config';
-import { ConfigType } from '@nestjs/config';
-import { clc } from '@nestjs/common/utils/cli-colors.util';
+import { deepMerge } from '@/shared/toolkits/object';
 import { stringifyJson } from '@/shared/toolkits/transform';
-import { format } from 'node:util';
 
 export const createLogger = (context: string) => {
   return new LokiLogger(() => {
@@ -76,7 +76,7 @@ export class LokiLogger {
               const msg =
                 typeof message === 'string'
                   ? LokiLogger.colorizeLevel(level, message)
-                  : stringifyJson(message, (message as any)?.message ?? '');
+                  : stringifyJson(message, (message as { message?: string })?.message ?? '');
 
               return `${prefix} ${timestamp}     ${upperLevel}${clc.yellow(
                 context ? ' [' + context + ']' : ''
@@ -99,23 +99,23 @@ export class LokiLogger {
     return this._logger;
   }
 
-  info(message: any, ...optionalParams: any[]) {
+  info(message: unknown, ...optionalParams: unknown[]) {
     this.logger?.info(format(message, ...optionalParams));
   }
 
-  error(message: any, ...optionalParams: any[]) {
+  error(message: unknown, ...optionalParams: unknown[]) {
     this.logger?.error(format(message, ...optionalParams));
   }
 
-  warn(message: any, ...optionalParams: any[]) {
+  warn(message: unknown, ...optionalParams: unknown[]) {
     this.logger?.warn(format(message, ...optionalParams));
   }
 
-  debug?(message: any, ...optionalParams: any[]) {
+  debug?(message: unknown, ...optionalParams: unknown[]) {
     this.logger?.debug(format(message, ...optionalParams));
   }
 
-  verbose?(message: any, ...optionalParams: any[]) {
+  verbose?(message: unknown, ...optionalParams: unknown[]) {
     this.logger?.verbose(format(message, ...optionalParams));
   }
 }

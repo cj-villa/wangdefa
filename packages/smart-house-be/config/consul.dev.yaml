@@ -1,1 +1,4 @@
-host: http://localhost:8500
+#host: http://localhost:8500
+
+host: http://consul.lcj.com
+token: 5b366951-3ebd-b443-5d50-c0c6ac70c538

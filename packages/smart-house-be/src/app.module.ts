@@ -1,26 +1,26 @@
+import KeyvRedis from '@keyv/redis';
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigType } from '@nestjs/config';
-import { FireflyModule } from '@/interface/modules/firefly/firefly.module';
-import { configLoad, consulConfig, databaseConfig } from '@/infrastructure/config';
-import { ConsulModule, KvService } from '@/infrastructure/consul';
-import { ExceptionProvider } from 'src/interface/exception';
-import { CacheModule } from '@nestjs/cache-manager';
-import { REDIS_INSTANCE, RedisModule } from '@/infrastructure/redis';
-import { MailModule } from '@/infrastructure/mail';
-import { DifyModule } from '@/infrastructure/dify';
-import { GuardProviders } from 'src/interface/guard';
-import { WechatModule } from '@/interface/modules/wechat/wechat.module';
-import { FallbackModule } from '@/interface/modules/fallback/fallback.module';
-import { AuthModule } from '@/interface/modules/auth/auth.module';
-import { CacheableMemory, Keyv } from 'cacheable';
-import KeyvRedis from '@keyv/redis';
-import { RedisClientType } from 'redis';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SystemModule } from '@/interface/modules/system/system.module';
-import { interceptors } from '@/interface/interceptor';
+import { CacheableMemory, Keyv } from 'cacheable';
+import { RedisClientType } from 'redis';
+import { ExceptionProvider } from 'src/interface/exception';
+import { GuardProviders } from 'src/interface/guard';
 import { JournalMeta } from '@/core/firefly/domain/entities/journal-meta.entity';
+import { configLoad, consulConfig, databaseConfig } from '@/infrastructure/config';
+import { ConsulModule, KvService } from '@/infrastructure/consul';
+import { DifyModule } from '@/infrastructure/dify';
+import { MailModule } from '@/infrastructure/mail';
+import { REDIS_INSTANCE, RedisModule } from '@/infrastructure/redis';
+import { interceptors } from '@/interface/interceptor';
+import { AuthModule } from '@/interface/modules/auth/auth.module';
+import { FallbackModule } from '@/interface/modules/fallback/fallback.module';
 import { FinancialModule } from '@/interface/modules/financial/financial.module';
+import { FireflyModule } from '@/interface/modules/firefly/firefly.module';
+import { SystemModule } from '@/interface/modules/system/system.module';
+import { WechatModule } from '@/interface/modules/wechat/wechat.module';
 
 @Module({
   imports: [
