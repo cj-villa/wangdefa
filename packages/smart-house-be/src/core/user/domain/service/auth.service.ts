@@ -1,7 +1,7 @@
 import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { type JwtUser, UserService } from '@/core/user';
-import argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
+import argon2 from 'argon2';
+import { type JwtUser, UserService } from '@/core/user';
 
 @Injectable()
 export class AuthService {

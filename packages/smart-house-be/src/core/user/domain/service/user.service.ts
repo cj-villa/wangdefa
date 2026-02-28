@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '@/core/user';
-import { Repository } from 'typeorm';
 import argon2 from 'argon2';
+import { Repository } from 'typeorm';
+import { User } from '@/core/user';
 
 @Injectable()
 export class UserService {

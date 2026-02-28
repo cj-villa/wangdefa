@@ -1,9 +1,9 @@
-import React from 'react';
 import { Flex } from 'antd';
-import { CalendarFilter } from 'src/components/calendar/filter';
-import { CalendarContextProvider } from 'src/components/calendar/context';
-import { CalendarProps } from 'src/components/calendar/type';
+import React from 'react';
 import { CalendarBody } from 'src/components/calendar/body';
+import { CalendarContextProvider } from 'src/components/calendar/context';
+import { CalendarFilter } from 'src/components/calendar/filter';
+import { CalendarProps } from 'src/components/calendar/type';
 
 export const Calendar: React.FC<CalendarProps> = (props) => {
   return (

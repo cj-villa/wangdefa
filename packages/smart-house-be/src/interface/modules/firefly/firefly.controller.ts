@@ -1,7 +1,7 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { Kv } from '@/infrastructure/consul';
-import { FireflyBasicInfoDTO, BasicInfoService, SingleAutomationService } from '@/core/firefly';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FireflyBasicInfoDTO, BasicInfoService, SingleAutomationService } from '@/core/firefly';
+import { Kv } from '@/infrastructure/consul';
 import { SkipFormat } from '@/interface/interceptor/response-format';
 
 @ApiTags('firefly')

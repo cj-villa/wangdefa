@@ -2,7 +2,7 @@ import { createLogger, LokiLogger } from '@/shared/logger';
 
 export const InjectLogger = (context: string = 'Wangdefa') => {
   let logger: LokiLogger;
-  return (target: Object, propertyKey: string | symbol) => {
+  return (target: object, propertyKey: string | symbol) => {
     Object.defineProperty(target, propertyKey, {
       get: () => {
         if (logger) {

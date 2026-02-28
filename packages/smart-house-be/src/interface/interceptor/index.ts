@@ -1,6 +1,6 @@
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { ResponseFormatInterceptor } from './response-format';
 import { RequestContextInterceptor } from './request-context';
+import { ResponseFormatInterceptor } from './response-format';
 
 export const interceptors = [
   {

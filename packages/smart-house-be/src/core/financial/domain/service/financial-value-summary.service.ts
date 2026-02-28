@@ -4,11 +4,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository } from 'typeorm';
-import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
-import { InjectRequest } from '@/interface/decorate/inject-request';
-import { JwtUser } from '@/core/user';
-import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
 import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
+import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
+import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
+import { JwtUser } from '@/core/user';
+import { InjectRequest } from '@/interface/decorate/inject-request';
 
 @Injectable()
 export class FinancialValueSummaryService {

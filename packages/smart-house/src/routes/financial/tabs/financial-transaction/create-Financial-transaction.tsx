@@ -1,10 +1,10 @@
 import { BetaSchemaForm } from '@ant-design/pro-components';
+import { ProFormColumnsType } from '@ant-design/pro-form/es/components/SchemaForm/typing';
 import { Form, message } from 'antd';
 import React from 'react';
+import { ListSelect } from 'src/components';
 import request from 'src/request';
 import { type FinancialTransaction, FinancialTransactionType } from 'src/request/type/financial';
-import { ProFormColumnsType } from '@ant-design/pro-form/es/components/SchemaForm/typing';
-import { ListSelect } from 'src/components';
 import { configModal } from 'src/share/ui/show-modal';
 
 interface CreateFinancialTransactionProps {
@@ -17,7 +17,6 @@ export const CreateFinancialTransaction = ({
   onSuccess,
 }: CreateFinancialTransactionProps) => {
   const [form] = Form.useForm();
-  const transactionDate = Form.useWatch('transactionDate', form);
 
   configModal({
     async onConfirm() {

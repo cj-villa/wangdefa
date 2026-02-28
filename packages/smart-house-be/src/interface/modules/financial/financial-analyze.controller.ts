@@ -1,6 +1,6 @@
 import { Controller, Get, Inject } from '@nestjs/common';
-import { FinancialAnalyzeService } from '@/core/financial/domain/service/financial-analyze.service';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FinancialAnalyzeService } from '@/core/financial/domain/service/financial-analyze.service';
 
 @ApiTags('financial-analyze')
 @ApiBearerAuth()

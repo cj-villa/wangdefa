@@ -1,5 +1,5 @@
-import { PaginationQuery } from '@/core/common/application/query/pagination.query';
 import { IsNotEmpty, IsString } from 'class-validator';
+import { PaginationQuery } from '@/core/common/application/query/pagination.query';
 
 export class FinancialNetValueQuery extends PaginationQuery {
   @IsString()

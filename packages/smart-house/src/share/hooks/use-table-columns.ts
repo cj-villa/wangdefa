@@ -1,7 +1,6 @@
-import { ProColumns } from '@ant-design/pro-components';
+import { ProColumnType } from '@ant-design/pro-table/es/typing';
 import { useMemo } from 'react';
 import { useRoute } from 'src/share/hooks/use-route';
-import { ProColumnType } from '@ant-design/pro-table/es/typing';
 
 export const useTableColumns = <DataSource, ValueType = 'text'>(
   columns: Array<ProColumnType<DataSource, ValueType> & { initIndex?: string }>

@@ -1,6 +1,6 @@
+import { useRequest } from 'ahooks';
 import { Select, SelectProps } from 'antd';
 import React from 'react';
-import { useRequest } from 'ahooks';
 import request from 'src/request';
 
 interface ConsulSelectProps extends Omit<SelectProps, 'options'> {

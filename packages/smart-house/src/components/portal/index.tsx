@@ -9,7 +9,7 @@ interface PortalContext {
 
 export const PortalContext = React.createContext<PortalContext>({ refs: {}, setRefs: () => ({}) });
 
-export const PortalProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+export const PortalProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [refs, setRefs] = React.useState<Record<string, HTMLDivElement>>({});
   return <PortalContext.Provider value={{ refs, setRefs }}>{children}</PortalContext.Provider>;
 };
@@ -27,9 +27,13 @@ export const PortalTarget: React.FC<React.PropsWithChildren<{ id: string }>> = (
     }
     setRefs((refs) => ({ ...refs, [id]: ref.current! }));
     return () => {
-      setRefs(({ id, ...refs }) => refs);
+      setRefs((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
     };
-  }, []);
+  }, [id, setRefs]);
 
   return (
     <div className={s['portal-target']} id={id} ref={ref}>

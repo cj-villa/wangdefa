@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
 import { PageHeader, ProBreadcrumb } from '@ant-design/pro-components';
 import { PageHeaderProps } from '@ant-design/pro-layout/es/components/PageHeader';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface CustomPageHeaderProps extends Pick<PageHeaderProps, 'title' | 'extra'> {
@@ -21,7 +21,7 @@ export const CustomPageHeader: React.FC<CustomPageHeaderProps> = ({ onBack, ...p
       return onBack;
     }
     return undefined;
-  }, [onBack]);
+  }, [navigate, onBack]);
 
   return (
     <PageHeader

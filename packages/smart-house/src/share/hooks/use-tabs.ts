@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useRoute } from 'src/share/hooks/use-route';
-import { useLocation } from 'react-router-dom';
-import { TabsProps } from 'antd/es/tabs';
 import { useUpdateEffect } from 'ahooks';
+import { TabsProps } from 'antd/es/tabs';
+import { useMemo, useState } from 'react';
+import { useRoute } from 'src/share/hooks/use-route';
 
 export const DEFAULT_TAB_KEY = 'tab_key';
 
@@ -16,8 +15,6 @@ export const useTab = (
   } = {}
 ) => {
   const { tabKey = DEFAULT_TAB_KEY, defaultTab, reservePrevParams } = tabOptions;
-
-  const location = useLocation();
   const { params, setParam } = useRoute();
 
   const stringOptionsList = useMemo<string[]>(
@@ -38,18 +35,6 @@ export const useTab = (
     }
     setParam(tabKey, tab, !reservePrevParams);
   }, [tab]);
-
-  useEffect(() => {
-    const paramsTabKey = params[tabKey];
-    // 防死循环
-    if (tab === paramsTabKey) {
-      return;
-    }
-    if (typeof paramsTabKey !== 'string' || !stringOptionsList.includes(paramsTabKey)) {
-      return;
-    }
-    handlerTabChange(paramsTabKey);
-  }, [location]);
 
   return { activeKey: tab, onChange: handlerTabChange };
 };

@@ -1,7 +1,7 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { isProd } from '@/shared/toolkits/env';
 import { createLogger, LokiLogger } from '@/shared/logger';
+import { isProd } from '@/shared/toolkits/env';
 
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {

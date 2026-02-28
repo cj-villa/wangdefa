@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {
   Entity,
   Column,
@@ -12,7 +13,6 @@ import {
 } from 'typeorm';
 import { FinancialTransactionType } from '@/core/financial/application/enum/financial-transaction-type';
 import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
-import dayjs from 'dayjs';
 
 @Entity({ name: 'track_financial_transaction', comment: '基金交易记录表' })
 export class FinancialTransaction {

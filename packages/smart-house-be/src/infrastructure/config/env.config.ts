@@ -1,5 +1,5 @@
-import { ConfigLoader } from './configuration';
 import LokiTransport from 'winston-loki';
+import { ConfigLoader } from './configuration';
 
 export interface EnvConfig {
   port?: number;

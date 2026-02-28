@@ -1,10 +1,10 @@
+import { type RedisClientType } from 'redis';
 import { MAIL_CONFIGURATION_LOADER, MAIL_INSTANCE } from '../constant';
 import { MailModuleConfig } from '../mail.type';
 import { Imap } from '@/infrastructure/mail/libs/Imap';
 import { REDIS_INSTANCE } from '@/infrastructure/redis';
-import { type RedisClientType } from 'redis';
-import { createLogger } from '@/shared/logger';
 import { checkLock } from '@/shared/lock';
+import { createLogger } from '@/shared/logger';
 
 const logger = createLogger('MailModule');
 

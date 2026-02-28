@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { REDIS_INSTANCE } from '@/infrastructure/redis';
-import type { RedisClientType } from 'redis';
-import dayjs from 'dayjs';
 import { Cron } from '@nestjs/schedule';
-import { createLogger } from '@/shared/logger';
-import { checkLock } from '@/shared/lock';
-import { DIFY_BASE_SERVICE, DifyBaseService } from '@/infrastructure/dify';
+import dayjs from 'dayjs';
+import type { RedisClientType } from 'redis';
 import { JournalPretreatmentService } from './journal-pretreatment.service';
 import { JournalCommand } from '../../application/commands/journal-command';
 import { InsertJournalService } from '@/core/firefly/domain/service/insert-juornal.service';
+import { DIFY_BASE_SERVICE, DifyBaseService } from '@/infrastructure/dify';
+import { REDIS_INSTANCE } from '@/infrastructure/redis';
+import { checkLock } from '@/shared/lock';
+import { createLogger } from '@/shared/logger';
 import { parseJson } from '@/shared/toolkits/transform';
 
 @Injectable()

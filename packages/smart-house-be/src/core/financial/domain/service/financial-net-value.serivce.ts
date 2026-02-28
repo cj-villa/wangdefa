@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
-import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import dayjs from 'dayjs';
+import { Repository } from 'typeorm';
 import { FinancialNetValueQuery } from '@/core/financial/application/query/financial-net-value.query';
+import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
+import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
 
 @Injectable()
 export class FinancialNetValueService {

@@ -1,6 +1,6 @@
 import { type DynamicModule, Module, type ModuleMetadata, type Provider } from '@nestjs/common';
-import type { CfgProviderConfig, DifyModuleAsyncOptions, DifyModuleConfig } from './dify.type';
 import { DIFY_BASE_SERVICE, DIFY_CONFIGURATION_LOADER, DIFY_CONFIGURATION_TOKEN } from './constant';
+import type { CfgProviderConfig, DifyModuleAsyncOptions, DifyModuleConfig } from './dify.type';
 import { DifyBaseService } from './libs/dify-base.service';
 import { DifyOpenModule } from './libs/dify-open.module';
 import { deepMerge } from '@/shared/toolkits/object';
@@ -51,7 +51,7 @@ export class DifyModule {
   static forRootAsync(
     options: Pick<ModuleMetadata, 'imports'> & DifyModuleAsyncOptions
   ): DynamicModule {
-    const { imports, isGlobal, ...factoryOptions } = options;
+    const { isGlobal, ...factoryOptions } = options;
     return {
       global: isGlobal,
       ...this.createModule(factoryOptions),

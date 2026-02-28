@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Query, Body, UseInterceptors, Inject } from '@nestjs/common';
-import { KvService } from '@/infrastructure/consul';
-import { SystemConfigUpdateDto } from '@/core/system/interface/dto/system-config-update.dto';
+import { type ConfigType } from '@nestjs/config';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -9,9 +8,10 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
+import { SystemConfigUpdateDto } from '@/core/system/interface/dto/system-config-update.dto';
 import { consulConfig } from '@/infrastructure/config';
-import { type ConfigType } from '@nestjs/config';
+import { KvService } from '@/infrastructure/consul';
+import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
 
 @ApiTags('system-config')
 @ApiBearerAuth()

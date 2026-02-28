@@ -1,7 +1,7 @@
-import type { SubscriptionSecureCommand, WechatMessageDto } from '@/core/wechat';
 import * as crypto from 'crypto';
+import type { SubscriptionSecureCommand, WechatMessageDto } from '@/core/wechat';
 
-import {xml2Json} from "@/shared/toolkits/transform";
+import { xml2Json } from '@/shared/toolkits/transform';
 
 export class SubscriptionDecryptionVO<T extends WechatMessageDto = WechatMessageDto> {
   private _payload?: T;
@@ -36,10 +36,8 @@ export class SubscriptionDecryptionVO<T extends WechatMessageDto = WechatMessage
     const decipher = crypto.createDecipheriv('aes-256-cbc', aesKey, aesKey.slice(0, 16));
     decipher.setAutoPadding(true);
     const decryptedBuffer = decipher.update(tmpMsg);
-    const randomStr = Uint8Array.prototype.slice.call(decryptedBuffer, 0, 16).toString();
     const msgLength = Uint8Array.prototype.slice.call(decryptedBuffer, 16, 20).readUInt32BE(0);
     const payload = Uint8Array.prototype.slice.call(decryptedBuffer, 20, 20 + msgLength).toString();
-    const appId = Uint8Array.prototype.slice.call(decryptedBuffer, 20 + msgLength, 205).toString();
     return xml2Json<{ xml: T }>(payload).then((res) => res?.xml ?? (res as unknown as T));
   }
 

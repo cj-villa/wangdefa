@@ -8,9 +8,9 @@ import {
   Index,
   OneToMany,
 } from 'typeorm';
-import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
 import { FinancialChannel } from '@/core/financial/application/enum/financial-channel';
 import { FinancialType } from '@/core/financial/application/enum/financial-type';
+import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
 
 @Entity({ name: 'track_financial', comment: '正在追踪的理财记录表' })
 @Index('ux_code_user_id', ['code', 'userId'], { unique: true })

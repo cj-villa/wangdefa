@@ -1,6 +1,6 @@
 import { APP_GUARD } from '@nestjs/core';
-import { PublicGuard } from './public.guard';
 import { AuthGuard } from './auth.guard';
+import { PublicGuard } from './public.guard';
 
 export const GuardProviders = [
   {

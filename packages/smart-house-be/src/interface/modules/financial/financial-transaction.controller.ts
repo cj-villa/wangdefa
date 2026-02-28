@@ -1,10 +1,4 @@
 import { Body, Controller, Get, Inject, Post, Query, UseInterceptors } from '@nestjs/common';
-import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
-import { DeleteDto } from '@/core/common/application/dto/delete.dto';
-import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
-import { TrackFinancialTransactionQuery } from '@/core/financial/application/query/track-financial-transaction.query';
-import { TrackFinancialTransactionCreateDto } from '@/core/financial/application/dto/track-financial-transaction-create.dto';
-import { TrackFinancialTransactionUpdateDto } from '@/core/financial/application/dto/track-financial-transaction-update.dto';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -13,6 +7,12 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { DeleteDto } from '@/core/common/application/dto/delete.dto';
+import { TrackFinancialTransactionCreateDto } from '@/core/financial/application/dto/track-financial-transaction-create.dto';
+import { TrackFinancialTransactionUpdateDto } from '@/core/financial/application/dto/track-financial-transaction-update.dto';
+import { TrackFinancialTransactionQuery } from '@/core/financial/application/query/track-financial-transaction.query';
+import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
+import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
 
 @ApiTags('financial-transaction')
 @ApiBearerAuth()
@@ -24,6 +24,8 @@ export class FinancialTransactionController {
   @Get('list')
   @ApiOperation({ summary: '查询理财交易记录列表' })
   @ApiQuery({ name: 'financialId', required: false, type: String, description: '理财ID' })
+  @ApiQuery({ name: 'name', required: false, type: String, description: '理财名称（模糊匹配）' })
+  @ApiQuery({ name: 'code', required: false, type: String, description: '理财编码（模糊匹配）' })
   @ApiQuery({ name: 'transactionType', required: false, type: String, description: '交易类型' })
   @ApiQuery({ name: 'from', required: false, type: String, description: '起始日期' })
   @ApiQuery({ name: 'to', required: false, type: String, description: '结束日期' })

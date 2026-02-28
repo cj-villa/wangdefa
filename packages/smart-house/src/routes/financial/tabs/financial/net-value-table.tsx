@@ -1,9 +1,9 @@
-import React from 'react';
 import { ActionType, ProTable } from '@ant-design/pro-components';
-import request from 'src/request';
-import dayjs from 'dayjs';
 import { message } from 'antd';
+import dayjs from 'dayjs';
+import React from 'react';
 import { ConfirmButton } from 'src/components';
+import request from 'src/request';
 
 export const NetValueTable = ({ code }: { code: string }) => {
   const actionRef = React.useRef<ActionType>(null);

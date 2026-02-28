@@ -1,29 +1,29 @@
 // 订单识别后的数据结构
 export class BillCommand {
-    // 交易时间
-    dateTime: string;
-    // 交易分类
-    category: string;
-    // 交易对方
-    counterparty: string;
-    // 对方账号
-    counterpartyAccount: string;
-    // 商品说明
-    description: string;
-    // 收入/支出
-    direction: string;
-    // 金额
-    amount: string;
-    // 收/付款方式
-    paymentMethod: string;
-    // 交易状态
-    status: string;
-    // 交易订单号
-    tradeNo: string;
-    // 商家订单号
-    merchantOrderNo: string;
-    // 备注
-    remark: string;
+  // 交易时间
+  dateTime: string;
+  // 交易分类
+  category: string;
+  // 交易对方
+  counterparty: string;
+  // 对方账号
+  counterpartyAccount: string;
+  // 商品说明
+  description: string;
+  // 收入/支出
+  direction: string;
+  // 金额
+  amount: string;
+  // 收/付款方式
+  paymentMethod: string;
+  // 交易状态
+  status: string;
+  // 交易订单号
+  tradeNo: string;
+  // 商家订单号
+  merchantOrderNo: string;
+  // 备注
+  remark: string;
 }
 
 // {

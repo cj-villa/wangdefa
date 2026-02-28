@@ -1,6 +1,6 @@
 import { Attachment } from 'mailparser';
-import { EBillVo } from '@/core/firefly';
 import { BillCommand } from '../../application/commands/bill-command';
+import { EBillVo } from '@/core/firefly';
 
 export class BillEmailVo {
   readonly eBill: EBillVo;

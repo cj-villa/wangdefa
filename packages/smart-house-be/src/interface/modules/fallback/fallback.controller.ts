@@ -1,6 +1,6 @@
 import { All, Controller, HttpStatus, Res } from '@nestjs/common';
-import { type Response } from 'express';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { type Response } from 'express';
 
 @ApiTags('fallback')
 @ApiBearerAuth()

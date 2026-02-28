@@ -5,8 +5,8 @@ import {
   NestInterceptor,
   SetMetadata,
 } from '@nestjs/common';
-import { map } from 'rxjs';
 import { Reflector } from '@nestjs/core';
+import { map } from 'rxjs';
 
 const SKIP_FORMAT = Symbol('SKIP_FORMAT');
 

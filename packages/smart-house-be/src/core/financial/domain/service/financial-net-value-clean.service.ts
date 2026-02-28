@@ -1,21 +1,21 @@
 /** 爬取理财每日的净值 */
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { FinancialChannel } from '@/core/financial/application/enum/financial-channel';
-import { http } from '@/shared/request';
-import { ICBCFinaQuery } from '@/core/financial/application/query/icbc-fina.query';
-import { MCBFundQuery } from '@/core/financial/application/query/mcb-fund.query';
-import { MCBFinaQuery } from '@/core/financial/application/query/mcb-fina.query';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
-import { Repository } from 'typeorm';
-import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
-import { InjectRequest } from '@/interface/decorate/inject-request';
-import { JwtUser } from '@/core/user';
 import dayjs from 'dayjs';
-import { LokiLogger } from '@/shared/logger';
-import { InjectLogger } from '@/interface/decorate/inject-logger';
-import { stringifyJson } from '@/shared/toolkits/transform';
+import { Repository } from 'typeorm';
+import { FinancialChannel } from '@/core/financial/application/enum/financial-channel';
+import { ICBCFinaQuery } from '@/core/financial/application/query/icbc-fina.query';
+import { MCBFinaQuery } from '@/core/financial/application/query/mcb-fina.query';
+import { MCBFundQuery } from '@/core/financial/application/query/mcb-fund.query';
+import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
+import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
 import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
+import { JwtUser } from '@/core/user';
+import { InjectLogger } from '@/interface/decorate/inject-logger';
+import { InjectRequest } from '@/interface/decorate/inject-request';
+import { LokiLogger } from '@/shared/logger';
+import { http } from '@/shared/request';
+import { stringifyJson } from '@/shared/toolkits/transform';
 
 @Injectable()
 export class FinancialNetValueCleanService {

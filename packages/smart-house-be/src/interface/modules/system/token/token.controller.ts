@@ -1,12 +1,5 @@
 import { Body, Controller, Get, Inject, Post, Query, UseInterceptors } from '@nestjs/common';
 import {
-  CreateTokenDto,
-  TokenDeleteDto,
-  TokenManageService,
-  TokenSearchService,
-} from '@/core/token';
-import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
-import {
   ApiBearerAuth,
   ApiBody,
   ApiOkResponse,
@@ -14,6 +7,13 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import {
+  CreateTokenDto,
+  TokenDeleteDto,
+  TokenManageService,
+  TokenSearchService,
+} from '@/core/token';
+import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
 
 @ApiTags('system-token')
 @ApiBearerAuth()

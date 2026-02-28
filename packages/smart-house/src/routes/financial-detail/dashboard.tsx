@@ -1,25 +1,11 @@
-import React, { useMemo } from 'react';
-import { Card, Col, Flex, Row, Statistic } from 'antd';
 import { FallOutlined, RiseOutlined } from '@ant-design/icons';
+import { Card, Flex, Statistic } from 'antd';
+import React from 'react';
 import { FinancialDetail } from 'src/request/type/financial';
 import { roundPrice } from 'src/share/toolkits/tookit';
-import dayjs from 'dayjs';
 
 export const Dashboard: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
-  const { valueTrends } = detail;
   const totalProfit = detail.totalAssets - detail.totalCost;
-
-  const yearProfit = useMemo(() => {
-    const now = dayjs();
-    // 最多366天咯
-    let profit = 0;
-    valueTrends.slice(-366).forEach((i) => {
-      if (i.balance !== 0) {
-        profit += i.balance;
-      }
-    });
-    return profit;
-  }, []);
 
   return (
     <Card style={{ marginBottom: 16 }}>

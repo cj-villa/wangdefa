@@ -1,18 +1,18 @@
 /** 资金交易记录服务 */
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { TrackFinancialTransactionCreateDto } from '@/core/financial/application/dto/track-financial-transaction-create.dto';
-import { InjectRequest } from '@/interface/decorate/inject-request';
-import { JwtUser } from '@/core/user';
 import { TrackFinancialTransactionUpdateDto } from '@/core/financial/application/dto/track-financial-transaction-update.dto';
 import { TrackFinancialTransactionQuery } from '@/core/financial/application/query/track-financial-transaction.query';
-import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
-import { batchKeys, mergeEntity } from '@/shared/toolkits/sql';
-import { FinancialNetValueService } from '@/core/financial/domain/service/financial-net-value.serivce';
 import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
+import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
+import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
+import { FinancialNetValueService } from '@/core/financial/domain/service/financial-net-value.serivce';
 import { TrackFinancialRecordService } from '@/core/financial/domain/service/track-financial-record.service';
+import { JwtUser } from '@/core/user';
+import { InjectRequest } from '@/interface/decorate/inject-request';
+import { batchKeys, mergeEntity } from '@/shared/toolkits/sql';
 
 @Injectable()
 export class TrackFinancialTransactionService {
@@ -112,6 +112,8 @@ export class TrackFinancialTransactionService {
       current = 1,
       pageSize = 10,
       financialId,
+      name,
+      code,
       transactionType,
       from,
       to,
@@ -127,6 +129,17 @@ export class TrackFinancialTransactionService {
 
     if (financialId) {
       queryBuilder.andWhere({ financialId: financialId });
+    }
+
+    if (name || code) {
+      queryBuilder.innerJoin(TrackFinancial, 'financial', 'financial.id = transaction.financialId');
+    }
+
+    if (name) {
+      queryBuilder.andWhere('financial.name LIKE :name', { name: `%${name}%` });
+    }
+    if (code) {
+      queryBuilder.andWhere('financial.code LIKE :code', { code: `%${code}%` });
     }
     if (transactionType) {
       queryBuilder.andWhere({ transactionType });

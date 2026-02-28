@@ -1,5 +1,5 @@
-import { parseStringPromise } from 'xml2js';
 import { BadRequestException } from '@nestjs/common';
+import { parseStringPromise } from 'xml2js';
 
 export const parseJson = <T>(jsonStr: string, options: { defaultJson?: T } = {}): T => {
   const { defaultJson } = options;

@@ -1,11 +1,11 @@
-import { ActionType, ProTable } from '@ant-design/pro-components';
-import request from 'src/request';
-import React, { useRef } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
+import { ActionType, ProTable } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
+import React, { useRef } from 'react';
+import { ConfirmButton } from 'src/components';
+import request from 'src/request';
 import { CreateToken } from 'src/routes/system/token/create-token';
 import { showModal } from 'src/share/ui/show-modal';
-import { ConfirmButton } from 'src/components';
 
 export const TokenPage = () => {
   const actionRef = useRef<ActionType>(null);

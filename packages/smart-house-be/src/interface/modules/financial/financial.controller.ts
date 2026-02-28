@@ -1,17 +1,4 @@
 import { Body, Controller, Get, Inject, Post, Query, UseInterceptors } from '@nestjs/common';
-import { TrackFinancialRecordService } from '@/core/financial/domain/service/track-financial-record.service';
-import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
-import { TrackFinancialQuery } from '@/core/financial/application/query/track-financial.query';
-import { TrackFinancialCreateDto } from '@/core/financial/application/dto/track-financial-create.dto';
-import { DeleteDto } from '@/core/common/application/dto/delete.dto';
-import { TrackFinancialUpdateDto } from '@/core/financial/application/dto/track-financial-update.dto';
-import { FinancialNetValueCleanService } from '@/core/financial/domain/service/financial-net-value-clean.service';
-import { TrackFinancialCleanDto } from '@/core/financial/application/dto/track-financial-clean.dto';
-import { FinancialValueCleanService } from '@/core/financial/domain/service/financial-value-clean.service';
-import { FinancialValueSummaryService } from '@/core/financial/domain/service/financial-value-summary.service';
-// 导入新增的服务和查询
-import { FinancialAnalyzeService } from '@/core/financial/domain/service/financial-analyze.service';
-import { FinancialDetailQuery } from '@/core/financial/application/query/financial-detail.query';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -20,6 +7,18 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { DeleteDto } from '@/core/common/application/dto/delete.dto';
+import { TrackFinancialCleanDto } from '@/core/financial/application/dto/track-financial-clean.dto';
+import { TrackFinancialCreateDto } from '@/core/financial/application/dto/track-financial-create.dto';
+import { TrackFinancialUpdateDto } from '@/core/financial/application/dto/track-financial-update.dto';
+import { FinancialDetailQuery } from '@/core/financial/application/query/financial-detail.query';
+import { TrackFinancialQuery } from '@/core/financial/application/query/track-financial.query';
+import { FinancialAnalyzeService } from '@/core/financial/domain/service/financial-analyze.service';
+import { FinancialNetValueCleanService } from '@/core/financial/domain/service/financial-net-value-clean.service';
+import { FinancialValueCleanService } from '@/core/financial/domain/service/financial-value-clean.service';
+import { FinancialValueSummaryService } from '@/core/financial/domain/service/financial-value-summary.service';
+import { TrackFinancialRecordService } from '@/core/financial/domain/service/track-financial-record.service';
+import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
 
 @ApiTags('financial')
 @ApiBearerAuth()

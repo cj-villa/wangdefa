@@ -13,8 +13,8 @@ const logger = createLogger('DecryptionDecorate');
 
 const getDecryptionVO = (
   request: Request<
-    {},
-    {},
+    Record<string, never>,
+    Record<string, never>,
     { xml: SubscriptionDecryptionRequestBodyDto },
     SubscriptionDecryptionRequestQueryDto
   >

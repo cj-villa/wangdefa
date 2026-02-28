@@ -1,5 +1,5 @@
-import { HttpException, HttpExceptionOptions } from '@nestjs/common/exceptions/http.exception';
 import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpExceptionOptions } from '@nestjs/common/exceptions/http.exception';
 import { Response } from 'express';
 
 export class PrivateException extends HttpException {

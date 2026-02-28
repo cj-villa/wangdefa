@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Tabs, Empty } from 'antd';
-import request from 'src/request';
-import { useRoute } from 'src/share/hooks/use-route';
-import { CustomPageHeader, PortalBody } from 'src/components';
-import { useRequest } from 'ahooks';
 import { ProSkeleton } from '@ant-design/pro-components';
+import { useRequest } from 'ahooks';
+import { Tabs, Empty } from 'antd';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { CustomPageHeader, PortalBody } from 'src/components';
+import request from 'src/request';
 import { Dashboard } from 'src/routes/financial-detail/dashboard';
-import { Transactions } from 'src/routes/financial-detail/tabs/transactions';
-import { Charts } from 'src/routes/financial-detail/tabs/charts';
 import { CalendarStatistics } from 'src/routes/financial-detail/tabs/calendar';
+import { Charts } from 'src/routes/financial-detail/tabs/charts';
+import { Transactions } from 'src/routes/financial-detail/tabs/transactions';
+import { useRoute } from 'src/share/hooks/use-route';
 
 export const FinancialDetailPage = () => {
   const { params } = useRoute();
   const { id } = params;
   const navigate = useNavigate();
-  const [timeRange, setTimeRange] = useState<'day' | 'week' | 'month' | 'year'>('month');
+  const timeRange: 'day' | 'week' | 'month' | 'year' = 'month';
 
   const { data: detailData, loading } = useRequest<any, any>(() =>
     request.getFinancialDetail({ id: id as string, range: timeRange })

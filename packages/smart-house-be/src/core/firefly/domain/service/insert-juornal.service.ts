@@ -1,15 +1,15 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { Kv } from '@/infrastructure/consul';
-import { type AccountCommand } from '@/core/firefly/application/commands/account-command';
 import { FireflyAccount, JournalCommand } from '@/core/firefly';
+import { type AccountCommand } from '@/core/firefly/application/commands/account-command';
 import { type TransactionBatchCommand } from '@/core/firefly/application/commands/transaction-command';
-import { FireflyTransaction } from '@/core/firefly/application/query/transaction';
 import { TransactionType } from '@/core/firefly/application/enum/transaction-type';
+import { FireflyTransaction } from '@/core/firefly/application/query/transaction';
+import { Kv } from '@/infrastructure/consul';
 import { InjectLogger, type LokiLogger } from '@/interface/decorate/inject-logger';
 import { http } from '@/shared/request';
 import { stringifyJson } from '@/shared/toolkits/transform';
 
-type FireflyData<Item = any> = {
+type FireflyData<Item = unknown> = {
   type: string;
   id: number;
   attributes: Item;
@@ -26,7 +26,7 @@ export class InsertJournalService {
   @Kv('domain', 'firefly')
   domain: string;
 
-  private async post<D extends any = any, T = any>(
+  private async post<D = unknown, T = unknown>(
     path: string,
     data: any = {}
   ): Promise<FireflyData<D>> {

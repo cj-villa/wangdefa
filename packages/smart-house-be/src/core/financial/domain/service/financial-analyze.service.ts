@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
+import { FinancialDetailDto } from '@/core/financial/application/dto/financial-detail-dto';
+import { FinancialSummaryDto } from '@/core/financial/application/dto/financial-summary-dto';
+import { FinancialDetailQuery } from '@/core/financial/application/query/financial-detail.query';
+import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
 import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
 import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
-import { InjectRequest } from '@/interface/decorate/inject-request';
+import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
 import { JwtUser } from '@/core/user';
-import { FinancialDetailQuery } from '@/core/financial/application/query/financial-detail.query';
-import { FinancialSummaryDto } from '@/core/financial/application/dto/financial-summary-dto';
+import { InjectRequest } from '@/interface/decorate/inject-request';
 import { sum } from '@/shared/toolkits/array';
-import { FinancialDetailDto } from '@/core/financial/application/dto/financial-detail-dto';
-import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
 
 @Injectable()
 export class FinancialAnalyzeService {

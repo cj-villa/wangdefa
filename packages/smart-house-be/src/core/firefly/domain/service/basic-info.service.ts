@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { Kv } from '@/infrastructure/consul';
 import axios from 'axios';
 import { AccountType } from '@/core/firefly';
 import type { FireflyAccount, FireflyBudget, FireflyCategory, FireflyTag } from '@/core/firefly';
+import { Kv } from '@/infrastructure/consul';
 
-type FireflyData<Item = any> = {
+type FireflyData<Item = unknown> = {
   data: Array<{ type: string; id: number; attributes: Item }>;
   meta: any;
 };
 
-type FireflyList<Item = any> = Array<{ type: string; id: number; attributes: Item }>;
+type FireflyList<Item = unknown> = Array<{ type: string; id: number; attributes: Item }>;
 
 @Injectable()
 export class BasicInfoService {
@@ -19,7 +19,7 @@ export class BasicInfoService {
   @Kv('domain', 'firefly')
   domain: string;
 
-  private async get<D extends any = any>(path: string, params: any = {}): Promise<FireflyData<D>> {
+  private async get<D = unknown>(path: string, params: any = {}): Promise<FireflyData<D>> {
     return axios
       .get<any, { data: FireflyData<D> }>(`${this.domain}${path}`, {
         params: { limit: 10, ...params },
@@ -31,7 +31,7 @@ export class BasicInfoService {
       .then((res) => res.data);
   }
 
-  private async getByRecursion<D extends any = any>(path: string, params: any = {}) {
+  private async getByRecursion<D = unknown>(path: string, params: any = {}) {
     let hasMore = true;
     let current = 1;
     const list: FireflyList<D> = [];

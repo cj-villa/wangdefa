@@ -1,12 +1,12 @@
+import * as fs from 'fs';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import * as yaml from 'js-yaml';
-import * as fs from 'fs';
-import { registerAs } from '@nestjs/config';
 import * as process from 'node:process';
-import { deepMerge } from '@/shared/toolkits/object';
+import { registerAs } from '@nestjs/config';
+import * as yaml from 'js-yaml';
 import { get } from 'lodash';
 import { type GlobalConfig } from '@/infrastructure/config/type';
+import { deepMerge } from '@/shared/toolkits/object';
 
 const envPrefix = {
   development: 'dev',

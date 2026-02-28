@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
 import { BetaSchemaForm } from '@ant-design/pro-components';
-import { Form, message, Spin } from 'antd';
+import { json } from '@codemirror/lang-json';
+import CodeMirror from '@uiw/react-codemirror';
 import { useRequest } from 'ahooks';
+import { Form, message, Spin } from 'antd';
+import React, { useEffect } from 'react';
 import request from 'src/request';
 import { configModal } from 'src/share/ui/show-modal';
-import CodeMirror from '@uiw/react-codemirror';
-import { json } from '@codemirror/lang-json';
 
 export const UpsertConfigModal = (props: { name?: string }) => {
   const { name } = props;

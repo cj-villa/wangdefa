@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TextMessageDto, WechatMessageDto } from '@/core/wechat';
 import { create } from 'xmlbuilder2';
 import { SingleAutomationService } from '@/core/firefly';
+import { TextMessageDto, WechatMessageDto } from '@/core/wechat';
 
 @Injectable()
 export class SubscriptionService {

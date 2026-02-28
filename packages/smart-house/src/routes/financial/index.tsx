@@ -1,9 +1,9 @@
-import React from 'react';
 import { Tabs, Card } from 'antd';
+import { TabsProps } from 'antd/es/tabs';
+import React from 'react';
+import { useTab } from 'src/share/hooks/use-tabs';
 import { FinancialTab } from './tabs/financial/financial';
 import { FinancialTransaction } from './tabs/financial-transaction/financial-transaction';
-import { useTab } from 'src/share/hooks/use-tabs';
-import { TabsProps } from 'antd/es/tabs';
 
 const tabItems: NonNullable<TabsProps['items']> = [
   {

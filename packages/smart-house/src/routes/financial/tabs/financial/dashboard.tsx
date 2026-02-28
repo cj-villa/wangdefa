@@ -1,7 +1,7 @@
 // 收益看板组件
-import { DollarOutlined, RiseOutlined, FallOutlined } from '@ant-design/icons';
-import { Card, Row, Col, Statistic } from 'antd';
+import { RiseOutlined, FallOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
+import { Card, Row, Col, Statistic } from 'antd';
 import request from 'src/request';
 import type { FinancialSummary } from 'src/request/type/financial';
 import { roundPrice } from 'src/share/toolkits/tookit';

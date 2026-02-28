@@ -1,6 +1,6 @@
-import { type TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
-import { type FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
 import { type FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
+import { type FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
+import { type TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
 
 export class FinancialDetailDto {
   financial: TrackFinancial;

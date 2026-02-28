@@ -1,14 +1,8 @@
 /** 注入需要全局拿到的 request 的对象 */
-import { JwtUser } from '@/core/user';
 import { AsyncLocalStorage } from 'node:async_hooks';
-import {
-  CallHandler,
-  ExecutionContext,
-  Injectable,
-  NestInterceptor,
-  NestMiddleware,
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable } from 'rxjs';
+import { JwtUser } from '@/core/user';
 
 export interface RequestStore {
   user?: JwtUser;

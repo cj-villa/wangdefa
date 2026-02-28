@@ -1,9 +1,9 @@
 import { createBrowserRouter, type RouteObject } from 'react-router';
 import { Layout } from 'src/layout';
-import { TokenPage } from 'src/routes/system/token';
 import { FinancialPage } from 'src/routes/financial';
-import { SystemConfig } from 'src/routes/system/config';
 import { FinancialDetailPage } from 'src/routes/financial-detail';
+import { SystemConfig } from 'src/routes/system/config';
+import { TokenPage } from 'src/routes/system/token';
 import { renderOutLetFactory } from 'src/share/ui/renderOutLet';
 
 export const routes = [

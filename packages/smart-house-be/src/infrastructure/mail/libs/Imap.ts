@@ -1,6 +1,6 @@
+import EventEmitter from 'events';
 import { ImapFlow, type MailboxLockObject, type ImapFlowOptions } from 'imapflow';
 import { simpleParser } from 'mailparser';
-import EventEmitter from 'events';
 import { createLogger } from '@/shared/logger';
 
 export class Imap extends EventEmitter {
@@ -45,8 +45,8 @@ export class Imap extends EventEmitter {
   private async fetchUnSeen() {
     const { client } = this;
     try {
-      for await (let msg of client.fetch({ seen: false }, { source: true })) {
-        let data = await simpleParser(msg.source);
+      for await (const msg of client.fetch({ seen: false }, { source: true })) {
+        const data = await simpleParser(msg.source);
         this.emit('message', data, () => {
           client.messageFlagsAdd(msg.uid, ['\\Seen'], { uid: true });
         });
@@ -84,7 +84,7 @@ export class Imap extends EventEmitter {
 
   async heartbeat() {
     try {
-      while (true) {
+      while (this.connected) {
         this.logger.debug('发送 NOOP 命令...');
         await this.client.noop();
         await new Promise((resolve) => setTimeout(resolve, 60000)); // 维持进程不退出

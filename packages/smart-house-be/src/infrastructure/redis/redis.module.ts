@@ -1,20 +1,20 @@
 import { Module, type DynamicModule, type ModuleMetadata, type Provider } from '@nestjs/common';
+import { type RedisClientType } from 'redis';
 import {
   REDIS_SERVICE,
   REDIS_CONFIGURATION_LOADER,
   REDIS_CONFIGURATION_TOKEN,
   REDIS_INSTANCE,
 } from './constant';
+import { createInstance } from './libs/create-instance';
+import { RedisBaseService } from './libs/redis-base.service';
+import { RedisOpenModule } from './libs/redis-open.module';
 import type {
   CfgProviderConfig,
   RedisModuleAsyncOptions,
   RedisBaseModuleConfig,
 } from './redis.type';
 import { deepMerge } from '@/shared/toolkits/object';
-import { RedisBaseService } from './libs/redis-base.service';
-import { RedisOpenModule } from './libs/redis-open.module';
-import { createInstance } from './libs/create-instance';
-import { type RedisClientType } from 'redis';
 
 type CombineOptions = RedisBaseModuleConfig | CfgProviderConfig;
 
@@ -74,7 +74,7 @@ export class RedisModule {
   static forRootAsync(
     options: Pick<ModuleMetadata, 'imports'> & RedisModuleAsyncOptions
   ): DynamicModule {
-    const { imports, isGlobal, ...factoryOptions } = options;
+    const { isGlobal, ...factoryOptions } = options;
     return {
       global: isGlobal,
       ...this.createModule(factoryOptions),

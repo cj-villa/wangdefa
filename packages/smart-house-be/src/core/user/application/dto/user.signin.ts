@@ -1,5 +1,5 @@
-import { IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 export class UserSignInDTO {
   @ApiProperty({ description: '用户名或邮箱', example: 'user@example.com' })

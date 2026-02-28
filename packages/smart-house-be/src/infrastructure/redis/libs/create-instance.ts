@@ -1,5 +1,5 @@
-import { REDIS_INSTANCE } from '@/infrastructure/redis';
 import { createClient, type RedisClientOptions } from 'redis';
+import { REDIS_INSTANCE } from '@/infrastructure/redis';
 import { REDIS_CONFIGURATION_LOADER } from '@/infrastructure/redis/constant';
 
 export const createInstance = () => ({

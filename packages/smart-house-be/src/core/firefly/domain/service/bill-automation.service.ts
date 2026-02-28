@@ -1,14 +1,14 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { type Imap, MAIL_INSTANCE } from '@/infrastructure/mail';
+import { ConfigType } from '@nestjs/config';
+import dayjs from 'dayjs';
 import { ParsedMail } from 'mailparser';
+import type { RedisClientType } from 'redis';
 import { BillEmailVo, BillCommand, SingleAutomationService } from '@/core/firefly';
 import { envConfig } from '@/infrastructure/config';
-import { ConfigType } from '@nestjs/config';
-import { InjectLogger, type LokiLogger } from '@/interface/decorate/inject-logger';
 import { Kv } from '@/infrastructure/consul';
+import { type Imap, MAIL_INSTANCE } from '@/infrastructure/mail';
 import { REDIS_INSTANCE } from '@/infrastructure/redis';
-import type { RedisClientType } from 'redis';
-import dayjs from 'dayjs';
+import { InjectLogger, type LokiLogger } from '@/interface/decorate/inject-logger';
 
 @Injectable()
 export class BillAutomationService implements OnModuleInit {

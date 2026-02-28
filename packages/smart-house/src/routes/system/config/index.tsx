@@ -1,10 +1,10 @@
-import React, { useRef } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, ProTable } from '@ant-design/pro-components';
 import { Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { showModal } from 'src/share/ui/show-modal';
-import { UpsertConfigModal } from 'src/routes/system/config/upsert-config-modal';
+import React, { useRef } from 'react';
 import request from 'src/request';
+import { UpsertConfigModal } from 'src/routes/system/config/upsert-config-modal';
+import { showModal } from 'src/share/ui/show-modal';
 
 export const SystemConfig = () => {
   const actionRef = useRef<ActionType>(null);

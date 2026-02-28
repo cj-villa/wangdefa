@@ -1,9 +1,9 @@
 import React from 'react';
 import { DayBody } from 'src/components/calendar/body/day-body';
-import { useCalendarContext } from '../context';
-import { CalendarMode } from 'src/components/calendar/type';
 import { MonthBody } from 'src/components/calendar/body/month-body';
 import { YearBody } from 'src/components/calendar/body/year-body';
+import { CalendarMode } from 'src/components/calendar/type';
+import { useCalendarContext } from '../context';
 
 export const CalendarBody = () => {
   const { mode } = useCalendarContext();

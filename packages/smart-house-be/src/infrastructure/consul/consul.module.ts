@@ -1,19 +1,19 @@
 import { Module, type DynamicModule, type ModuleMetadata, type Provider } from '@nestjs/common';
-import {
-  CONSUL_BASE_SERVICE,
-  CONSUL_CONFIGURATION_LOADER,
-  CONSUL_CONFIGURATION_TOKEN,
-} from '@/infrastructure/consul/constant';
-import { KvService } from './libs/kv';
 import type {
   CfgProviderConfig,
   ConsulKvModuleAsyncOptions,
   ConsulKvModuleConfig,
 } from './consul.type';
-import { deepMerge } from '@/shared/toolkits/object';
 import { ConsulOpenModule } from './libs/consul-open.module';
+import { KvService } from './libs/kv';
+import {
+  CONSUL_BASE_SERVICE,
+  CONSUL_CONFIGURATION_LOADER,
+  CONSUL_CONFIGURATION_TOKEN,
+} from '@/infrastructure/consul/constant';
 import { ConsulBaseService } from '@/infrastructure/consul/libs/consul-base.service';
 import { KvRecordService } from '@/infrastructure/consul/libs/kv/record.service';
+import { deepMerge } from '@/shared/toolkits/object';
 
 type CombineOptions = ConsulKvModuleConfig | CfgProviderConfig;
 
@@ -84,7 +84,7 @@ export class ConsulModule {
   static forRootAsync(
     options: Pick<ModuleMetadata, 'imports'> & ConsulKvModuleAsyncOptions
   ): DynamicModule {
-    const { imports, isGlobal, ...factoryOptions } = options;
+    const { isGlobal, ...factoryOptions } = options;
     return {
       global: isGlobal,
       ...this.createModule(factoryOptions),

@@ -1,9 +1,9 @@
+import { randomUUID } from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { JwtUser } from '@/core/user';
 import { Token } from '@/core/token';
-import { randomUUID } from 'crypto';
+import { JwtUser } from '@/core/user';
 import { InjectRequest } from '@/interface/decorate/inject-request';
 
 @Injectable()

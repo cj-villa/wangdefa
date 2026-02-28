@@ -1,9 +1,9 @@
+import { constants as cryptoConstants } from 'crypto';
+import https from 'https';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
-import https from 'https';
-
 const legacyAgent = new https.Agent({
-  secureOptions: require('constants').SSL_OP_LEGACY_SERVER_CONNECT,
+  secureOptions: cryptoConstants.SSL_OP_LEGACY_SERVER_CONNECT,
 });
 
 /** 创建实例 */

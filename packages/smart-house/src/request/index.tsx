@@ -1,4 +1,3 @@
-import { request } from './request';
 import type { Page } from 'src/request/type/common';
 import {
   Financial,
@@ -7,6 +6,7 @@ import {
   FinancialTransactionType,
 } from 'src/request/type/financial';
 import { UpdateSystemConfigRequest } from 'src/request/type/system';
+import { request } from './request';
 
 export default {
   /** system */
@@ -36,7 +36,15 @@ export default {
 
   /** 理财交易相关 */
   listFinancialTransaction: (
-    params: Page & { financialId?: string; transactionType?: FinancialTransactionType }
+    params: Page & {
+      financialId?: string;
+      name?: string;
+      code?: string;
+      transactionType?: FinancialTransactionType;
+      from?: string;
+      to?: string;
+      orderBy?: 'ASC' | 'DESC';
+    }
   ) => request.get('/api/financial/transaction/list', { params }),
   createFinancialTransaction: (data: Omit<FinancialTransaction, 'id'>) =>
     request.post('/api/financial/transaction/create', data),

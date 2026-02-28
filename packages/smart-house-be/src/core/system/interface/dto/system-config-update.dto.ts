@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsEnum, IsNumberString } from 'class-validator';
-import { FinancialTransactionType } from '@/core/financial/application/enum/financial-transaction-type';
-import { ObjectType } from 'typeorm';
+import { IsNotEmpty } from 'class-validator';
 
 export class SystemConfigUpdateDto {
   @ApiProperty({ example: 'db', description: '配置修改的key' })
@@ -13,5 +11,5 @@ export class SystemConfigUpdateDto {
     description: '修改后的key',
   })
   @IsNotEmpty()
-  data: Object;
+  data: Record<string, unknown>;
 }

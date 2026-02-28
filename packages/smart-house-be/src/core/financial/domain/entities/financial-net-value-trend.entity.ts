@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { type TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
 import { FinancialType } from '@/core/financial/application/enum/financial-type';
+import { type TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
 
 @Entity({ name: 'financial_net_value_trend', comment: '理财净值表' })
 @Index('ux_code_date', ['code', 'date'], { unique: true })

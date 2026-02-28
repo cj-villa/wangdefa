@@ -1,10 +1,10 @@
-import { requestContext, RequestStore } from '@/interface/interceptor/request-context';
 import { get } from 'lodash';
+import { requestContext, RequestStore } from '@/interface/interceptor/request-context';
 
 type Keys<TObject extends object> = keyof TObject | [keyof TObject];
 
 export const InjectRequest = (key?: Keys<RequestStore>) => {
-  return (target: Object, propertyKey: string | symbol) => {
+  return (target: object, propertyKey: string | symbol) => {
     Object.defineProperty(target, propertyKey, {
       get: () => {
         const request = requestContext.getStore();

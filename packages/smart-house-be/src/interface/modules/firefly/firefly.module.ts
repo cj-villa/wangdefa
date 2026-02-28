@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { FireflyController } from './firefly.controller';
 import {
   BasicInfoService,
@@ -6,10 +7,9 @@ import {
   SingleAutomationService,
   JournalPretreatmentService,
 } from '@/core/firefly';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { InsertJournalService } from '@/core/firefly/domain/service/insert-juornal.service';
 import { FireflyParsingRules } from '@/core/firefly/domain/entities/firefly-parsing-rules.entity';
 import { JournalMeta } from '@/core/firefly/domain/entities/journal-meta.entity';
+import { InsertJournalService } from '@/core/firefly/domain/service/insert-juornal.service';
 
 @Module({
   imports: [

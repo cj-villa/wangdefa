@@ -1,4 +1,4 @@
-export const calculation = <T extends any = any, K extends keyof T = keyof T>(
+export const calculation = <T = unknown, K extends keyof T = keyof T>(
   target: T[],
   key: K,
   method: (prev: T[K], value: T[K]) => T[K],
@@ -7,7 +7,7 @@ export const calculation = <T extends any = any, K extends keyof T = keyof T>(
   return target.reduce((prev, cur) => method(prev, cur[key]), initialValue);
 };
 
-export const sum = <T extends any = any, K extends keyof T = keyof T>(
+export const sum = <T = unknown, K extends keyof T = keyof T>(
   target: T[],
   key: K,
   initialValue = 0

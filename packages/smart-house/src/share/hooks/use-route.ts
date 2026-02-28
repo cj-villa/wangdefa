@@ -1,8 +1,8 @@
 /**
  * @description 获取路由参数，可以添加、删除当前路由参数
  */
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useMemo, useCallback } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface RouteParams {
   [key: string]: string | string[] | undefined;
@@ -134,7 +134,7 @@ export const useRoute = (): UseRouteReturn => {
         }
       );
     },
-    [location.pathname, navigate]
+    [location.pathname, navigate, params]
   );
 
   /**

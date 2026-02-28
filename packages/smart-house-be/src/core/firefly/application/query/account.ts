@@ -1,7 +1,7 @@
 import { AccountRole } from '../enum/account-role';
 import { AccountType } from '../enum/account-type';
-import { CurrencyCode } from '../enum/currency-code';
 import { CreditCardType } from '../enum/credit-card-type';
+import { CurrencyCode } from '../enum/currency-code';
 import { LiabilityType } from '../enum/liability-type';
 
 export class FireflyAccount {

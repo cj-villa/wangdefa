@@ -1,4 +1,11 @@
-import {Entity, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn} from 'typeorm';
+import {
+  Entity,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'journal_meta', comment: 'firefly原数据表', database: 'firefly' })
 export class JournalMeta {

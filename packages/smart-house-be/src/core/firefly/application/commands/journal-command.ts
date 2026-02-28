@@ -1,29 +1,28 @@
 // firefly ai处理后的的数据结构
 export class JournalCommand {
-    /** 交易类型 */
-    type: 'expense' | 'income' | 'transfer';
-    /** 交易金额 */
-    amount: number;
-    // /** 交易时间 */
-    time: string;
-    /** 交易标签 */
-    tag: string;
-    /** 交易预算 */
-    budget: string;
-    /** 交易分类 */
-    category: string;
-    /** 交易来源账户 */
-    source: string;
-    /** 交易目标账户 */
-    target: string;
-    /** 交易描述 */
-    description: string;
-    /** 交易交易号 */
-    tradeNo: string;
-    /** 解析前的数据 */
-    hint: string;
+  /** 交易类型 */
+  type: 'expense' | 'income' | 'transfer';
+  /** 交易金额 */
+  amount: number;
+  // /** 交易时间 */
+  time: string;
+  /** 交易标签 */
+  tag: string;
+  /** 交易预算 */
+  budget: string;
+  /** 交易分类 */
+  category: string;
+  /** 交易来源账户 */
+  source: string;
+  /** 交易目标账户 */
+  target: string;
+  /** 交易描述 */
+  description: string;
+  /** 交易交易号 */
+  tradeNo: string;
+  /** 解析前的数据 */
+  hint: string;
 }
-
 
 // {
 //   "type": "expense",

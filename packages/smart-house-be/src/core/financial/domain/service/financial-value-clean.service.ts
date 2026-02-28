@@ -3,20 +3,19 @@
  */
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
-import { Between, In, LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
-import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
-import { InjectRequest } from '@/interface/decorate/inject-request';
-import { JwtUser } from '@/core/user';
 import dayjs from 'dayjs';
-import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
-import { calculation, sum } from '@/shared/toolkits/array';
-import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
-import { FinancialTransactionType } from '@/core/financial/application/enum/financial-transaction-type';
-import { LokiLogger } from '@/shared/logger';
-import { InjectLogger } from '@/interface/decorate/inject-logger';
+import { Between, LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { FinancialType } from '@/core/financial/application/enum/financial-type';
+import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
+import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
 import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
+import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
+import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
+import { JwtUser } from '@/core/user';
+import { InjectLogger } from '@/interface/decorate/inject-logger';
+import { InjectRequest } from '@/interface/decorate/inject-request';
+import { LokiLogger } from '@/shared/logger';
+import { calculation, sum } from '@/shared/toolkits/array';
 
 @Injectable()
 export class FinancialValueCleanService {
@@ -82,13 +81,13 @@ export class FinancialValueCleanService {
       total = total * (profit / 10000 + 1);
     }
     while (transactions.length) {
-      let current = transactions.shift();
+      const current = transactions.shift();
       // 已经计算到需要计算的日期之后就不计算了
       if (dayjs(current.ensureDate).isAfter(date)) {
         break;
       }
       // 不存在时用后面的交易记录来兜底
-      let next = transactions[0];
+      const next = transactions[0];
       const profit = await this.addProfit(
         financial,
         dayjs(current.ensureDate),
@@ -150,9 +149,6 @@ export class FinancialValueCleanService {
     let financialValue = 0;
     // 份额
     let currentShares = 0;
-    // 当日的收益
-    let currentProfit = 0;
-
     const { type } = financial;
     // 净值类型的基金价值直接计算
     if (type === FinancialType.NET_VALUE) {

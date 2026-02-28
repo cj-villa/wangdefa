@@ -6,8 +6,8 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
-import { type JournalFieldType } from '../../application/enum/journal-field-type';
 import { type BillFieldType } from '../../application/enum/bill-field-type';
+import { type JournalFieldType } from '../../application/enum/journal-field-type';
 
 @Entity({ name: 'firefly_parsing_rules', comment: 'firefly解析规则表' })
 export class FireflyParsingRules {

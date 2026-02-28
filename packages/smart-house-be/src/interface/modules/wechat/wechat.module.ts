@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SubscriptionService } from '@/core/wechat';
 import { SubscriptionController } from './subscription.controller';
+import { SubscriptionService } from '@/core/wechat';
 import { FireflyModule } from '@/interface/modules/firefly/firefly.module';
 
 @Module({

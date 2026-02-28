@@ -1,5 +1,5 @@
-import { AutoBudgetType } from '../enum/auto-budget-type';
 import { AutoBudgetPeriod } from '../enum/auto-budget-period';
+import { AutoBudgetType } from '../enum/auto-budget-type';
 
 export class FireflyBudget {
   // 基本信息
