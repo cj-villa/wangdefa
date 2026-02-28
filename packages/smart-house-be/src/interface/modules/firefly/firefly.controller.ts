@@ -1,10 +1,11 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { Kv } from '@/infrastructure/consul';
 import { FireflyBasicInfoDTO, BasicInfoService, SingleAutomationService } from '@/core/firefly';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SkipFormat } from '@/interface/interceptor/response-format';
 
 @ApiTags('firefly')
+@ApiBearerAuth()
 @Controller('api/firefly')
 export class FireflyController {
   constructor(
@@ -33,7 +34,7 @@ export class FireflyController {
   @ApiOperation({ summary: '手动执行定时任务' })
   @ApiOkResponse({
     description: '任务开始执行',
-    type: null,
+    schema: { type: 'object', additionalProperties: true },
   })
   async runCronManually() {
     return this.singleAutomationService.handleCron();
