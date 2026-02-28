@@ -36,12 +36,12 @@ export class FinancialNetValueCleanService {
 
   // 获取当月净值
   private async getNetValue(code: string, channel: FinancialChannel, pageSize = 10, page = 1) {
-    if (channel === FinancialChannel.ICBC_FINA) {
+    if (channel === FinancialChannel.ICBC_FINA || channel === FinancialChannel.ICBC_CURRENCY) {
       const res: { data: { list: ICBCFinaQuery[] } } = await http.post(
         'https://papi.icbc.com.cn/finance/deposit/consignment/getNetValueList',
         { prodId: code, pageIndex: page, pageSize }
       );
-      return res.data.list.map((item) => {
+      return (res.data?.list ?? []).map((item) => {
         const trend = new FinancialNetValueTrendEntity();
         trend.date = dayjs(item.workDate).toDate();
         trend.code = code;
@@ -58,7 +58,7 @@ export class FinancialNetValueCleanService {
           pageSize,
         }
       );
-      return res.body.data.map((item) => {
+      return (res.body?.data ?? []).map((item) => {
         const trend = new FinancialNetValueTrendEntity();
         trend.date = dayjs(item.znavDat).toDate();
         trend.code = code;
@@ -70,7 +70,7 @@ export class FinancialNetValueCleanService {
         'https://fund.cmbchina.com/api/v1/fund/nv/list-paged',
         { fundCode: code, pageIndex: 1, pageSize }
       );
-      return res.body.list.map((item) => {
+      return (res.body?.list ?? []).map((item) => {
         const trend = new FinancialNetValueTrendEntity();
         trend.date = dayjs(item.updateTime).toDate();
         trend.code = code;
@@ -150,7 +150,7 @@ export class FinancialNetValueCleanService {
       if (!trends?.length) {
         needContinue = false;
       }
-      for (const trend of trends) {
+      for (const trend of trends || []) {
         this.logger.info(
           `[${current - page} / ${maxRound}] ${code} save ${trends.length} ${trend.date} trend`
         );
