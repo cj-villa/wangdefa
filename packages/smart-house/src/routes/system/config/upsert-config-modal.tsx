@@ -5,7 +5,7 @@ import { useRequest } from 'ahooks';
 import { Form, message, Spin } from 'antd';
 import React, { useEffect } from 'react';
 import request from 'src/request';
-import { configModal } from 'src/share/ui/show-modal';
+import { useConfigModal } from 'src/share/ui/show-modal';
 
 export const UpsertConfigModal = (props: { name?: string }) => {
   const { name } = props;
@@ -15,7 +15,7 @@ export const UpsertConfigModal = (props: { name?: string }) => {
     manual: true,
   });
 
-  configModal({
+  useConfigModal({
     async onConfirm() {
       const formData = await form.validateFields();
       console.log('formData', formData);

@@ -3,7 +3,7 @@ import { Form, message } from 'antd';
 import React from 'react';
 import { ConsulSelect } from 'src/components';
 import request from 'src/request';
-import { configModal } from 'src/share/ui/show-modal';
+import { useConfigModal } from 'src/share/ui/show-modal';
 
 interface CreateFinancialProps {
   initialValues?: any;
@@ -18,7 +18,7 @@ export const CreateFinancial: React.FC<CreateFinancialProps> = ({ initialValues 
     }
   }, [initialValues, form]);
 
-  configModal({
+  useConfigModal({
     async onConfirm() {
       const formData = await form.validateFields();
       try {

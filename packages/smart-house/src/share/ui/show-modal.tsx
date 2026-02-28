@@ -1,5 +1,5 @@
 import { Modal } from 'antd';
-import React, { useCallback, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 interface ModalContextStateConfig {
   onConfirm?: (close: VoidFunction) => Promise<any> | any;
@@ -17,7 +17,13 @@ export const ModalContext = React.createContext<ModalContextState>({
   configModal: () => {},
 });
 
-let configModalBridge: ((config: ModalContextState['config']) => void) | undefined;
+const useModalContext = () => {
+  const state = useContext(ModalContext);
+  if (!state) {
+    throw new Error('useModalContext must be used within a ModalContext');
+  }
+  return state;
+};
 
 export const ModalProvider: React.FC<
   React.PropsWithChildren<{
@@ -26,20 +32,10 @@ export const ModalProvider: React.FC<
 > = ({ children, configRef }) => {
   const [config, configModal] = React.useState<ModalContextState['config']>({});
 
-  const onConfigChang = useCallback(
-    (nextConfig: ModalContextState['config']) => {
-      configModal(nextConfig);
-      configRef.current = nextConfig;
-    },
-    [configRef]
-  );
-
-  useEffect(() => {
-    configModalBridge = onConfigChang;
-    return () => {
-      configModalBridge = undefined;
-    };
-  }, [onConfigChang]);
+  const onConfigChang = (nextConfig: ModalContextState['config']) => {
+    configModal(nextConfig);
+    configRef.current = nextConfig;
+  };
 
   return (
     <ModalContext.Provider value={{ config, configModal: onConfigChang }}>
@@ -48,8 +44,12 @@ export const ModalProvider: React.FC<
   );
 };
 
-export const configModal = (config: ModalContextState['config']) => {
-  configModalBridge?.(config);
+export const useConfigModal = (config: ModalContextState['config']) => {
+  const { configModal } = useModalContext();
+
+  useEffect(() => {
+    configModal(config);
+  }, [config, configModal]);
 };
 
 export const showModal = ({

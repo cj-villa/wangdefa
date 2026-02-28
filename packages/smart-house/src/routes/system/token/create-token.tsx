@@ -1,12 +1,12 @@
 import { BetaSchemaForm } from '@ant-design/pro-components';
 import { Form, message } from 'antd';
 import request from 'src/request';
-import { configModal } from 'src/share/ui/show-modal';
+import { useConfigModal } from 'src/share/ui/show-modal';
 
 export const CreateToken = () => {
   const [form] = Form.useForm();
 
-  configModal({
+  useConfigModal({
     async onConfirm() {
       const formData = await form.validateFields();
       await request.createToken(formData);

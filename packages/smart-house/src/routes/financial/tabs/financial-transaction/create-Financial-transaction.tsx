@@ -5,7 +5,7 @@ import React from 'react';
 import { ListSelect } from 'src/components';
 import request from 'src/request';
 import { type FinancialTransaction, FinancialTransactionType } from 'src/request/type/financial';
-import { configModal } from 'src/share/ui/show-modal';
+import { useConfigModal } from 'src/share/ui/show-modal';
 
 interface CreateFinancialTransactionProps {
   initialValues?: FinancialTransaction;
@@ -18,7 +18,7 @@ export const CreateFinancialTransaction = ({
 }: CreateFinancialTransactionProps) => {
   const [form] = Form.useForm();
 
-  configModal({
+  useConfigModal({
     async onConfirm() {
       try {
         const formData = await form.validateFields();
