@@ -2,7 +2,7 @@ import type { Page } from 'src/request/type/common';
 import {
   Financial,
   FinancialSummary,
-  FinancialTransaction,
+  FinancialTransactionUpsertPayload,
   FinancialTransactionType,
 } from 'src/request/type/financial';
 import { UpdateSystemConfigRequest } from 'src/request/type/system';
@@ -46,11 +46,11 @@ export default {
       orderBy?: 'ASC' | 'DESC';
     }
   ) => request.get('/api/financial/transaction/list', { params }),
-  createFinancialTransaction: (data: Omit<FinancialTransaction, 'id'>) =>
+  createFinancialTransaction: (data: Omit<FinancialTransactionUpsertPayload, 'id'>) =>
     request.post('/api/financial/transaction/create', data),
   deleteFinancialTransaction: (data: { id: string }) =>
     request.post('/api/financial/transaction/delete', data),
-  updateFinancialTransaction: (data: FinancialTransaction) =>
+  updateFinancialTransaction: (data: FinancialTransactionUpsertPayload) =>
     request.post('/api/financial/transaction/update', data),
 
   /** 理财详情相关 */

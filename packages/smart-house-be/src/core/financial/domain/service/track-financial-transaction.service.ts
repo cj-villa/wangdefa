@@ -44,12 +44,15 @@ export class TrackFinancialTransactionService {
 
     const transaction = this.transactionRepo.create({
       ...data,
+      amount: Number(data.amount),
+      transactionDate: new Date(data.transactionDate),
+      ensureDate: new Date(data.ensureDate),
       userId: this.user.userId,
     });
 
     const netValueTrend = await this.financialNetValueService.getFinancialNetValueTrend(
       financial,
-      data.ensureDate
+      transaction.ensureDate
     );
 
     if (netValueTrend) {
@@ -94,16 +97,36 @@ export class TrackFinancialTransactionService {
       throw new BadRequestException('基金不存在或无权访问');
     }
 
-    const netValueTrend = await this.financialNetValueService.getFinancialNetValueTrend(
-      financial,
-      data.ensureDate
-    );
-
-    if (netValueTrend) {
-      rest.shares = netValueTrend.getSharesByAmount(financial, rest.amount);
+    const normalizedData: Partial<FinancialTransaction> = {};
+    if (rest.financialId !== undefined) {
+      normalizedData.financialId = rest.financialId;
+    }
+    if (rest.transactionType !== undefined) {
+      normalizedData.transactionType = rest.transactionType;
+    }
+    if (rest.amount !== undefined) {
+      normalizedData.amount = Number(rest.amount);
+    }
+    if (rest.shares !== undefined) {
+      normalizedData.shares = Number(rest.shares);
+    }
+    if (rest.transactionDate !== undefined) {
+      normalizedData.transactionDate = new Date(rest.transactionDate);
+    }
+    if (rest.ensureDate !== undefined) {
+      normalizedData.ensureDate = new Date(rest.ensureDate);
     }
 
-    return this.transactionRepo.update(id, rest);
+    const netValueTrend = await this.financialNetValueService.getFinancialNetValueTrend(
+      financial,
+      normalizedData.ensureDate ?? transaction.ensureDate
+    );
+
+    if (netValueTrend && normalizedData.amount !== undefined) {
+      normalizedData.shares = netValueTrend.getSharesByAmount(financial, normalizedData.amount);
+    }
+
+    return this.transactionRepo.update(id, normalizedData);
   }
 
   /** 查询交易记录列表 */

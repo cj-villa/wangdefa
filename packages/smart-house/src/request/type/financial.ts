@@ -36,6 +36,15 @@ export interface FinancialTransaction {
   updatedAt?: string;
 }
 
+export interface FinancialTransactionUpsertPayload {
+  id?: string;
+  financialId: string;
+  transactionType: FinancialTransactionType;
+  amount: string;
+  transactionDate: string;
+  ensureDate: string;
+}
+
 export interface FinancialSummary {
   // 总资产
   totalAssets: number;

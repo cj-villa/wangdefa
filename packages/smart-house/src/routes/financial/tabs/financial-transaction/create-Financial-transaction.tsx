@@ -1,6 +1,7 @@
 import { BetaSchemaForm } from '@ant-design/pro-components';
 import { ProFormColumnsType } from '@ant-design/pro-form/es/components/SchemaForm/typing';
 import { Form, message } from 'antd';
+import dayjs from 'dayjs';
 import React from 'react';
 import { ListSelect } from 'src/components';
 import request from 'src/request';
@@ -18,15 +19,26 @@ export const CreateFinancialTransaction = ({
 }: CreateFinancialTransactionProps) => {
   const [form] = Form.useForm();
 
+  const formatPayload = (formData: Record<string, any>) => {
+    return {
+      financialId: formData.financialId,
+      transactionType: formData.transactionType,
+      amount: String(formData.amount),
+      transactionDate: dayjs(formData.transactionDate).toISOString(),
+      ensureDate: dayjs(formData.ensureDate).toISOString(),
+    };
+  };
+
   useConfigModal({
     async onConfirm() {
       try {
         const formData = await form.validateFields();
+        const payload = formatPayload(formData);
         if (initialValues?.id) {
-          await request.updateFinancialTransaction({ ...formData, id: initialValues.id });
+          await request.updateFinancialTransaction({ ...payload, id: initialValues.id });
           message.success('更新成功');
         } else {
-          await request.createFinancialTransaction(formData);
+          await request.createFinancialTransaction(payload);
           message.success('创建成功');
         }
         onSuccess?.();

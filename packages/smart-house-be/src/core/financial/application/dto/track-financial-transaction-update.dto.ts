@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsEnum, IsNumberString, IsOptional, IsDate } from 'class-validator';
+import { IsNotEmpty, IsEnum, IsNumberString, IsOptional, IsDateString } from 'class-validator';
 import { FinancialTransactionType } from '@/core/financial/application/enum/financial-transaction-type';
 
 export class TrackFinancialTransactionUpdateDto {
@@ -28,25 +28,25 @@ export class TrackFinancialTransactionUpdateDto {
   @ApiProperty({ example: '10000.00', description: '交易金额', required: false })
   @IsOptional()
   @IsNumberString({ no_symbols: false })
-  amount?: number;
+  amount?: string;
 
   @ApiProperty({ example: '1000.0000', description: '交易份额', required: false })
   @IsOptional()
   @IsNumberString({ no_symbols: false })
-  shares?: number;
+  shares?: string;
 
   @ApiProperty({ example: '10.0000', description: '交易价格', required: false })
   @IsOptional()
   @IsNumberString({ no_symbols: false })
-  transactionPrice?: number;
+  transactionPrice?: string;
 
   @ApiProperty({ example: '2024-01-01T10:00:00Z', description: '交易日期', required: false })
-  @IsNotEmpty()
-  @IsDate()
-  transactionDate?: Date;
+  @IsOptional()
+  @IsDateString()
+  transactionDate?: string;
 
   @ApiProperty({ example: '2024-01-01T10:00:00Z', description: '确认份额的时间', required: false })
-  @IsNotEmpty()
-  @IsDate()
-  ensureDate?: Date;
+  @IsOptional()
+  @IsDateString()
+  ensureDate?: string;
 }
