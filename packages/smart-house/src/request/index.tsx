@@ -28,9 +28,9 @@ export default {
   deleteFinancial: (data: { id: string }) => request.post('/api/financial/delete', data),
   updateFinancial: (data: Financial) => request.post('/api/financial/update', data),
   updateFinancialValue: (data: { code: string; from?: number }) =>
-    request.post('/api/financial/clean', data),
+    request.post('/api/financial/clean', data, { timeout: 0 }),
   updateFinancialNetValue: (data: { code: string; from?: number }) =>
-    request.post('/api/financial/net-value/clean', data),
+    request.post('/api/financial/net-value/clean', data, { timeout: 0 }),
   listFinancialNetValue: (params: { code: string }) =>
     request.get('/api/financial/net-value/list', { params }),
 

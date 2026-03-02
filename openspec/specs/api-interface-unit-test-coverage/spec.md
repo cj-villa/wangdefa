@@ -1,0 +1,31 @@
+## ADDED Requirements
+
+### Requirement: All API controllers MUST have baseline unit tests
+The backend project SHALL provide unit tests for each controller under `src/interface/modules/**`. Each exposed endpoint MUST include at least one successful-path test and one failure-path test.
+
+#### Scenario: Endpoint successful path is covered
+- **WHEN** a controller endpoint is invoked with valid input and mocked dependencies return success
+- **THEN** a unit test MUST assert the expected response or side effect for that endpoint
+
+#### Scenario: Endpoint failure path is covered
+- **WHEN** a controller endpoint receives invalid input or dependency throws an error
+- **THEN** a unit test MUST assert the corresponding exception or error handling behavior
+
+### Requirement: DTO validation and transformation behavior MUST be testable
+For endpoints that rely on DTO validation/transformation, the project MUST include tests that verify accepted inputs pass and malformed inputs fail deterministically.
+
+#### Scenario: Valid DTO payload passes validation
+- **WHEN** a valid request payload is transformed and validated for an endpoint DTO
+- **THEN** validation MUST pass and produce expected typed values
+
+#### Scenario: Invalid DTO payload fails validation
+- **WHEN** an invalid payload is transformed and validated for an endpoint DTO
+- **THEN** validation MUST fail with field-level errors for violated constraints
+
+### Requirement: API unit tests MUST be part of quality gate execution
+API unit tests SHALL be executable in standard local/CI workflows together with lint and TypeScript checks, and failures MUST block merge readiness.
+
+#### Scenario: Quality checks include API unit tests
+- **WHEN** project quality checks run for the backend package
+- **THEN** API-related unit tests execute alongside `eslint` and `tsc` checks
+- **AND** any failing API unit test marks the check as failed
