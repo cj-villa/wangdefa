@@ -1,30 +1,25 @@
 ## ADDED Requirements
 
-### Requirement: Net value update action MUST support long-running request without frontend timeout interruption
-When users trigger net value updates from financial-related tabs, the frontend SHALL keep the request active without client-side timeout interruption and wait for explicit server response.
+### Requirement: Financial list transaction entry MUST navigate to transaction tab with fund context
+From the financial list view, clicking "View Transaction" SHALL navigate to the financial transaction tab and carry the selected fund context for pre-filtering.
 
-#### Scenario: Update request exceeds previous timeout threshold
-- **WHEN** user clicks the net value update action and the backend processing time is long
-- **THEN** frontend request MUST remain pending without timeout-triggered failure
-- **AND** loading state remains active until the server returns success or error
+#### Scenario: User clicks view transaction on list row
+- **WHEN** user clicks "View Transaction" for a specific fund row
+- **THEN** UI SHALL switch to the financial transaction tab
+- **AND** the selected fund SHALL be pre-populated in transaction filters
 
-### Requirement: Net value update action MUST prevent duplicate submits during in-flight request
-The update trigger in both affected pages SHALL disable repeated triggering while the current update request is in progress.
+### Requirement: Transaction filter UI MUST use fund selector instead of free text fields
+The financial transaction filter panel SHALL hide free text fields for fund name and fund code, and provide a single fund selector component as the canonical fund filter input.
 
-#### Scenario: User clicks update multiple times quickly
-- **WHEN** the first update request is in progress
-- **THEN** subsequent clicks MUST NOT create additional update requests
-- **AND** the UI keeps a single in-flight loading indication
+#### Scenario: User opens transaction filter panel
+- **WHEN** transaction page is rendered
+- **THEN** fund name and fund code text inputs MUST NOT be displayed
+- **AND** a fund selector MUST be available for choosing target fund
 
-### Requirement: Net value update feedback MUST be consistent across financial tabs
-The financial net value tab and financial transaction tab SHALL use consistent success and failure feedback patterns for update actions, and recover interaction state in a deterministic way.
+### Requirement: Transaction list API MUST support active UI filters
+The transaction list request contract SHALL accept and apply all active filters exposed by the current UI, including selected fund and existing filter dimensions.
 
-#### Scenario: Update succeeds after long wait
-- **WHEN** update request completes successfully
-- **THEN** both tabs display consistent success feedback
-- **AND** loading state is cleared and actions become clickable again
-
-#### Scenario: Update fails after long wait
-- **WHEN** update request returns an error
-- **THEN** both tabs display consistent failure feedback with error context
-- **AND** loading state is cleared and actions become clickable again
+#### Scenario: User applies filters and queries transaction list
+- **WHEN** user selects a fund and submits other supported filters
+- **THEN** the request payload SHALL include the same filter set shown in UI
+- **AND** returned transaction data SHALL match the applied filter conditions
