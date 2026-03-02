@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { FinancialDetailDto } from '@/core/financial/application/dto/financial-detail-dto';
 import { FinancialSummaryDto } from '@/core/financial/application/dto/financial-summary-dto';
 import { FinancialDetailQuery } from '@/core/financial/application/query/financial-detail.query';
@@ -36,9 +36,14 @@ export class FinancialAnalyzeService {
       userId: this.user.userId,
     });
     const summary = new FinancialSummaryDto();
-    if (!financials) {
-      return;
+    if (!financials?.length) {
+      summary.productCount = 0;
+      summary.totalAssets = 0;
+      summary.totalCost = 0;
+      summary.preDayProfit = 0;
+      return summary;
     }
+    const financialIds = financials.map((item) => item.id);
     summary.productCount = financials.length;
     /** 总资产 */
     const latestValues = await this.financialValueTrendRepo
@@ -49,6 +54,7 @@ export class FinancialAnalyzeService {
             .select('v.financial_id', 'financial_id')
             .addSelect('MAX(v.date)', 'maxDate')
             .from(FinancialValueTrendEntity, 'v')
+            .where('v.financial_id IN (:...financialIds)', { financialIds })
             .groupBy('v.financial_id'),
         't',
         't.financial_id = vt.financial_id AND t.maxDate = vt.date'
@@ -59,10 +65,14 @@ export class FinancialAnalyzeService {
         'vt.balance as balance',
         'vt.profit as profit',
       ])
+      .where('vt.financial_id IN (:...financialIds)', { financialIds })
       .getRawMany();
     summary.totalAssets = sum(latestValues, 'balance');
     /** 总支出 */
-    const totalTransaction = await this.transactionRepo.findBy({ userId: this.user.userId });
+    const totalTransaction = await this.transactionRepo.findBy({
+      userId: this.user.userId,
+      financialId: In(financialIds),
+    });
     summary.totalCost = sum(totalTransaction, 'value');
     /** 最近一日的收益 */
     summary.preDayProfit = sum(latestValues, 'profit');

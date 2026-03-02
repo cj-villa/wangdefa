@@ -1,22 +1,28 @@
 import type { ProColumns } from '@ant-design/pro-components';
 import dayjs from 'dayjs';
+import React from 'react';
+import { ListSelect } from 'src/components';
 import { FinancialTransactionType } from 'src/request/type/financial';
 
-export const buildTransactionColumns = (defaultCode?: string | string[]): ProColumns<any>[] => {
+export const buildTransactionColumns = (defaultFinancialId?: string): ProColumns<any>[] => {
   return [
     {
-      title: '基金名称',
-      dataIndex: 'name',
+      title: '基金',
+      dataIndex: 'financialId',
       hideInTable: true,
+      initialValue: defaultFinancialId,
+      renderFormItem: () => (
+        <ListSelect
+          request="/api/financial/list"
+          fieldNames={{ label: 'name', value: 'id' }}
+          tips="code"
+          allowClear
+          placeholder="请选择基金"
+        />
+      ),
     },
-    {
-      title: '基金编码',
-      dataIndex: 'code',
-      hideInTable: true,
-      initialValue: defaultCode,
-    },
-    { title: '基金名称', dataIndex: ['financial', 'name'], width: 250 },
-    { title: '基金编码', dataIndex: ['financial', 'code'], width: 120 },
+    { title: '基金名称', hideInSearch: true, dataIndex: ['financial', 'name'], width: 250 },
+    { title: '基金编码', hideInSearch: true, dataIndex: ['financial', 'code'], width: 120 },
     {
       title: '交易类型',
       dataIndex: 'transactionType',

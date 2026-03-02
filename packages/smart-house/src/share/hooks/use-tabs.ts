@@ -22,19 +22,44 @@ export const useTab = (
     [options]
   );
 
-  const [tab, setTab] = useState<string>(defaultTab ?? stringOptionsList?.[0]);
+  const routeTab = useMemo(() => {
+    const value = params[tabKey];
+    return typeof value === 'string' ? value : undefined;
+  }, [params, tabKey]);
+
+  const initialTab = useMemo(() => {
+    if (routeTab && stringOptionsList.includes(routeTab)) {
+      return routeTab;
+    }
+    return defaultTab ?? stringOptionsList?.[0];
+  }, [defaultTab, routeTab, stringOptionsList]);
+
+  const [tab, setTab] = useState<string>(initialTab);
+
+  const activeKey = useMemo(() => {
+    if (routeTab && stringOptionsList.includes(routeTab)) {
+      return routeTab;
+    }
+    return tab;
+  }, [routeTab, stringOptionsList, tab]);
 
   const handlerTabChange = (nextTab: string) => {
-    return setTab(nextTab);
+    if (!stringOptionsList.includes(nextTab)) {
+      return;
+    }
+    setTab(nextTab);
+    if (nextTab === params[tabKey]) {
+      return;
+    }
+    setParam(tabKey, nextTab, !reservePrevParams);
   };
 
   useUpdateEffect(() => {
-    // 防死循环
-    if (tab === params[tabKey]) {
+    if (!activeKey || activeKey === params[tabKey]) {
       return;
     }
-    setParam(tabKey, tab, !reservePrevParams);
-  }, [tab]);
+    setParam(tabKey, activeKey, !reservePrevParams);
+  }, [activeKey, params, reservePrevParams, setParam, tabKey]);
 
-  return { activeKey: tab, onChange: handlerTabChange };
+  return { activeKey, onChange: handlerTabChange };
 };

@@ -19,7 +19,9 @@ const tabItems: NonNullable<TabsProps['items']> = [
 ];
 
 export const FinancialPage = () => {
-  const { activeKey, onChange } = useTab(['financials', 'transactions']);
+  const { activeKey, onChange } = useTab(['financials', 'transactions'], {
+    reservePrevParams: true,
+  });
 
   return (
     <Card>

@@ -70,7 +70,11 @@ export const FinancialTab = () => {
                 type="text"
                 size="small"
                 onClick={() => {
-                  setParams({ code: entity.code, [DEFAULT_TAB_KEY]: 'transactions' });
+                  setParams({
+                    financialId: entity.id,
+                    code: entity.code,
+                    [DEFAULT_TAB_KEY]: 'transactions',
+                  });
                 }}
               >
                 查看交易
