@@ -58,7 +58,7 @@ export const FinancialDetailPage = () => {
       <Dashboard detail={detailData} />
 
       {/* 主要内容区域 */}
-      <Tabs items={tabItems} defaultActiveKey="calendar" />
+      <Tabs items={tabItems} defaultActiveKey="charts" />
     </>
   );
 };

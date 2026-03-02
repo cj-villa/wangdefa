@@ -108,10 +108,18 @@ export class FinancialNetValueCleanService {
         round: Math.ceil(dayjs().diff(dayjsFrom, 'day') / 30),
       };
     }
-    // 已存在比现在早或相同时间的数据，还洗个啥
+    // 已存在比现在早或相同时间的数据，还洗个啥，防止有定时任务不对，洗个一次吧
     const gap = dayjs(lastTrend.date).diff(dayjsFrom, 'day');
-    if (gap <= 0) {
+    if (gap === 0) {
       return null;
+    }
+    if (gap < 0) {
+      return {
+        deadLine: dayjsFrom,
+        pageSize: 30,
+        page: 1,
+        round: 1,
+      };
     }
     // 把之前已经洗过的数据都跳过
     return {

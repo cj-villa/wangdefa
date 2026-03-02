@@ -9,6 +9,7 @@ import { roundPrice } from 'src/share/toolkits/tookit';
 const getStart = (count = 0) => Math.max(1 - 30 / count, 0);
 const formatNetValue = (value: number) => Number(value || 0).toFixed(4);
 const toNetValueNumber = (value: number) => Number(formatNetValue(value));
+const formatAmount = (value: number) => roundPrice(Number(value || 0));
 type TrendView = 'chart' | 'table';
 
 const assertNetValueFormat = () => {
@@ -17,8 +18,15 @@ const assertNetValueFormat = () => {
   }
 };
 
+const assertProfitFormat = () => {
+  if (formatAmount(1.236) !== 1.24) {
+    throw new Error('profit formatter assertion failed');
+  }
+};
+
 if (process.env.NODE_ENV !== 'production') {
   assertNetValueFormat();
+  assertProfitFormat();
 }
 
 export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
@@ -27,19 +35,38 @@ export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
   const [netValueView, setNetValueView] = useState<TrendView>('chart');
   const netValueTitle = `${detail.financial.channel === 'icbc_currency' ? '万份利润' : '净值'}趋势`;
 
-  const lineValue = useMemo(
-    () => valueTrends.map((i) => ({ ...i, balance: roundPrice(Number(i.balance || 0)) })),
-    [valueTrends]
-  );
+  const lineValue = useMemo(() => {
+    return valueTrends.flatMap((i) => {
+      const date = i.date;
+      return [
+        {
+          date,
+          metric: 'balance',
+          metricLabel: '余额',
+          value: formatAmount(Number(i.balance || 0)),
+        },
+        {
+          date,
+          metric: 'profit',
+          metricLabel: '收益',
+          value: formatAmount(Number((i as any).profit || 0)),
+        },
+      ];
+    });
+  }, [valueTrends]);
   const lineNetValue = useMemo(
     () => netValueTrends.map((i) => ({ ...i, value: toNetValueNumber(Number(i.value || 0)) })),
     [netValueTrends]
   );
-  const tableBalanceData = useMemo(
-    () =>
-      [...lineValue].sort((a: any, b: any) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf()),
-    [lineValue]
-  );
+  const tableBalanceData = useMemo(() => {
+    return [...valueTrends]
+      .map((i) => ({
+        date: i.date,
+        balance: formatAmount(Number(i.balance || 0)),
+        profit: formatAmount(Number((i as any).profit || 0)),
+      }))
+      .sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf());
+  }, [valueTrends]);
   const tableNetValueData = useMemo(
     () =>
       [...lineNetValue].sort((a: any, b: any) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf()),
@@ -79,7 +106,8 @@ export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
   // 余额图表配置
   const balanceConfig: LineConfig = {
     xField: 'date',
-    yField: 'balance',
+    yField: 'value',
+    seriesField: 'metricLabel',
     axis: {
       x: {
         size: 30,
@@ -88,11 +116,12 @@ export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
     },
     tooltip: {
       formatter: (datum: any) => ({
-        name: '余额',
-        value: String(roundPrice(Number(datum.balance || 0))),
+        name: datum.metricLabel,
+        value: String(formatAmount(Number(datum.value || 0))),
       }),
     },
-    color: '#faad14',
+    colorField: 'metric',
+    color: ['#faad14', '#13c2c2'],
     interactions: [{ type: 'marker-active' }],
     slider: {
       x: {
@@ -136,7 +165,12 @@ export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
                 {
                   title: '余额',
                   dataIndex: 'balance',
-                  render: (value: number) => roundPrice(Number(value || 0)),
+                  render: (value: number) => formatAmount(Number(value || 0)),
+                },
+                {
+                  title: '收益',
+                  dataIndex: 'profit',
+                  render: (value: number) => formatAmount(Number(value || 0)),
                 },
               ]}
             />
