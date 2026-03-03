@@ -31,7 +31,7 @@ export default {
     request.post('/api/financial/clean', data, { timeout: 0 }),
   updateFinancialNetValue: (data: { code: string; from?: number }) =>
     request.post('/api/financial/net-value/clean', data, { timeout: 0 }),
-  listFinancialNetValue: (params: { code: string }) =>
+  listFinancialNetValue: (params: { code: string; extraLimit?: number }) =>
     request.get('/api/financial/net-value/list', { params }),
 
   /** 理财交易相关 */

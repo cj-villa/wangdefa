@@ -6,4 +6,7 @@ export class PaginationQuery {
 
   @IsOptional()
   pageSize?: number = 10;
+
+  @IsOptional()
+  extraLimit?: number = 0;
 }

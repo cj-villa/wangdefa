@@ -28,6 +28,12 @@ export class FinancialNetValueController {
   @ApiQuery({ name: 'code', required: true, type: String, description: '理财编码' })
   @ApiQuery({ name: 'current', required: false, type: Number, description: '页码' })
   @ApiQuery({ name: 'pageSize', required: false, type: Number, description: '分页大小' })
+  @ApiQuery({
+    name: 'extraLimit',
+    required: false,
+    type: Number,
+    description: '额外添加的分页数据',
+  })
   @ApiOkResponse({
     description: '理财净值列表查询成功',
     schema: {

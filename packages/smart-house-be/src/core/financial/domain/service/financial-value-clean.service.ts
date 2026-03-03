@@ -198,7 +198,7 @@ export class FinancialValueCleanService {
     while (!current.isAfter(endDay)) {
       prevValue = await this.calcFinancialValue(code, current, prevValue);
       this.logger.info(
-        `基金${code}价值计算完成，日期${current.format('YYYY-MM-DD')},价值${prevValue.balance}`
+        `基金${code} ${current.format('YYYY-MM-DD')}价值计算完成,价值${prevValue.balance}`
       );
       current = current.add(1, 'day');
     }

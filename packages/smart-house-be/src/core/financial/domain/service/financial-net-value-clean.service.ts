@@ -54,7 +54,7 @@ export class FinancialNetValueCleanService {
         {
           saaCod: 'D07',
           funCod: code,
-          pageIndex: 1,
+          pageIndex: page,
           pageSize,
         }
       );
@@ -68,7 +68,7 @@ export class FinancialNetValueCleanService {
     } else if (channel === FinancialChannel.MCB_FUND) {
       const res: { body: { list: MCBFundQuery[] } } = await http.post(
         'https://fund.cmbchina.com/api/v1/fund/nv/list-paged',
-        { fundCode: code, pageIndex: 1, pageSize }
+        { fundCode: code, pageIndex: page, pageSize }
       );
       return (res.body?.list ?? []).map((item) => {
         const trend = new FinancialNetValueTrendEntity();
@@ -108,30 +108,31 @@ export class FinancialNetValueCleanService {
         round: Math.ceil(dayjs().diff(dayjsFrom, 'day') / 30),
       };
     }
-    // 已存在比现在早或相同时间的数据，还洗个啥，防止有定时任务不对，洗个一次吧
     const gap = dayjs(earliestTrend.date).diff(dayjsFrom, 'day');
-    if (gap <= 0) {
-      const latestTrend = await this.financialTrendRepository.findOne({
-        where: { code },
-        order: { date: 'desc' },
-      });
-      if (latestTrend && dayjs(latestTrend.date).isSame(dayjsFrom, 'day')) {
-        return null;
-      }
+    // 最早的一条比它还晚，把之前的补齐了
+    if (gap > 0) {
+      return {
+        deadLine: dayjsFrom,
+        pageSize: 30,
+        page: Math.ceil(count / 30),
+        round: Math.ceil(gap / 30),
+      };
+    }
+    const latestTrend = await this.financialTrendRepository.findOne({
+      where: { code },
+      order: { date: 'desc' },
+    });
+    // 最新的一条比它还早，把后面的补齐了
+    const latestTrendGap = dayjs(dayjsFrom).diff(latestTrend?.date ?? dayjsFrom, 'day');
+    if (latestTrendGap > 0) {
       return {
         deadLine: dayjsFrom,
         pageSize: 30,
         page: 1,
-        round: 1,
+        round: Math.ceil(latestTrendGap / 30),
       };
     }
-    // 把之前已经洗过的数据都跳过
-    return {
-      deadLine: dayjsFrom,
-      pageSize: 30,
-      page: Math.ceil(count / 30),
-      round: Math.ceil(gap / 30),
-    };
+    return null;
   }
 
   /**
@@ -178,7 +179,7 @@ export class FinancialNetValueCleanService {
           needContinue = false;
         }
       }
-      this.logger.info(`${code} 清洗 trend 完成`);
     }
+    this.logger.info(`${code} 清洗 trend 完成`);
   }
 }

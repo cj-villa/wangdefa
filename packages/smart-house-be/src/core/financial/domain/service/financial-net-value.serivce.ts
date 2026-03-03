@@ -12,11 +12,11 @@ export class FinancialNetValueService {
   private readonly financialNetValueTrendEntity: Repository<FinancialNetValueTrendEntity>;
 
   async getNetValueList(query: FinancialNetValueQuery) {
-    const { code, current = 1, pageSize = 10 } = query;
+    const { code, current = 1, pageSize = 10, extraLimit = 0 } = query;
     return this.financialNetValueTrendEntity.findAndCount({
       where: { code },
       order: { date: 'DESC' },
-      take: pageSize,
+      take: Number(pageSize) + Number(extraLimit),
       skip: (current - 1) * pageSize,
     });
   }

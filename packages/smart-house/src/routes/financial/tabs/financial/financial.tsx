@@ -58,7 +58,7 @@ export const FinancialTab = () => {
                 size="small"
                 onClick={() =>
                   showModal({
-                    width: 600,
+                    width: 700,
                     title: `${entity.name}净值`,
                     content: <NetValueTable code={entity.code} />,
                   })
