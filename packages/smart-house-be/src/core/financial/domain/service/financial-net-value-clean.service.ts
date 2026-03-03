@@ -94,13 +94,13 @@ export class FinancialNetValueCleanService {
     }
     const dayjsFrom = dayjs(from);
     // 默认每天会获取最新的数据，至少去获取最早的数据是否比现在早即可
-    const [[lastTrend], count] = await this.financialTrendRepository.findAndCount({
+    const [[earliestTrend], count] = await this.financialTrendRepository.findAndCount({
       where: { code },
       order: { date: 'asc' },
       take: 1,
     });
     // 不存在数据，直接开刷
-    if (!lastTrend) {
+    if (!earliestTrend) {
       return {
         deadLine: dayjsFrom,
         pageSize: 30,
@@ -109,11 +109,15 @@ export class FinancialNetValueCleanService {
       };
     }
     // 已存在比现在早或相同时间的数据，还洗个啥，防止有定时任务不对，洗个一次吧
-    const gap = dayjs(lastTrend.date).diff(dayjsFrom, 'day');
-    if (gap === 0) {
-      return null;
-    }
-    if (gap < 0) {
+    const gap = dayjs(earliestTrend.date).diff(dayjsFrom, 'day');
+    if (gap <= 0) {
+      const latestTrend = await this.financialTrendRepository.findOne({
+        where: { code },
+        order: { date: 'desc' },
+      });
+      if (latestTrend && dayjs(latestTrend.date).isSame(dayjsFrom, 'day')) {
+        return null;
+      }
       return {
         deadLine: dayjsFrom,
         pageSize: 30,

@@ -37,6 +37,11 @@ export const buildTransactionColumns = (): ProColumns<any>[] => {
       width: 120,
     },
     {
+      title: '份额',
+      dataIndex: 'shares',
+      width: 120,
+    },
+    {
       title: '交易日期',
       dataIndex: 'transactionDate',
       width: 100,

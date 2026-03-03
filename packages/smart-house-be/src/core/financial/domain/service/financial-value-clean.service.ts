@@ -112,14 +112,11 @@ export class FinancialValueCleanService {
       },
       order: { date: 'desc' },
     });
-    if (!prevValueTrend) {
-      return 0;
-    }
     const transaction = await this.transactionRepo.findBy({
       financialId: financial.id,
       ensureDate: valueTrend.date,
     });
-    return valueTrend.balance - prevValueTrend.balance - sum(transaction, 'value');
+    return valueTrend.balance - (prevValueTrend?.balance ?? 0) - sum(transaction, 'value');
   }
 
   /**

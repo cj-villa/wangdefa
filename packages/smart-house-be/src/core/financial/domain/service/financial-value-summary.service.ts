@@ -3,7 +3,7 @@
  */
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { FinancialValueTrendEntity } from '@/core/financial/domain/entities/financial-value-trend.entity';
 import { TrackFinancial } from '@/core/financial/domain/entities/track-financial.entity';
 import { TrackFinancialTransactionService } from '@/core/financial/domain/service/track-financial-transaction.service';
@@ -24,6 +24,7 @@ export class FinancialValueSummaryService {
   @Inject()
   private readonly trackFinancialTransactionService: TrackFinancialTransactionService;
 
+  // TODO 逻辑是有问题的
   async getFinancialSummary(financialId: string) {
     const financial = await this.trackFinancialRepo.findOneBy({
       id: financialId,
@@ -39,18 +40,6 @@ export class FinancialValueSummaryService {
     if (!latestValue) {
       return {};
     }
-    const dayBeforeYesterdayValue = await this.financialValueTrendEntity.findOne({
-      where: {
-        financialId,
-        date: LessThan(latestValue.date),
-      },
-      order: { date: 'DESC' },
-    });
-    if (!dayBeforeYesterdayValue) {
-      return {
-        balance: latestValue.balance,
-      };
-    }
     const totalCost = await this.trackFinancialTransactionService.getFinancialAmount(
       financial,
       latestValue.date
@@ -59,7 +48,7 @@ export class FinancialValueSummaryService {
       // 当前余额
       balance: latestValue.balance,
       // 昨日利润
-      yesterdayProfit: latestValue.balance - dayBeforeYesterdayValue.balance,
+      yesterdayProfit: latestValue.profit,
       totalProfit: latestValue.balance - totalCost,
     };
   }
