@@ -51,6 +51,7 @@ describe('FinancialAnalyzeService', () => {
       productCount: 1,
       totalAssets: 1000,
       totalCost: 80,
+      totalProfit: 920,
       preDayProfit: 25,
     });
   });

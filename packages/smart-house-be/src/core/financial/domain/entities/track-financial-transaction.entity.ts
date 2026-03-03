@@ -36,6 +36,9 @@ export class FinancialTransaction {
   @Column({ type: 'decimal', precision: 10, scale: 2, comment: '交易金额' })
   amount: number;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, comment: '手续费', default: 0 })
+  fee: number;
+
   @Column({
     type: 'decimal',
     precision: 13,
@@ -87,7 +90,10 @@ export class FinancialTransaction {
   }
 
   get value() {
-    return this.transactionType === FinancialTransactionType.BUY ? this.amount : -this.amount;
+    const effectiveAmount = Math.max(0, Number(this.amount) - Number(this.fee ?? 0));
+    return this.transactionType === FinancialTransactionType.BUY
+      ? effectiveAmount
+      : -effectiveAmount;
   }
 
   get sharesWithSymbol() {

@@ -43,6 +43,7 @@ describe('Interface DTO validation', () => {
       financialId: '',
       transactionType: 'INVALID',
       amount: 'abc',
+      fee: 'bad',
       transactionDate: 'bad',
       ensureDate: 'bad',
     });
@@ -51,6 +52,7 @@ describe('Interface DTO validation', () => {
         'financialId',
         'transactionType',
         'amount',
+        'fee',
         'transactionDate',
         'ensureDate',
       ])
@@ -59,10 +61,11 @@ describe('Interface DTO validation', () => {
     const invalidUpdate = await validateDto(TrackFinancialTransactionUpdateDto, {
       transactionType: 'UNKNOWN',
       amount: 'oops',
+      fee: 'oops',
       transactionDate: 'bad',
     });
     expect(getErrorProperties(invalidUpdate)).toEqual(
-      expect.arrayContaining(['transactionType', 'amount', 'transactionDate'])
+      expect.arrayContaining(['transactionType', 'amount', 'fee', 'transactionDate'])
     );
   });
 
@@ -72,6 +75,7 @@ describe('Interface DTO validation', () => {
         financialId: 'f1',
         transactionType: FinancialTransactionType.BUY,
         amount: '100.00',
+        fee: '1.00',
         transactionDate: '2024-01-01T00:00:00.000Z',
         ensureDate: '2024-01-02T00:00:00.000Z',
       })

@@ -50,7 +50,7 @@ export class TrackFinancialRecordService {
 
   /** 基金列表 */
   async list(data: TrackFinancialQuery) {
-    const { current = 1, pageSize = 10, name, code } = data;
+    const { current = 1, pageSize = 10, name, code, channel } = data;
     const query = this.trackFinancialRepo
       .createQueryBuilder('trackFinancial')
       .where({ userId: this.user.userId });
@@ -62,6 +62,9 @@ export class TrackFinancialRecordService {
     }
     if (code) {
       query.andWhere({ code });
+    }
+    if (channel) {
+      query.andWhere({ channel });
     }
     return query.getManyAndCount();
   }

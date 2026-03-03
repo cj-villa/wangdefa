@@ -3,6 +3,7 @@ export interface Financial {
   name: string;
   code: string;
   channel: string;
+  totalFee?: number;
   balance?: number;
   totalProfit?: number;
   preDayProfit?: number;
@@ -12,6 +13,7 @@ export interface FinancialDetail {
   financial: Financial;
   totalAssets: number;
   totalCost: number;
+  totalFee: number;
   preDayProfit: number;
   shares: number;
   valueTrends: any[];
@@ -28,6 +30,7 @@ export interface FinancialTransaction {
   financialId: string;
   financialName?: string;
   financialCode?: string;
+  fee?: number;
   transactionType: FinancialTransactionType;
   amount: number;
   shares: number;
@@ -42,6 +45,7 @@ export interface FinancialTransactionUpsertPayload {
   financialId: string;
   transactionType: FinancialTransactionType;
   amount: string;
+  fee: string;
   transactionDate: string;
   ensureDate: string;
 }
@@ -51,6 +55,9 @@ export interface FinancialSummary {
   totalAssets: number;
   // 总支出
   totalCost: number;
+  totalFee: number;
+  // 累计收益
+  totalProfit: number;
   // 昨日收益
   preDayProfit: number;
   // 产品数量

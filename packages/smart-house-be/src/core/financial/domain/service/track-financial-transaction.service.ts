@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { TrackFinancialTransactionCreateDto } from '@/core/financial/application/dto/track-financial-transaction-create.dto';
 import { TrackFinancialTransactionUpdateDto } from '@/core/financial/application/dto/track-financial-transaction-update.dto';
+import { FinancialTransactionType } from '@/core/financial/application/enum/financial-transaction-type';
 import { TrackFinancialTransactionQuery } from '@/core/financial/application/query/track-financial-transaction.query';
 import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
 import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
@@ -32,6 +33,22 @@ export class TrackFinancialTransactionService {
   @InjectRequest('user')
   private user: JwtUser;
 
+  private normalizeFee(rawFee: unknown): number {
+    const fee = Number(rawFee ?? 0);
+    if (!Number.isFinite(fee) || fee < 0) {
+      return 0;
+    }
+    return fee;
+  }
+
+  private getEffectiveAmount(amount: number, fee: number): number {
+    const effectiveAmount = amount - fee;
+    if (effectiveAmount < 0) {
+      throw new BadRequestException('交易金额必须大于或等于手续费');
+    }
+    return effectiveAmount;
+  }
+
   /** 创建交易记录 */
   async create(data: TrackFinancialTransactionCreateDto) {
     // 检查基金是否存在且属于当前用户
@@ -43,9 +60,11 @@ export class TrackFinancialTransactionService {
       throw new BadRequestException('基金不存在或无权访问');
     }
 
+    const fee = this.normalizeFee(data.fee);
     const transaction = this.transactionRepo.create({
       ...data,
       amount: Number(data.amount),
+      fee,
       transactionDate: new Date(data.transactionDate),
       ensureDate: new Date(data.ensureDate),
       userId: this.user.userId,
@@ -57,7 +76,10 @@ export class TrackFinancialTransactionService {
     );
 
     if (netValueTrend) {
-      transaction.shares = netValueTrend.getSharesByAmount(financial, transaction.amount);
+      transaction.shares = netValueTrend.getSharesByAmount(
+        financial,
+        this.getEffectiveAmount(transaction.amount, fee)
+      );
     }
 
     return this.transactionRepo.save(transaction);
@@ -108,6 +130,9 @@ export class TrackFinancialTransactionService {
     if (rest.amount !== undefined) {
       normalizedData.amount = Number(rest.amount);
     }
+    if (rest.fee !== undefined) {
+      normalizedData.fee = this.normalizeFee(rest.fee);
+    }
     if (rest.shares !== undefined) {
       normalizedData.shares = Number(rest.shares);
     }
@@ -125,8 +150,14 @@ export class TrackFinancialTransactionService {
         .toDate()
     );
 
-    if (netValueTrend && normalizedData.amount !== undefined) {
-      normalizedData.shares = netValueTrend.getSharesByAmount(financial, normalizedData.amount);
+    const amountForShares = normalizedData.amount ?? transaction.amount;
+    const feeForShares = normalizedData.fee ?? this.normalizeFee((transaction as any).fee);
+
+    if (netValueTrend) {
+      normalizedData.shares = netValueTrend.getSharesByAmount(
+        financial,
+        this.getEffectiveAmount(amountForShares, feeForShares)
+      );
     }
 
     return this.transactionRepo.update(id, normalizedData);
@@ -215,8 +246,28 @@ export class TrackFinancialTransactionService {
       to: date,
     });
     return transactions.reduce((amount, transaction) => {
-      return amount + Number(transaction.value);
+      const effectiveAmount = this.getEffectiveAmount(
+        Number(transaction.amount),
+        this.normalizeFee((transaction as { fee?: unknown }).fee)
+      );
+      return (
+        amount +
+        (transaction.transactionType === FinancialTransactionType.BUY
+          ? effectiveAmount
+          : -effectiveAmount)
+      );
     }, 0);
+  }
+
+  async getFinancialTotalFee(financial: TrackFinancial, date: Date) {
+    const [transactions] = await this.list({
+      financialId: financial.id,
+      to: date,
+    });
+    return transactions.reduce(
+      (total, transaction) => total + this.normalizeFee((transaction as { fee?: unknown }).fee),
+      0
+    );
   }
 
   /** 更新某个时间点下所有交易的份额 */
@@ -231,7 +282,13 @@ export class TrackFinancialTransactionService {
       ensureDate: dayjs(date).subtract(financial.delay).toDate(),
     });
     for (const transaction of transactions) {
-      transaction.shares = trend.getSharesByAmount(financial, transaction.amount);
+      transaction.shares = trend.getSharesByAmount(
+        financial,
+        this.getEffectiveAmount(
+          Number(transaction.amount),
+          this.normalizeFee((transaction as { fee?: unknown }).fee)
+        )
+      );
       await this.transactionRepo.save(transaction);
     }
   }

@@ -72,6 +72,11 @@ export class FinancialAnalyzeService {
       financialId: In(financialIds),
     });
     summary.totalCost = sum(totalTransaction, 'value');
+    summary.totalFee = totalTransaction.reduce(
+      (total, item) => total + Number((item as any).fee ?? 0),
+      0
+    );
+    summary.totalProfit = summary.totalAssets - summary.totalCost;
     /** 最近一日的收益 */
     summary.preDayProfit = sum(latestValues, 'profit');
     return summary;
@@ -105,6 +110,7 @@ export class FinancialAnalyzeService {
       financial,
       totalAssets: summary.totalAssets,
       totalCost: summary.totalCost,
+      totalFee: summary.totalFee,
       preDayProfit: summary.preDayProfit,
       shares: summary.shares,
       valueTrends,

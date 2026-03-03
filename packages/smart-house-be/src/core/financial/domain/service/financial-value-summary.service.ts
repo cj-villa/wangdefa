@@ -44,12 +44,17 @@ export class FinancialValueSummaryService {
       financial,
       latestValue.date
     );
+    const totalFee = await this.trackFinancialTransactionService.getFinancialTotalFee(
+      financial,
+      latestValue.date
+    );
     return {
       // 当前余额
       balance: latestValue.balance,
       // 昨日利润
       yesterdayProfit: latestValue.profit,
       totalProfit: latestValue.balance - totalCost,
+      totalFee,
     };
   }
 }

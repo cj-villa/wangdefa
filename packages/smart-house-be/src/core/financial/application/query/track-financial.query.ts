@@ -3,4 +3,5 @@ import { PaginationQuery } from '@/core/common/application/query/pagination.quer
 export class TrackFinancialQuery extends PaginationQuery {
   code?: string;
   name?: string;
+  channel?: string;
 }

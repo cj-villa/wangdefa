@@ -24,6 +24,7 @@ export const CreateFinancialTransaction = ({
       financialId: formData.financialId,
       transactionType: formData.transactionType,
       amount: String(formData.amount),
+      fee: String(formData.fee ?? 0),
       transactionDate: dayjs(formData.transactionDate).toISOString(),
       ensureDate: dayjs(formData.ensureDate).toISOString(),
     };
@@ -95,6 +96,24 @@ export const CreateFinancialTransaction = ({
       },
     },
     {
+      title: '手续费',
+      dataIndex: 'fee',
+      valueType: 'digit',
+      fieldProps: {
+        placeholder: '请输入手续费',
+        min: 0,
+        precision: 2,
+        style: { width: '100%' },
+      },
+      formItemProps: {
+        rules: [
+          { required: true, message: '请输入手续费' },
+          { type: 'number', min: 0, message: '手续费不能小于0' },
+        ],
+      },
+      initialValue: 0,
+    },
+    {
       title: '交易日期',
       dataIndex: 'transactionDate',
       valueType: 'date',
@@ -115,7 +134,7 @@ export const CreateFinancialTransaction = ({
       layoutType="Form"
       form={form}
       columns={columns}
-      initialValues={initialValues}
+      initialValues={{ fee: 0, ...initialValues }}
       submitter={{ render: () => null }}
     />
   );

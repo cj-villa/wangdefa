@@ -9,6 +9,7 @@ context: |
  We use conventional commits
  每次提交需要校验eslint、tsc都通过
  Domain: e-commerce platform
+ 只修改src下的文件
 
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.

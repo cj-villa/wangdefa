@@ -30,6 +30,11 @@ export class TrackFinancialTransactionUpdateDto {
   @IsNumberString({ no_symbols: false })
   amount?: string;
 
+  @ApiProperty({ example: '0', description: '手续费', required: false })
+  @IsOptional()
+  @IsNumberString({ no_symbols: false })
+  fee?: string;
+
   @ApiProperty({ example: '1000.0000', description: '交易份额', required: false })
   @IsOptional()
   @IsNumberString({ no_symbols: false })

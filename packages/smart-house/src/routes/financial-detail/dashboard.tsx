@@ -20,6 +20,12 @@ export const Dashboard: React.FC<{ detail: FinancialDetail }> = ({ detail }) => 
         <Statistic style={{ flex: 1 }} title="份额" value={roundPrice(detail.shares)} />
         <Statistic
           style={{ flex: 1 }}
+          title="累计手续费"
+          value={roundPrice(detail.totalFee ?? 0)}
+          prefix="¥"
+        />
+        <Statistic
+          style={{ flex: 1 }}
           title="累计收益"
           value={roundPrice(totalProfit)}
           prefix="¥"

@@ -26,6 +26,13 @@ export const buildFinancialBaseColumns = ({
       hideInSearch: true,
     },
     {
+      title: '累计手续费',
+      dataIndex: 'totalFee',
+      width: 110,
+      valueType: 'money' as const,
+      hideInSearch: true,
+    },
+    {
       title: '购买渠道',
       dataIndex: 'channel',
       width: 130,
