@@ -18,6 +18,9 @@ export const CreateFinancialTransaction = ({
   onSuccess,
 }: CreateFinancialTransactionProps) => {
   const [form] = Form.useForm();
+  const isEdit = Boolean(initialValues?.id);
+  const editingId = initialValues?.id;
+  const KEEP_OPEN_ERROR = '__KEEP_OPEN_AFTER_CREATE__';
 
   const formatPayload = (formData: Record<string, any>) => {
     return {
@@ -35,16 +38,23 @@ export const CreateFinancialTransaction = ({
       try {
         const formData = await form.validateFields();
         const payload = formatPayload(formData);
-        if (initialValues?.id) {
-          await request.updateFinancialTransaction({ ...payload, id: initialValues.id });
+        if (isEdit && editingId) {
+          await request.updateFinancialTransaction({ ...payload, id: editingId });
           message.success('更新成功');
         } else {
           await request.createFinancialTransaction(payload);
-          message.success('创建成功');
+          const continueCreate = Boolean(formData.continueCreate);
+          message.success(continueCreate ? '创建成功，可继续新建' : '创建成功');
+          if (continueCreate) {
+            throw new Error(KEEP_OPEN_ERROR);
+          }
         }
         onSuccess?.();
       } catch (error) {
-        message.error(initialValues?.id ? '更新失败' : '创建失败');
+        if (error instanceof Error && error.message === KEEP_OPEN_ERROR) {
+          throw error;
+        }
+        message.error(isEdit ? '更新失败' : '创建失败');
         throw error;
       }
     },
@@ -105,12 +115,6 @@ export const CreateFinancialTransaction = ({
         precision: 2,
         style: { width: '100%' },
       },
-      formItemProps: {
-        rules: [
-          { required: true, message: '请输入手续费' },
-          { type: 'number', min: 0, message: '手续费不能小于0' },
-        ],
-      },
       initialValue: 0,
     },
     {
@@ -127,6 +131,17 @@ export const CreateFinancialTransaction = ({
       fieldProps: { style: { width: '100%' } },
       formItemProps: { rules: [{ required: true }] },
     },
+    ...(!isEdit
+      ? [
+          {
+            title: '保存后继续新建',
+            dataIndex: 'continueCreate',
+            valueType: 'switch' as const,
+            colProps: { span: 24 },
+            initialValue: false,
+          },
+        ]
+      : []),
   ];
 
   return (

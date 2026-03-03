@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import { In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { TrackFinancialTransactionCreateDto } from '@/core/financial/application/dto/track-financial-transaction-create.dto';
 import { TrackFinancialTransactionUpdateDto } from '@/core/financial/application/dto/track-financial-transaction-update.dto';
-import { FinancialTransactionType } from '@/core/financial/application/enum/financial-transaction-type';
 import { TrackFinancialTransactionQuery } from '@/core/financial/application/query/track-financial-transaction.query';
 import { FinancialNetValueTrendEntity } from '@/core/financial/domain/entities/financial-net-value-trend.entity';
 import { FinancialTransaction } from '@/core/financial/domain/entities/track-financial-transaction.entity';
@@ -41,14 +40,6 @@ export class TrackFinancialTransactionService {
     return fee;
   }
 
-  private getEffectiveAmount(amount: number, fee: number): number {
-    const effectiveAmount = amount - fee;
-    if (effectiveAmount < 0) {
-      throw new BadRequestException('交易金额必须大于或等于手续费');
-    }
-    return effectiveAmount;
-  }
-
   /** 创建交易记录 */
   async create(data: TrackFinancialTransactionCreateDto) {
     // 检查基金是否存在且属于当前用户
@@ -76,10 +67,7 @@ export class TrackFinancialTransactionService {
     );
 
     if (netValueTrend) {
-      transaction.shares = netValueTrend.getSharesByAmount(
-        financial,
-        this.getEffectiveAmount(transaction.amount, fee)
-      );
+      transaction.shares = netValueTrend.getSharesByAmount(financial, transaction.effectiveAmount);
     }
 
     return this.transactionRepo.save(transaction);
@@ -112,6 +100,8 @@ export class TrackFinancialTransactionService {
       throw new BadRequestException('交易记录不存在');
     }
 
+    // 避免修改Id
+    delete transaction.id;
     const financial = await this.trackFinancialRepo.findOneBy({
       id: transaction.financialId,
       userId: this.user.userId,
@@ -120,47 +110,40 @@ export class TrackFinancialTransactionService {
       throw new BadRequestException('基金不存在或无权访问');
     }
 
-    const normalizedData: Partial<FinancialTransaction> = {};
     if (rest.financialId !== undefined) {
-      normalizedData.financialId = rest.financialId;
+      transaction.financialId = rest.financialId;
     }
     if (rest.transactionType !== undefined) {
-      normalizedData.transactionType = rest.transactionType;
+      transaction.transactionType = rest.transactionType;
     }
     if (rest.amount !== undefined) {
-      normalizedData.amount = Number(rest.amount);
+      transaction.amount = Number(rest.amount);
     }
     if (rest.fee !== undefined) {
-      normalizedData.fee = this.normalizeFee(rest.fee);
+      transaction.fee = this.normalizeFee(rest.fee);
     }
     if (rest.shares !== undefined) {
-      normalizedData.shares = Number(rest.shares);
+      transaction.shares = Number(rest.shares);
     }
     if (rest.transactionDate !== undefined) {
-      normalizedData.transactionDate = new Date(rest.transactionDate);
+      transaction.transactionDate = new Date(rest.transactionDate);
     }
     if (rest.ensureDate !== undefined) {
-      normalizedData.ensureDate = new Date(rest.ensureDate);
+      transaction.ensureDate = new Date(rest.ensureDate);
     }
 
     const netValueTrend = await this.financialNetValueService.getFinancialNetValueTrend(
       financial,
-      dayjs(normalizedData.ensureDate ?? transaction.ensureDate)
+      dayjs(transaction.ensureDate ?? transaction.ensureDate)
         .subtract(financial.delay, 'days')
         .toDate()
     );
 
-    const amountForShares = normalizedData.amount ?? transaction.amount;
-    const feeForShares = normalizedData.fee ?? this.normalizeFee((transaction as any).fee);
-
     if (netValueTrend) {
-      normalizedData.shares = netValueTrend.getSharesByAmount(
-        financial,
-        this.getEffectiveAmount(amountForShares, feeForShares)
-      );
+      transaction.shares = netValueTrend.getSharesByAmount(financial, transaction.effectiveAmount);
     }
 
-    return this.transactionRepo.update(id, normalizedData);
+    return this.transactionRepo.update(id, transaction);
   }
 
   /** 查询交易记录列表 */
@@ -246,16 +229,8 @@ export class TrackFinancialTransactionService {
       to: date,
     });
     return transactions.reduce((amount, transaction) => {
-      const effectiveAmount = this.getEffectiveAmount(
-        Number(transaction.amount),
-        this.normalizeFee((transaction as { fee?: unknown }).fee)
-      );
-      return (
-        amount +
-        (transaction.transactionType === FinancialTransactionType.BUY
-          ? effectiveAmount
-          : -effectiveAmount)
-      );
+      return amount + transaction.value;
+      // return amount + transaction.value + transaction.effectiveAmount;
     }, 0);
   }
 
@@ -282,13 +257,7 @@ export class TrackFinancialTransactionService {
       ensureDate: dayjs(date).subtract(financial.delay).toDate(),
     });
     for (const transaction of transactions) {
-      transaction.shares = trend.getSharesByAmount(
-        financial,
-        this.getEffectiveAmount(
-          Number(transaction.amount),
-          this.normalizeFee((transaction as { fee?: unknown }).fee)
-        )
-      );
+      transaction.shares = trend.getSharesByAmount(financial, transaction.effectiveAmount);
       await this.transactionRepo.save(transaction);
     }
   }

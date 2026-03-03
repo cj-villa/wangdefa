@@ -85,18 +85,27 @@ export class FinancialTransaction {
   @BeforeInsert()
   @BeforeUpdate()
   formatDate() {
-    console.log('12312321');
     this.ensureDate = dayjs(this.ensureDate).toDate();
   }
 
   get value() {
     const effectiveAmount = Math.max(0, Number(this.amount) - Number(this.fee ?? 0));
-    return this.transactionType === FinancialTransactionType.BUY
-      ? effectiveAmount
-      : -effectiveAmount;
+    return Number(
+      this.transactionType === FinancialTransactionType.BUY ? effectiveAmount : -effectiveAmount
+    );
   }
 
+  // 获取带有正负的份额
   get sharesWithSymbol() {
-    return this.transactionType === FinancialTransactionType.BUY ? this.shares : -this.shares;
+    return Number(
+      this.transactionType === FinancialTransactionType.BUY ? this.shares : -this.shares
+    );
+  }
+
+  // 实际的算净值的金额（买入时为amount-fee 卖出为 amount + fee）
+  get effectiveAmount() {
+    return Number(
+      this.amount + (this.transactionType === FinancialTransactionType.BUY ? -this.fee : +this.fee)
+    );
   }
 }
