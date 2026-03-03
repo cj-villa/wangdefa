@@ -17,6 +17,7 @@ export const Dashboard: React.FC<{ detail: FinancialDetail }> = ({ detail }) => 
           prefix="¥"
           valueStyle={{ color: '#cf1322' }}
         />
+        <Statistic style={{ flex: 1 }} title="份额" value={roundPrice(detail.shares)} />
         <Statistic
           style={{ flex: 1 }}
           title="累计收益"

@@ -37,10 +37,6 @@ export class FinancialAnalyzeService {
     });
     const summary = new FinancialSummaryDto();
     if (!financials?.length) {
-      summary.productCount = 0;
-      summary.totalAssets = 0;
-      summary.totalCost = 0;
-      summary.preDayProfit = 0;
       return summary;
     }
     const financialIds = financials.map((item) => item.id);
@@ -63,11 +59,13 @@ export class FinancialAnalyzeService {
         'vt.financial_id AS financial_id',
         'vt.date AS date',
         'vt.balance as balance',
+        'vt.shares as shares',
         'vt.profit as profit',
       ])
       .where('vt.financial_id IN (:...financialIds)', { financialIds })
       .getRawMany();
     summary.totalAssets = sum(latestValues, 'balance');
+    summary.shares = sum(latestValues, 'shares');
     /** 总支出 */
     const totalTransaction = await this.transactionRepo.findBy({
       userId: this.user.userId,
@@ -108,6 +106,7 @@ export class FinancialAnalyzeService {
       totalAssets: summary.totalAssets,
       totalCost: summary.totalCost,
       preDayProfit: summary.preDayProfit,
+      shares: summary.shares,
       valueTrends,
       netValueTrends,
     };

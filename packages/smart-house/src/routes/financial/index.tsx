@@ -20,12 +20,13 @@ const tabItems: NonNullable<TabsProps['items']> = [
 
 export const FinancialPage = () => {
   const { activeKey, onChange } = useTab(['financials', 'transactions'], {
-    reservePrevParams: true,
+    reservePrevParams: false,
   });
 
   return (
     <Card>
       <Tabs
+        destroyOnHidden
         activeKey={activeKey}
         onChange={(key) => {
           onChange(key);

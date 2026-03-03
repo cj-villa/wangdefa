@@ -4,13 +4,12 @@ import React from 'react';
 import { ListSelect } from 'src/components';
 import { FinancialTransactionType } from 'src/request/type/financial';
 
-export const buildTransactionColumns = (defaultFinancialId?: string): ProColumns<any>[] => {
+export const buildTransactionColumns = (): ProColumns<any>[] => {
   return [
     {
       title: '基金',
       dataIndex: 'financialId',
       hideInTable: true,
-      initialValue: defaultFinancialId,
       renderFormItem: () => (
         <ListSelect
           request="/api/financial/list"

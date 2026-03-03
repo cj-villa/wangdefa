@@ -13,6 +13,7 @@ export interface FinancialDetail {
   totalAssets: number;
   totalCost: number;
   preDayProfit: number;
+  shares: number;
   valueTrends: any[];
   netValueTrends: any[];
 }

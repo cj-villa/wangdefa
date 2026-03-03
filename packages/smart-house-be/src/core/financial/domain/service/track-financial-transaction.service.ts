@@ -1,6 +1,7 @@
 /** 资金交易记录服务 */
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import dayjs from 'dayjs';
 import { In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { TrackFinancialTransactionCreateDto } from '@/core/financial/application/dto/track-financial-transaction-create.dto';
 import { TrackFinancialTransactionUpdateDto } from '@/core/financial/application/dto/track-financial-transaction-update.dto';
@@ -52,7 +53,7 @@ export class TrackFinancialTransactionService {
 
     const netValueTrend = await this.financialNetValueService.getFinancialNetValueTrend(
       financial,
-      transaction.ensureDate
+      dayjs(transaction.ensureDate).subtract(financial.delay, 'days').toDate()
     );
 
     if (netValueTrend) {
@@ -119,7 +120,9 @@ export class TrackFinancialTransactionService {
 
     const netValueTrend = await this.financialNetValueService.getFinancialNetValueTrend(
       financial,
-      normalizedData.ensureDate ?? transaction.ensureDate
+      dayjs(normalizedData.ensureDate ?? transaction.ensureDate)
+        .subtract(financial.delay, 'days')
+        .toDate()
     );
 
     if (netValueTrend && normalizedData.amount !== undefined) {
@@ -225,7 +228,7 @@ export class TrackFinancialTransactionService {
     }
     const transactions = await this.transactionRepo.findBy({
       financialId: financial.id,
-      ensureDate: date,
+      ensureDate: dayjs(date).subtract(financial.delay).toDate(),
     });
     for (const transaction of transactions) {
       transaction.shares = trend.getSharesByAmount(financial, transaction.amount);

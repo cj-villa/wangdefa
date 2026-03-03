@@ -2,6 +2,8 @@
 export class FinancialSummaryDto {
   // 总资产
   totalAssets: number = 0;
+  // 总份额
+  shares: number = 0;
   // 总支出
   totalCost: number = 0;
   // 最近一个收益

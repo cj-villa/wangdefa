@@ -8,6 +8,8 @@ export class FinancialDetailDto {
   totalAssets: number = 0;
   // 总支出
   totalCost: number = 0;
+  // 份额
+  shares: number;
   // 最近一个收益
   preDayProfit: number = 0;
   valueTrends: FinancialValueTrendEntity[];

@@ -13,12 +13,9 @@ import { CreateFinancialTransaction } from './create-Financial-transaction';
 export const FinancialTransaction = () => {
   const { params } = useRoute();
   const transactionActionRef = useRef<ActionType>(null);
-  const defaultFinancialId =
-    typeof params.financialId === 'string' ? params.financialId : undefined;
-  const defaultCode = typeof params.code === 'string' ? params.code : undefined;
 
   const columns = useMemo(() => {
-    const baseColumns = buildTransactionColumns(defaultFinancialId);
+    const baseColumns = buildTransactionColumns();
 
     return [
       ...baseColumns,
@@ -76,23 +73,14 @@ export const FinancialTransaction = () => {
         },
       },
     ];
-  }, [defaultCode, defaultFinancialId]);
+  }, []);
 
   return (
     <ProTable
       actionRef={transactionActionRef}
       scroll={{ x: 800 }}
       columns={columns}
-      request={(query) => {
-        const nextQuery = { ...query } as typeof query & { financialId?: string; code?: string };
-        if (!nextQuery.financialId && defaultFinancialId) {
-          nextQuery.financialId = defaultFinancialId;
-        }
-        if (!nextQuery.financialId && defaultCode) {
-          nextQuery.code = defaultCode;
-        }
-        return request.listFinancialTransaction(nextQuery);
-      }}
+      request={request.listFinancialTransaction}
       search={{
         defaultCollapsed: false,
         labelWidth: 88,
@@ -100,6 +88,9 @@ export const FinancialTransaction = () => {
       }}
       form={{
         syncToUrl: false,
+        initialValues: {
+          financialId: params.financialId,
+        },
       }}
       tableAlertRender={false}
       toolBarRender={() => [

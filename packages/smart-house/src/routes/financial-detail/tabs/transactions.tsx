@@ -3,12 +3,17 @@ import { Card } from 'antd';
 import React from 'react';
 import request from 'src/request';
 import { FinancialTransactionType } from 'src/request/type/financial';
+import { useRoute } from 'src/share/hooks/use-route';
 
 export const Transactions = () => {
+  const { params } = useRoute();
+  const { id } = params;
+
   return (
     <Card>
       <ProTable
         request={request.listFinancialTransaction}
+        params={{ financialId: id as string }}
         search={false}
         scroll={{ x: 800 }}
         columns={[
