@@ -37,11 +37,12 @@ export const ModalProvider: React.FC<
     configRef.current = nextConfig;
   };
 
-  return (
-    <ModalContext.Provider value={{ config, configModal: onConfigChang }}>
-      {children}
-    </ModalContext.Provider>
+  const context = React.useMemo(
+    () => ({ config, configModal: onConfigChang }),
+    [config, onConfigChang]
   );
+
+  return <ModalContext.Provider value={context}>{children}</ModalContext.Provider>;
 };
 
 export const useConfigModal = (config: ModalContextState['config']) => {
@@ -49,7 +50,7 @@ export const useConfigModal = (config: ModalContextState['config']) => {
 
   useEffect(() => {
     configModal(config);
-  }, [config, configModal]);
+  }, []);
 };
 
 export const showModal = ({
