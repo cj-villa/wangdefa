@@ -43,6 +43,7 @@
     "class-validator": "^0.14.3",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.19",
+    "gm-crypto": "^0.1.12",
     "iconv-lite": "^0.7.1",
     "imapflow": "^1.2.3",
     "js-yaml": "^4.1.1",

@@ -1,5 +1,8 @@
-## ADDED Requirements
+# api-interface-unit-test-coverage Specification
 
+## Purpose
+Define baseline API interface unit test coverage requirements, including controller behavior, DTO validation, and quality-gate integration.
+## Requirements
 ### Requirement: All API controllers MUST have baseline unit tests
 The backend project SHALL provide unit tests for each controller under `src/interface/modules/**`. Each exposed endpoint MUST include at least one successful-path test and one failure-path test.
 
@@ -29,3 +32,15 @@ API unit tests SHALL be executable in standard local/CI workflows together with 
 - **WHEN** project quality checks run for the backend package
 - **THEN** API-related unit tests execute alongside `eslint` and `tsc` checks
 - **AND** any failing API unit test marks the check as failed
+
+### Requirement: Shared signing utilities MUST have compatibility fixture tests
+Utility-level tests SHALL validate signature helper compatibility against fixtures derived from known `test.js` behavior to prevent regressions in request signing.
+
+#### Scenario: Fixture compatibility is enforced
+- **WHEN** unit tests run for backend utilities
+- **THEN** signature outputs for defined fixture inputs MUST match expected values
+
+#### Scenario: Regression is detected on algorithm drift
+- **WHEN** signature generation behavior changes unintentionally
+- **THEN** fixture-based unit tests MUST fail and block quality checks
+

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { BillEmailVo } from '../../../src/core/firefly';
 import type { Attachment } from 'mailparser';
+import { BillEmailVo } from '../../../src/core/firefly';
 
 const testFileBuffer = fs.readFileSync(
   path.join(__dirname, '../../../static/支付宝交易明细(20251124-20251224).zip')

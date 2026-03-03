@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { JournalPretreatmentService } from '../../../src/core/firefly/domain/service/journal-pretreatment.service';
-import { FireflyParsingRules } from '../../../src/core/firefly/domain/entities/firefly-parsing-rules.entity';
-import { JournalMeta } from '../../../src/core/firefly/domain/entities/journal-meta.entity';
-import { requestContext } from '../../../src/interface/interceptor/request-context';
+import { JournalCommand } from '../../../src/core/firefly';
 import { BillFieldType } from '../../../src/core/firefly/application/enum/bill-field-type';
 import { JournalFieldType } from '../../../src/core/firefly/application/enum/journal-field-type';
-import { JournalCommand } from '../../../src/core/firefly';
+import { FireflyParsingRules } from '../../../src/core/firefly/domain/entities/firefly-parsing-rules.entity';
+import { JournalMeta } from '../../../src/core/firefly/domain/entities/journal-meta.entity';
+import { JournalPretreatmentService } from '../../../src/core/firefly/domain/service/journal-pretreatment.service';
+import { requestContext } from '../../../src/interface/interceptor/request-context';
 
 const hint = {
   dateTime: '2025-12-24 11:11:43',
@@ -194,7 +194,7 @@ describe('账单预处理逻辑', () => {
     }).compile();
     const journalPretreatmentService = module.get(JournalPretreatmentService);
     const result = (await journalPretreatmentService.preTreatmentHint(
-        JSON.stringify(hint)
+      JSON.stringify(hint)
     )) as JournalCommand;
     expect(result).toBeFalsy();
   });

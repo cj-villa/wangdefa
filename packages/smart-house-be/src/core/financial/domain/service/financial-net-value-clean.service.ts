@@ -1,4 +1,5 @@
 /** 爬取理财每日的净值 */
+// import crypto from 'crypto';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import dayjs from 'dayjs';
@@ -15,6 +16,7 @@ import { InjectLogger } from '@/interface/decorate/inject-logger';
 import { InjectRequest } from '@/interface/decorate/inject-request';
 import { LokiLogger } from '@/shared/logger';
 import { http } from '@/shared/request';
+import { generateSignature } from '@/shared/toolkits';
 import { stringifyJson } from '@/shared/toolkits/transform';
 
 @Injectable()
@@ -49,15 +51,27 @@ export class FinancialNetValueCleanService {
         return trend;
       });
     } else if (channel === FinancialChannel.MCB_FINA) {
-      const res: { body: { data: MCBFinaQuery[] } } = await http.post(
+      const now = Date.now();
+      const headers = {
+        AppId: 'LB50.22_CFWebUI',
+        Timespan: now,
+        Signature: generateSignature(`LB50.22_CFWebUI|${now}`),
+      };
+      const res: { body: { data: MCBFinaQuery[] }; errorMsg?: string } = await http.post(
         'https://cfweb.paas.cmbchina.com/api/ProductValue/getSAValueByPageOrDate',
         {
           saaCod: 'D07',
           funCod: code,
           pageIndex: page,
           pageSize,
-        }
+          startDate: '',
+          endDate: '',
+        },
+        { headers }
       );
+      if (res.errorMsg) {
+        this.logger.error(`${code} 请求失败 ${res.errorMsg}`);
+      }
       return (res.body?.data ?? []).map((item) => {
         const trend = new FinancialNetValueTrendEntity();
         trend.date = dayjs(item.znavDat).toDate();
@@ -66,10 +80,13 @@ export class FinancialNetValueCleanService {
         return trend;
       });
     } else if (channel === FinancialChannel.MCB_FUND) {
-      const res: { body: { list: MCBFundQuery[] } } = await http.post(
+      const res: { body: { list: MCBFundQuery[] }; errorMsg?: string } = await http.post(
         'https://fund.cmbchina.com/api/v1/fund/nv/list-paged',
         { fundCode: code, pageIndex: page, pageSize }
       );
+      if (res.errorMsg) {
+        this.logger.error(`${code} 请求失败 ${res.errorMsg}`);
+      }
       return (res.body?.list ?? []).map((item) => {
         const trend = new FinancialNetValueTrendEntity();
         trend.date = dayjs(item.updateTime).toDate();

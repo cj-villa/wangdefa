@@ -1,16 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { SingleAutomationService } from '../../../src/core/firefly/domain/service/single-automation.service';
-import { JournalPretreatmentService } from '../../../src/core/firefly/domain/service/journal-pretreatment.service';
-import { JournalMeta } from '../../../src/core/firefly/domain/entities/journal-meta.entity';
-import { FireflyParsingRules } from '../../../src/core/firefly/domain/entities/firefly-parsing-rules.entity';
-import { REDIS_INSTANCE } from '../../../src/infrastructure/redis';
-import { DIFY_BASE_SERVICE } from '../../../src/infrastructure/dify';
 import { BillFieldType, JournalFieldType } from '../../../src/core/firefly';
+import { FireflyParsingRules } from '../../../src/core/firefly/domain/entities/firefly-parsing-rules.entity';
+import { JournalMeta } from '../../../src/core/firefly/domain/entities/journal-meta.entity';
+import { JournalPretreatmentService } from '../../../src/core/firefly/domain/service/journal-pretreatment.service';
+import { SingleAutomationService } from '../../../src/core/firefly/domain/service/single-automation.service';
+import { DIFY_BASE_SERVICE } from '../../../src/infrastructure/dify';
+import { REDIS_INSTANCE } from '../../../src/infrastructure/redis';
 import { requestContext } from '../../../src/interface/interceptor/request-context';
-import axios from 'axios';
-
-const missingAccounts = [];
 
 describe('自动化处理账单', () => {
   let module: TestingModule;
