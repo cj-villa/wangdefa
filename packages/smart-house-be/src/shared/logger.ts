@@ -49,7 +49,7 @@ export class LokiLogger {
     if (loggerConfig?.loki) {
       const lokiTransport = new LokiTransport(
         deepMerge(loggerConfig.loki, {
-          json: true,
+          // json: true,
           batching: true,
           interval: 5,
           labels: { env: process.env.NODE_ENV || 'dev' },
