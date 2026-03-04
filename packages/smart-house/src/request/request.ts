@@ -2,8 +2,10 @@ import { message } from 'antd';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
 /** 默认接口域名 */
-const port = process.env.NODE_ENV === 'development' ? 8000 : 3010;
-const DEFAULT_BASE_URL = `http://${window.location.hostname}:${port}`;
+const DEFAULT_BASE_URL =
+  process.env.NODE_ENV === 'development'
+    ? `//${window.location.hostname}:8000`
+    : '//wdf-api.lcj.com';
 
 /** 创建实例 */
 export const request: AxiosInstance = axios.create({

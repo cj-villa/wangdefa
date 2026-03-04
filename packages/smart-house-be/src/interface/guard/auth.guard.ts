@@ -47,7 +47,9 @@ export class AuthGuard implements CanActivate {
     }
 
     this.logger.info(
-      `user ${request['user'].userId} auth success method: ${request.method}; path: ${request.path};`
+      `【${getIp(request)}】user ${request['user'].userId} auth success method: ${
+        request.method
+      }; path: ${request.path};`
     );
 
     return true;

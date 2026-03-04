@@ -31,7 +31,7 @@ export class PublicGuard implements CanActivate {
     if (isDev || ip === '127.0.0.1' || ip.startsWith('192.168')) {
       return true;
     }
-    this.logger.info(`guard refuse ip: ${ip}; method: ${request.method}; path: ${request.path};`);
+    this.logger.error(`guard refuse ip: ${ip}; method: ${request.method}; path: ${request.path};`);
     throw new PrivateException();
   }
 }
