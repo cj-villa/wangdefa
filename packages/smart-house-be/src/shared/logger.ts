@@ -47,16 +47,19 @@ export class LokiLogger {
       typeof this.loggerConfig === 'function' ? this.loggerConfig() : this.loggerConfig;
     const transports: winston.transport[] = [];
     if (loggerConfig?.loki) {
-      transports.push(
-        new LokiTransport(
-          deepMerge(loggerConfig.loki, {
-            json: true,
-            batching: true,
-            interval: 5,
-            labels: { env: process.env.NODE_ENV || 'dev' },
-          })
-        )
+      const lokiTransport = new LokiTransport(
+        deepMerge(loggerConfig.loki, {
+          json: true,
+          batching: true,
+          interval: 5,
+          labels: { env: process.env.NODE_ENV || 'dev' },
+          onConnectionError(error: unknown) {
+            console.error('connectionError', error);
+          },
+        })
       );
+      this.bindLokiFeedback(lokiTransport, loggerConfig?.loki?.host || 'unknown');
+      transports.push(lokiTransport);
     }
     if (loggerConfig?.console) {
       transports.push(
@@ -97,6 +100,27 @@ export class LokiLogger {
       });
     }
     return this._logger;
+  }
+
+  private bindLokiFeedback(transport: LokiTransport, lokiHost: string) {
+    transport.on('error', (error: unknown) => {
+      this.emitLokiFailureFeedback(error, lokiHost);
+    });
+  }
+
+  private emitLokiFailureFeedback(error: unknown, lokiHost: string) {
+    const message =
+      error instanceof Error ? error.stack || error.message : stringifyJson(error, '');
+    const payload = {
+      level: 'error',
+      event: 'loki_transport_error',
+      lokiHost,
+      timestamp: new Date().toISOString(),
+      error: message,
+      context: this.context || 'LokiLogger',
+    };
+
+    console.log(`${JSON.stringify(payload)}\n`);
   }
 
   info(message: unknown, ...optionalParams: unknown[]) {
