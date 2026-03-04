@@ -1,7 +1,6 @@
 import { format } from 'node:util';
 import { clc } from '@nestjs/common/utils/cli-colors.util';
 import { ConfigType } from '@nestjs/config';
-import axios from 'axios';
 import winston from 'winston';
 import LokiTransport from 'winston-loki';
 import { type envConfig, getConfig } from '@/infrastructure/config';
@@ -15,7 +14,7 @@ export const createLogger = (context: string) => {
 };
 
 export class LokiLogger {
-  private _logger: winston.Logger;
+  static _logger: winston.Logger;
 
   static colorizeLevel(level: string, text: string) {
     switch (level) {
@@ -40,8 +39,8 @@ export class LokiLogger {
   ) {}
 
   get logger(): winston.Logger {
-    if (this._logger) {
-      return this._logger;
+    if (LokiLogger._logger) {
+      return LokiLogger._logger;
     }
     const { context } = this;
     const loggerConfig =
@@ -61,21 +60,6 @@ export class LokiLogger {
       );
       this.bindLokiFeedback(lokiTransport, loggerConfig.loki.host || 'unknown');
       transports.push(lokiTransport);
-      axios
-        .post(`${loggerConfig.loki.host}/loki/api/v1/push`, {
-          streams: [
-            {
-              stream: { app: 'debug-test' },
-              values: [[Date.now() * 1000000 + '', 'hello from node direct']],
-            },
-          ],
-        })
-        .then(() => {
-          console.log('conenct loki success');
-        })
-        .catch((error) => {
-          console.error(error);
-        });
     }
     if (loggerConfig?.console) {
       transports.push(
@@ -106,7 +90,7 @@ export class LokiLogger {
       );
     }
     if (transports.length > 0) {
-      this._logger = winston.createLogger({
+      LokiLogger._logger = winston.createLogger({
         level: loggerConfig.level,
         format: winston.format.combine(
           winston.format.errors({ stack: true }),
@@ -116,7 +100,7 @@ export class LokiLogger {
       });
     }
 
-    return this._logger;
+    return LokiLogger._logger;
   }
 
   private bindLokiFeedback(transport: LokiTransport, lokiHost: string) {
