@@ -4,6 +4,7 @@ const getHeaderString = (item?: string | string[]): string =>
   Array.isArray(item) ? item[0] : item;
 
 export const getIp = (request: Request) => {
+  console.log(request.headers);
   const ip =
     getHeaderString(request.headers['x-forwarded-for'])?.split(',')[0]?.trim() ||
     getHeaderString(request.headers['x-real-ip']) ||
