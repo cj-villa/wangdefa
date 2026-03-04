@@ -1,6 +1,7 @@
 import { format } from 'node:util';
 import { clc } from '@nestjs/common/utils/cli-colors.util';
 import { ConfigType } from '@nestjs/config';
+import axios from 'axios';
 import winston from 'winston';
 import LokiTransport from 'winston-loki';
 import { type envConfig, getConfig } from '@/infrastructure/config';
@@ -58,8 +59,23 @@ export class LokiLogger {
           },
         })
       );
-      this.bindLokiFeedback(lokiTransport, loggerConfig?.loki?.host || 'unknown');
+      this.bindLokiFeedback(lokiTransport, loggerConfig.loki.host || 'unknown');
       transports.push(lokiTransport);
+      axios
+        .post(`${loggerConfig.loki.host}/loki/api/v1/push`, {
+          streams: [
+            {
+              stream: { app: 'debug-test' },
+              values: [[Date.now() * 1000000 + '', 'hello from node direct']],
+            },
+          ],
+        })
+        .then(() => {
+          console.log('conenct loki success');
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
     if (loggerConfig?.console) {
       transports.push(
@@ -99,6 +115,7 @@ export class LokiLogger {
         transports,
       });
     }
+
     return this._logger;
   }
 
