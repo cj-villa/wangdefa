@@ -15,15 +15,17 @@ The system SHALL provide a fee input field in financial create/edit form with de
 - **THEN** system persists the updated fee value and returns it in subsequent detail/list queries
 
 ### Requirement: Transaction net amount SHALL deduct fee
-The system SHALL calculate transaction net amount by deducting fee from transaction amount before applying share/net-value computation.
+The system SHALL calculate transaction net amount by deducting fee from transaction amount before applying share/net-value computation, and the net-value reference for share calculation MUST use the Nth previous **existing** net-value record (not calendar-day subtraction).
 
 #### Scenario: Buy transaction with fee
 - **WHEN** a buy transaction has amount `A` and fee `F`
 - **THEN** system uses `A - F` as effective amount for share and asset calculations
+- **AND** system uses the Nth previous existing net-value record for share calculation
 
 #### Scenario: Historical transaction without fee
 - **WHEN** transaction/financial data has no fee value
 - **THEN** system treats fee as `0` and preserves backward-compatible results
+- **AND** system still applies existing-net-value-day lookup strategy for share calculation
 
 ### Requirement: Fee validation SHALL prevent invalid calculation
 The system SHALL enforce fee input as non-negative numeric value and prevent invalid net-amount computation.

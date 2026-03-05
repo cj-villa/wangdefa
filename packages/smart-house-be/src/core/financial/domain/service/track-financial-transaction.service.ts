@@ -61,10 +61,12 @@ export class TrackFinancialTransactionService {
       userId: this.user.userId,
     });
 
-    const netValueTrend = await this.financialNetValueService.getFinancialNetValueTrend(
-      financial,
-      dayjs(transaction.ensureDate).subtract(financial.delay, 'days').toDate()
-    );
+    const netValueTrend =
+      await this.financialNetValueService.getFinancialNetValueTrendByExistingDays(
+        financial,
+        transaction.ensureDate,
+        financial.delay
+      );
 
     if (netValueTrend) {
       transaction.shares = netValueTrend.getSharesByAmount(financial, transaction.effectiveAmount);
@@ -132,12 +134,12 @@ export class TrackFinancialTransactionService {
       transaction.ensureDate = new Date(rest.ensureDate);
     }
 
-    const netValueTrend = await this.financialNetValueService.getFinancialNetValueTrend(
-      financial,
-      dayjs(transaction.ensureDate ?? transaction.ensureDate)
-        .subtract(financial.delay, 'days')
-        .toDate()
-    );
+    const netValueTrend =
+      await this.financialNetValueService.getFinancialNetValueTrendByExistingDays(
+        financial,
+        transaction.ensureDate,
+        financial.delay
+      );
 
     if (netValueTrend) {
       transaction.shares = netValueTrend.getSharesByAmount(financial, transaction.effectiveAmount);
