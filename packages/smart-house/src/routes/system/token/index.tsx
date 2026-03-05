@@ -5,6 +5,7 @@ import React, { useRef } from 'react';
 import { ConfirmButton } from 'src/components';
 import request from 'src/request';
 import { CreateToken } from 'src/routes/system/token/create-token';
+import { DEFAULT_TABLE_PAGINATION } from 'src/share/ui/pagination';
 import { showModal } from 'src/share/ui/show-modal';
 
 export const TokenPage = () => {
@@ -38,6 +39,7 @@ export const TokenPage = () => {
       ]}
       search={false}
       request={request.listToken}
+      pagination={DEFAULT_TABLE_PAGINATION}
       toolBarRender={() => [
         <Button
           key="button"

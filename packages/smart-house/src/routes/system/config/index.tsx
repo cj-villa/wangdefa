@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import React, { useRef } from 'react';
 import request from 'src/request';
 import { UpsertConfigModal } from 'src/routes/system/config/upsert-config-modal';
+import { DEFAULT_TABLE_PAGINATION } from 'src/share/ui/pagination';
 import { showModal } from 'src/share/ui/show-modal';
 
 export const SystemConfig = () => {
@@ -48,6 +49,7 @@ export const SystemConfig = () => {
           return result;
         })
       }
+      pagination={DEFAULT_TABLE_PAGINATION}
       toolBarRender={() => [
         <Button
           key="button"

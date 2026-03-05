@@ -6,6 +6,7 @@ import React, { useMemo, useRef } from 'react';
 import { ConfirmButton } from 'src/components';
 import request from 'src/request';
 import { useRoute } from 'src/share/hooks/use-route';
+import { DEFAULT_TABLE_PAGINATION } from 'src/share/ui/pagination';
 import { showModal } from 'src/share/ui/show-modal';
 import { buildTransactionColumns } from './columns';
 import { CreateFinancialTransaction } from './create-Financial-transaction';
@@ -113,9 +114,7 @@ export const FinancialTransaction = () => {
         </Button>,
       ]}
       rowKey="id"
-      pagination={{
-        pageSize: 10,
-      }}
+      pagination={DEFAULT_TABLE_PAGINATION}
     />
   );
 };

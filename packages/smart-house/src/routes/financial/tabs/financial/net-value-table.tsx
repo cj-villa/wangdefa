@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { ConfirmButton } from 'src/components';
 import request from 'src/request';
+import { DEFAULT_TABLE_PAGINATION } from 'src/share/ui/pagination';
 
 type NetValueRecord = {
   date?: string;
@@ -70,7 +71,7 @@ export const NetValueTable = ({ code }: { code: string }) => {
         };
       }}
       search={false}
-      pagination={{ defaultPageSize: 10 }}
+      pagination={DEFAULT_TABLE_PAGINATION}
       columns={[
         {
           title: '日期',

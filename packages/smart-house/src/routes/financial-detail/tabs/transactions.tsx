@@ -4,6 +4,7 @@ import React from 'react';
 import request from 'src/request';
 import { FinancialTransactionType } from 'src/request/type/financial';
 import { useRoute } from 'src/share/hooks/use-route';
+import { DEFAULT_TABLE_PAGINATION } from 'src/share/ui/pagination';
 
 export const Transactions = () => {
   const { params } = useRoute();
@@ -47,7 +48,7 @@ export const Transactions = () => {
           },
         ]}
         rowKey="id"
-        pagination={{ defaultPageSize: 10 }}
+        pagination={DEFAULT_TABLE_PAGINATION}
       />
     </Card>
   );

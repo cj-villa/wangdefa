@@ -18,7 +18,6 @@ export const UpsertConfigModal = (props: { name?: string }) => {
   useConfigModal({
     async onConfirm() {
       const formData = await form.validateFields();
-      console.log('formData', formData);
       return request.updateSystemConfig(formData).then(() => {
         message.success('配置更新成功');
       });

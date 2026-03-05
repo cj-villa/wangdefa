@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
 import { FinancialDetail } from 'src/request/type/financial';
 import { roundPrice } from 'src/share/toolkits/tookit';
+import { DEFAULT_TABLE_PAGINATION } from 'src/share/ui/pagination';
 
 const getStart = (count = 0) => Math.max(1 - 30 / count, 0);
 const formatNetValue = (value: number) => Number(value || 0).toFixed(4);
@@ -154,7 +155,7 @@ export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
             <Table
               size="small"
               rowKey="date"
-              pagination={{ pageSize: 10 }}
+              pagination={DEFAULT_TABLE_PAGINATION}
               dataSource={tableBalanceData}
               columns={[
                 {
@@ -196,7 +197,7 @@ export const Charts: React.FC<{ detail: FinancialDetail }> = ({ detail }) => {
             <Table
               size="small"
               rowKey="date"
-              pagination={{ pageSize: 10 }}
+              pagination={DEFAULT_TABLE_PAGINATION}
               dataSource={tableNetValueData}
               columns={[
                 {

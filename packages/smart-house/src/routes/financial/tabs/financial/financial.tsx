@@ -10,6 +10,7 @@ import { FinancialProfitDashboard } from 'src/routes/financial/tabs/financial/da
 import { NetValueTable } from 'src/routes/financial/tabs/financial/net-value-table';
 import { useRoute } from 'src/share/hooks/use-route';
 import { DEFAULT_TAB_KEY } from 'src/share/hooks/use-tabs';
+import { DEFAULT_TABLE_PAGINATION } from 'src/share/ui/pagination';
 import { showModal } from 'src/share/ui/show-modal';
 import { buildFinancialBaseColumns } from './columns';
 
@@ -134,9 +135,7 @@ export const FinancialTab = () => {
           </Button>,
         ]}
         rowKey="id"
-        pagination={{
-          pageSize: 10,
-        }}
+        pagination={DEFAULT_TABLE_PAGINATION}
       />
     </div>
   );
