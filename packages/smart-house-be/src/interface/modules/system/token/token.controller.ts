@@ -17,7 +17,7 @@ import { PaginationFormatInterceptor } from '@/interface/interceptor/response-fo
 
 @ApiTags('system-token')
 @ApiBearerAuth()
-@Controller('/api/system')
+@Controller('/api/system/token')
 export class TokenController {
   @Inject()
   private readonly tokenManageService: TokenManageService;

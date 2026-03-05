@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { DeleteDto } from '@/core/common/application/dto/delete.dto';
+import { RunScheduleManualDto } from '@/core/financial/application/dto/run-schedule-manual.dto';
 import { TrackFinancialCleanDto } from '@/core/financial/application/dto/track-financial-clean.dto';
 import { TrackFinancialCreateDto } from '@/core/financial/application/dto/track-financial-create.dto';
 import { TrackFinancialUpdateDto } from '@/core/financial/application/dto/track-financial-update.dto';
@@ -17,6 +18,7 @@ import { FinancialAnalyzeService } from '@/core/financial/domain/service/financi
 import { FinancialNetValueCleanService } from '@/core/financial/domain/service/financial-net-value-clean.service';
 import { FinancialValueCleanService } from '@/core/financial/domain/service/financial-value-clean.service';
 import { FinancialValueSummaryService } from '@/core/financial/domain/service/financial-value-summary.service';
+import { FinancialScheduleService } from '@/core/financial/domain/service/financial.schedule.service';
 import { TrackFinancialRecordService } from '@/core/financial/domain/service/track-financial-record.service';
 import { PaginationFormatInterceptor } from '@/interface/interceptor/response-format';
 
@@ -38,6 +40,9 @@ export class FinancialController {
 
   @Inject()
   private readonly financialAnalyzeService: FinancialAnalyzeService;
+
+  @Inject()
+  private readonly financialScheduleService: FinancialScheduleService;
 
   @Get('list')
   @ApiOperation({ summary: '查询理财产品列表' })
@@ -121,5 +126,22 @@ export class FinancialController {
   })
   async getDetail(@Query() query: FinancialDetailQuery) {
     return this.financialAnalyzeService.getFinancialDetail(query);
+  }
+
+  @Post('run_schedule_manual')
+  @ApiOperation({ summary: '手动触发理财定时任务执行' })
+  @ApiBody({ type: RunScheduleManualDto, required: false })
+  @ApiOkResponse({
+    description: '理财定时任务触发成功',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+      },
+    },
+  })
+  async runScheduleManual(@Body() body: RunScheduleManualDto) {
+    await this.financialScheduleService.calcFinancialValue(body?.delay);
+    return { success: true };
   }
 }

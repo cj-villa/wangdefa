@@ -137,7 +137,7 @@ export class FinancialValueCleanService {
       throw new BadRequestException('基金不存在');
     }
     for (const financial of financials) {
-      const dayjsFrom = dayjs(date);
+      const dayjsFrom = dayjs(date).startOf('day');
       // 一直往前取，没有的话就爆炸
       const netValue = await this.financialTrendRepository.findOne({
         where: { code, date: LessThanOrEqual(dayjsFrom.toDate()) },

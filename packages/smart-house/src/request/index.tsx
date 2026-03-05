@@ -11,9 +11,9 @@ import { request } from './request';
 export default {
   /** system */
   // 管理token
-  listToken: (params: Page) => request.get('/api/token/list', { params }),
-  createToken: (data: { name: string }) => request.post('/api/token/create', data),
-  deleteToken: (data: { id: string }) => request.post('/api/token/delete', data),
+  listToken: (params: Page) => request.get('/api/system/token/list', { params }),
+  createToken: (data: { name: string }) => request.post('/api/system/token/create', data),
+  deleteToken: (data: { id: string }) => request.post('/api/system/token/delete', data),
   // 系统配置
   listSystemConfig: (params?: { search?: string; current?: number; pageSize?: number }) =>
     request.get('/api/system/config/list', { params }),
