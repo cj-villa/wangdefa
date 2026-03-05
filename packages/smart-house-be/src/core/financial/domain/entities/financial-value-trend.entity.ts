@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {
   Column,
   CreateDateColumn,
@@ -42,4 +43,8 @@ export class FinancialValueTrendEntity {
     nullable: true,
   })
   deletedAt?: Date;
+
+  get formatDate() {
+    return dayjs(this.date).format('YYYY-MM-DD') as unknown as Date;
+  }
 }

@@ -64,12 +64,15 @@ export class FinancialValueCleanService {
     }
     let total = valueTrend ? valueTrend.balance : 0;
     // 中间有几次交易，需要计算每一次的收益
-    const [transactions] = await this.trackFinancialTransactionService.list({
-      financialId: financial.id,
-      ...(valueTrend ? { from: dayjs(valueTrend.date).add(1, 'day').toDate() } : {}),
-      to: date.toDate(),
-      orderBy: 'ASC',
-    });
+    const [transactions] = await this.trackFinancialTransactionService.list(
+      {
+        financialId: financial.id,
+        ...(valueTrend ? { from: dayjs(valueTrend.date).add(1, 'day').toDate() } : {}),
+        to: date.toDate(),
+        orderBy: 'ASC',
+      },
+      financial.userId
+    );
     // 和上一次价值记录中间没有交易，直接通过万份收益进行累加
     if (!transactions.length && valueTrend) {
       const profit = await this.addProfit(
@@ -127,59 +130,63 @@ export class FinancialValueCleanService {
     date: dayjs.ConfigType,
     valueTrend?: FinancialValueTrendEntity
   ) {
-    // 自己没有该基金你处理个啥
-    const financial = await this.trackFinancialRepo.findOneBy({ code, userId: this.user.userId });
-    if (!financial) {
+    const userQuery = this.user ? { userId: this.user.userId } : {};
+    // 定时任务时，需要清洗所有的人的交易
+    const financials = await this.trackFinancialRepo.findBy({ code, ...userQuery });
+    if (!financials.length) {
       throw new BadRequestException('基金不存在');
     }
-    const dayjsFrom = dayjs(date);
-    // 一直往前取，没有的话就爆炸
-    const netValue = await this.financialTrendRepository.findOne({
-      where: { code, date: LessThanOrEqual(dayjsFrom.toDate()) },
-      order: { date: 'desc' },
-    });
-    if (!netValue) {
-      throw new BadRequestException('基金净值不存在');
-    }
-    const { value } = netValue;
-    // 这个时间点当前理财的价值
-    let financialValue = 0;
-    // 份额
-    let currentShares = 0;
-    const { type } = financial;
-    // 净值类型的基金价值直接计算
-    if (type === FinancialType.NET_VALUE) {
-      currentShares = await this.trackFinancialTransactionService.getFinancialShares(
-        financial,
-        dayjsFrom.toDate()
-      );
-      financialValue = currentShares ? value * currentShares : 0;
-    }
-    // 万份收益的需要把每一个阶段的价值都计算出来
-    if (type === FinancialType.PROFIT) {
-      financialValue = await this.calcProfitValue(financial, dayjsFrom, valueTrend);
-      // 万份收益的价值就是当前份额
-      currentShares = financialValue;
-    }
-    // upsert value trend
-    const financialValueTrend = this.financialValueTrendEntity.create({
-      financialId: financial.id,
-      date: dayjsFrom.toDate(),
-      balance: financialValue,
-      shares: currentShares,
-      profit: await this.getCurrentProfit(financial, {
+    for (const financial of financials) {
+      const dayjsFrom = dayjs(date);
+      // 一直往前取，没有的话就爆炸
+      const netValue = await this.financialTrendRepository.findOne({
+        where: { code, date: LessThanOrEqual(dayjsFrom.toDate()) },
+        order: { date: 'desc' },
+      });
+      if (!netValue) {
+        throw new BadRequestException('基金净值不存在');
+      }
+      const { value } = netValue;
+      // 这个时间点当前理财的价值
+      let financialValue = 0;
+      // 份额
+      let currentShares = 0;
+      const { type } = financial;
+      // 净值类型的基金价值直接计算
+      if (type === FinancialType.NET_VALUE) {
+        currentShares = await this.trackFinancialTransactionService.getFinancialShares(
+          financial,
+          dayjsFrom.toDate()
+        );
+        financialValue = currentShares ? value * currentShares : 0;
+      }
+      // 万份收益的需要把每一个阶段的价值都计算出来
+      if (type === FinancialType.PROFIT) {
+        financialValue = await this.calcProfitValue(financial, dayjsFrom, valueTrend);
+        // 万份收益的价值就是当前份额
+        currentShares = financialValue;
+      }
+      // upsert value trend
+      const financialValueTrend = this.financialValueTrendEntity.create({
+        financialId: financial.id,
         date: dayjsFrom.toDate(),
         balance: financialValue,
-      }),
-    });
-    const currentTrend = await this.financialValueTrendEntity.findOneBy({
-      financialId: financial.id,
-      date: dayjsFrom.toDate(),
-    });
-    await (currentTrend
-      ? this.financialValueTrendEntity.update(currentTrend.id, financialValueTrend)
-      : this.financialValueTrendEntity.save(financialValueTrend));
-    return financialValueTrend;
+        shares: currentShares,
+        profit: await this.getCurrentProfit(financial, {
+          date: dayjsFrom.toDate(),
+          balance: financialValue,
+        }),
+      });
+      // 当时是否存在已有的价值
+      const currentTrend = await this.financialValueTrendEntity.findOneBy({
+        financialId: financialValueTrend.financialId,
+        date: financialValueTrend.formatDate,
+      });
+      await (currentTrend
+        ? this.financialValueTrendEntity.update(currentTrend.id, financialValueTrend)
+        : this.financialValueTrendEntity.save(financialValueTrend));
+      return financialValueTrend;
+    }
   }
 
   /** 从某天开始清理基金价值至最后有净值的一天 */

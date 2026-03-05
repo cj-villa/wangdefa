@@ -159,7 +159,7 @@ export class FinancialNetValueCleanService {
    */
   async fillNetValue(code: string, from?: dayjs.ConfigType) {
     // 自己没有该基金你处理个啥
-    const financial = await this.trackFinancialRepo.findOneBy({ code, userId: this.user.userId });
+    const financial = await this.trackFinancialRepo.findOneBy({ code });
     if (!financial) {
       throw new BadRequestException('基金不存在');
     }

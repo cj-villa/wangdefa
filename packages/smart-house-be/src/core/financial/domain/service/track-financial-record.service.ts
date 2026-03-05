@@ -51,9 +51,7 @@ export class TrackFinancialRecordService {
   /** 基金列表 */
   async list(data: TrackFinancialQuery) {
     const { current = 1, pageSize = 10, name, code, channel } = data;
-    const query = this.trackFinancialRepo
-      .createQueryBuilder('trackFinancial')
-      .where({ userId: this.user.userId });
+    const query = this.trackFinancialRepo.createQueryBuilder('trackFinancial');
     if (pageSize !== Infinity) {
       query.limit(pageSize).offset((current - 1) * pageSize);
     }
@@ -73,9 +71,11 @@ export class TrackFinancialRecordService {
   async listCode(): Promise<string[]> {
     return this.trackFinancialRepo
       .createQueryBuilder('trackFinancial')
-      .select('trackFinancial.code')
-      .groupBy('trackFinancial.code')
+      .select(['code'])
+      .groupBy('code')
       .getRawMany()
-      .then((res: Array<{ code: string }>) => res.map((i) => i.code));
+      .then((res: Array<{ code: string }>) => {
+        return res.map((i) => i.code);
+      });
   }
 }

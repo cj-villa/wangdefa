@@ -147,7 +147,7 @@ export class TrackFinancialTransactionService {
   }
 
   /** 查询交易记录列表 */
-  async list(query: TrackFinancialTransactionQuery) {
+  async list(query: TrackFinancialTransactionQuery, userId?: string) {
     const {
       current = 1,
       pageSize = 10,
@@ -161,7 +161,7 @@ export class TrackFinancialTransactionService {
     } = query;
     const queryBuilder = this.transactionRepo
       .createQueryBuilder('transaction')
-      .where({ userId: this.user.userId });
+      .where({ userId: userId ?? this.user.userId });
 
     if (pageSize != Infinity) {
       queryBuilder.limit(pageSize).offset((current - 1) * pageSize);
@@ -213,10 +213,13 @@ export class TrackFinancialTransactionService {
 
   /** 获取某个时间点理财的总份额 */
   async getFinancialShares(financial: TrackFinancial, date: Date) {
-    const [transactions] = await this.list({
-      financialId: financial.id,
-      to: date,
-    });
+    const [transactions] = await this.list(
+      {
+        financialId: financial.id,
+        to: date,
+      },
+      financial.userId
+    );
     return transactions.reduce((shares, transaction) => {
       return shares + Number(transaction.sharesWithSymbol);
     }, 0);
@@ -246,8 +249,8 @@ export class TrackFinancialTransactionService {
   }
 
   /** 更新某个时间点下所有交易的份额 */
-  async updateTransactionShares(trend: FinancialNetValueTrendEntity) {
-    const { date, code } = trend;
+  async updateTransactionShares(netValueTrend: FinancialNetValueTrendEntity) {
+    const { date, code } = netValueTrend;
     const [[financial]] = await this.trackFinancialRecordService.list({ code });
     if (!financial) {
       return;
@@ -257,7 +260,7 @@ export class TrackFinancialTransactionService {
       ensureDate: dayjs(date).subtract(financial.delay).toDate(),
     });
     for (const transaction of transactions) {
-      transaction.shares = trend.getSharesByAmount(financial, transaction.effectiveAmount);
+      transaction.shares = netValueTrend.getSharesByAmount(financial, transaction.effectiveAmount);
       await this.transactionRepo.save(transaction);
     }
   }
