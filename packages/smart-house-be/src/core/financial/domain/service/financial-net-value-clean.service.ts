@@ -157,14 +157,22 @@ export class FinancialNetValueCleanService {
    * @param code 理财的编码
    * @param from 清洗的开始时间，不传入时只清洗10天的数据
    */
-  async fillNetValue(code: string, from?: dayjs.ConfigType) {
+  async fillNetValue(code: string, from?: dayjs.ConfigType, forceRefreshDays?: number) {
     // 自己没有该基金你处理个啥
     const financial = await this.trackFinancialRepo.findOneBy({ code });
     if (!financial) {
       throw new BadRequestException('基金不存在');
     }
 
-    const paramsData = await this.getCleanParamsData(code, from);
+    let paramsData = await this.getCleanParamsData(code, from);
+    if (!paramsData && forceRefreshDays) {
+      paramsData = {
+        deadLine: dayjs().subtract(forceRefreshDays, 'day'),
+        pageSize: 30,
+        page: 1,
+        round: Math.ceil(forceRefreshDays / 30) || 1,
+      };
+    }
     this.logger.info(`清洗理财净值 ${code} from: ${from} paramsData: ${stringifyJson(paramsData)}`);
     if (!paramsData) {
       return;

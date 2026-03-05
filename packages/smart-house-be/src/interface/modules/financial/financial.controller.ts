@@ -141,7 +141,7 @@ export class FinancialController {
     },
   })
   async runScheduleManual(@Body() body: RunScheduleManualDto) {
-    await this.financialScheduleService.calcFinancialValue(body?.delay);
+    await this.financialScheduleService.calcFinancialValue(body?.delay, body?.forceRefreshNetValue);
     return { success: true };
   }
 }

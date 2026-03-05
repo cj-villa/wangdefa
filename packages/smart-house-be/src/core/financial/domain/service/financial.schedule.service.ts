@@ -29,7 +29,7 @@ export class FinancialScheduleService {
   /** 每天计算一次前一天的基金价值 */
   // @Cron('0 15 * * * *')
   @Cron('0 0 4 * * *')
-  async calcFinancialValue(delay?: number) {
+  async calcFinancialValue(delay?: number, forceRefreshNetValue?: number) {
     const codes = await this.trackFinancialRecordService.listCode();
     for (const code of codes) {
       this.logger.info(`计算基金 ${code} 的价值`);
@@ -39,7 +39,7 @@ export class FinancialScheduleService {
 
         const current = dayjs().subtract(delay ?? financial.delay ?? 2, 'day');
         // 刷新净值
-        await this.financialNetValueCleanService.fillNetValue(code, current);
+        await this.financialNetValueCleanService.fillNetValue(code, current, forceRefreshNetValue);
         // 刷新价值
         await this.financialValueCleanService.calcFinancialValue(code, current);
         this.logger.info(`计算基金 ${code} 的价值完成`);
