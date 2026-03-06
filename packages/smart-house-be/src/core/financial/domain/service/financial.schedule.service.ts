@@ -28,7 +28,7 @@ export class FinancialScheduleService {
 
   /** 每天计算一次前一天的基金价值 */
   // @Cron('0 15 * * * *')
-  @Cron('0 0 4 * * *')
+  @Cron('0 0 4,16 * * *')
   async calcFinancialValue(delay?: number, forceRefreshNetValue?: number) {
     const codes = await this.trackFinancialRecordService.listCode();
     for (const code of codes) {
