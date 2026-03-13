@@ -1,8 +1,12 @@
 import type { ProColumns } from '@ant-design/pro-components';
+import { FINANCIAL_MASKED_COLUMN_KEYS } from './display-config';
+import { MaskableValue } from './maskable-value';
 
 interface BuildFinancialBaseColumnsArgs {
   valueEnum: any;
 }
+
+const maskedColumnKeys = FINANCIAL_MASKED_COLUMN_KEYS as readonly string[];
 
 export const buildFinancialBaseColumns = ({
   valueEnum,
@@ -24,6 +28,9 @@ export const buildFinancialBaseColumns = ({
       width: 90,
       valueType: 'money' as const,
       hideInSearch: true,
+      render(dom) {
+        return <MaskableValue value={dom} defaultMasked={maskedColumnKeys.includes('balance')} />;
+      },
     },
     {
       title: '累计手续费',
